@@ -1,0 +1,13 @@
+name: JustAttribute
+main: com.sakuragame.eternal.justattribute.JustAttribute
+version: ${project.version}
+author: 'Megumi'
+api-version: '1.13'
+depend:
+  - MegumiLib
+  - Zaphkiel
+
+commands:
+  jattribute:
+    aliases: [attribute, attr]
+    description: show all command
