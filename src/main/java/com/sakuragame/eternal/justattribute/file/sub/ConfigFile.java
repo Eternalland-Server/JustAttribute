@@ -11,14 +11,25 @@ public class ConfigFile {
 
     public static String prefix;
 
-    public static String format;
+    public static String none_potency;
+
+    public static String attribute_format;
+    public static String bound_format;
+    public static String unbound_format;
+    public static String realm_format;
+    public static String type_format;
 
     public static void init() {
         config = JustAttribute.getInstance().getFileManager().getConfig();
 
         prefix = getString("prefix");
 
-        format = getString("format");
+        none_potency = getString("none-potency");
+
+        attribute_format = getString("format.attribute");
+        bound_format = getString("format.bound");
+        unbound_format = getString("format.unbound");
+        type_format = getString("format.type");
     }
 
     private static String getString(String path) {

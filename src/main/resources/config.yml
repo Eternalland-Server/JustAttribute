@@ -1,2 +1,10 @@
 prefix: ' &7[JustAttribute]'
-format: ' <symbol> &b<identifier>: &f<value>'
+none-potency: '&3使用潜能卷轴进行鉴定'
+format:
+  attribute: ' <symbol> &b<identifier>: &f<value>'
+  bound: '&a已绑定: &7<owner>'
+  unbound: '&a<desc>'
+  realm: '&f境界要求: &7<realm>'
+  type: '&f装备类型: &7<type>'
+realm-hp: 3*realm
+realm-mp: 10*realm
