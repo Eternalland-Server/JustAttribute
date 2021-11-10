@@ -1,13 +1,13 @@
 package com.sakuragame.eternal.justattribute.core.attribute;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
+import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import lombok.Getter;
 
 @Getter
-public class BaseAttribute {
+public abstract class BaseAttribute {
 
     private final Identifier identifier;
     private final String symbol;
@@ -25,6 +25,18 @@ public class BaseAttribute {
         this.name = name;
         this.base = base;
         this.onlyPercent = onlyPercent;
+    }
+
+    public double calculate(RoleAttribute role) {
+        return calculate(role.getOrdinaryTotalValue(identifier), role.getPotencyTotalValue(identifier));
+    }
+
+    public double calculate(double ordinaryValue, double potencyValue) {
+        if (onlyPercent) {
+            return ordinaryValue + potencyValue;
+        }
+
+        return ordinaryValue * (1 + potencyValue);
     }
 
     public String format(double value) {

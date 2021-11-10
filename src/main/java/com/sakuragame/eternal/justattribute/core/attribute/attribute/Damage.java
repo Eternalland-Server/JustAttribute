@@ -6,6 +6,6 @@ import com.sakuragame.eternal.justattribute.core.attribute.BaseAttribute;
 public class Damage extends BaseAttribute {
 
     public Damage() {
-        super(Identifier.Damage, "ㇻ", "攻击力", 10);
+        super(Identifier.Damage, "ㇻ", "攻击力", 0);
     }
 }

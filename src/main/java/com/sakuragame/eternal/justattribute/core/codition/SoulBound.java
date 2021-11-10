@@ -1,6 +1,7 @@
 package com.sakuragame.eternal.justattribute.core.codition;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import lombok.Getter;
 
 public class SoulBound {
@@ -13,8 +14,8 @@ public class SoulBound {
     @Getter
     public enum Action {
 
-        AUTO(0, "自动绑定"),
-        USE(1, "使用后绑定");
+        AUTO(0, ConfigFile.soulbound_auto),
+        USE(1, ConfigFile.soulbound_use);
 
         private final int id;
         private final String desc;

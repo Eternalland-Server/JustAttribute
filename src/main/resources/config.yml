@@ -1,10 +1,33 @@
 prefix: ' &7[JustAttribute]'
-none-potency: '&3使用潜能卷轴进行鉴定'
+base:
+  damage-immune-limit: 0.4
 format:
   attribute: ' <symbol> &b<identifier>: &f<value>'
   bound: '&a已绑定: &7<owner>'
   unbound: '&a<desc>'
   realm: '&f境界要求: &7<realm>'
   type: '&f装备类型: &7<type>'
-realm-hp: 3*realm
-realm-mp: 10*realm
+potency:
+  empty: '&3使用潜能卷轴进行鉴定'
+soulbound:
+  auto: '自动绑定'
+  use: '使用后绑定'
+#玩家基础属性
+role-base:
+  health: 120
+  mana: 300
+  damage: 10
+  defence: 4
+  restore-hp: 1
+  #每秒恢复血量值
+  restore-mp: 2
+  #每秒恢复法力值
+#玩家属性提升
+#基于阶段，每阶段增加下面属性值
+role-promote:
+  health: 40
+  mana: 100
+  damage: 3
+  defence: 2
+  restore-hp: 1.5
+  restore-mp: 1.5

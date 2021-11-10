@@ -1,4 +1,4 @@
-package com.sakuragame.eternal.justattribute.core.attribute.stats;
+package com.sakuragame.eternal.justattribute.core.attribute;
 
 import com.sakuragame.eternal.justattribute.core.codition.EquipType;
 import lombok.Getter;
@@ -10,6 +10,7 @@ public enum VanillaSlot {
     ChestPlate(6, EquipType.Armor, "chestplate"),
     Leggings(7, EquipType.Armor, "leggings"),
     Boots(8, EquipType.Armor, "boots"),
+    MainHand(-1, EquipType.MainHand, "mainhand"),
     OffHand(45, EquipType.OffHand, "offhand");
 
     private final int index;

@@ -28,7 +28,7 @@ public class ZaphkielListener implements Listener {
         List<String> ordinaryDisplay = new ArrayList<>();
         List<String> potencyDisplay = new ArrayList<>();
 
-        for (BaseAttribute attr : JustAttribute.getAttributeManager().getAttr().values()) {
+        for (BaseAttribute attr : JustAttribute.getAttributeManager().getAttrProfile().values()) {
             ItemTagData ordinary = tags.getDeep(attr.getOrdinaryNode());
             ItemTagData potency = tags.getDeep(attr.getPotencyNode());
 
@@ -42,7 +42,7 @@ public class ZaphkielListener implements Listener {
 
         e.addLore(AttributeManager.ORDINARY_DISPLAY_NODE, ordinaryDisplay);
         if (potencyDisplay.isEmpty()) {
-            e.addLore(AttributeManager.POTENCY_DISPLAY_NODE, ConfigFile.none_potency);
+            e.addLore(AttributeManager.POTENCY_DISPLAY_NODE, ConfigFile.potency_empty);
         }
         else {
             e.addLore(AttributeManager.POTENCY_DISPLAY_NODE, potencyDisplay);

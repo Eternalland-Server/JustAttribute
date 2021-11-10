@@ -6,6 +6,6 @@ import com.sakuragame.eternal.justattribute.core.attribute.BaseAttribute;
 public class Health extends BaseAttribute {
 
     public Health() {
-        super(Identifier.Health, "ㇹ", "生命值", 100);
+        super(Identifier.Health, "ㇹ", "生命值", 0);
     }
 }
