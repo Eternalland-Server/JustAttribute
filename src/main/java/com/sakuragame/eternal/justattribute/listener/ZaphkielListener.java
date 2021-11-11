@@ -7,6 +7,7 @@ import com.sakuragame.eternal.justattribute.core.codition.EquipType;
 import com.sakuragame.eternal.justattribute.core.codition.Realm;
 import com.sakuragame.eternal.justattribute.core.codition.SoulBound;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
@@ -54,7 +55,7 @@ public class ZaphkielListener implements Listener {
         Player player = e.getPlayer();
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 
-        ItemTagData data = itemTag.getDeep(SoulBound.ACTION_NODE);
+        ItemTagData data = itemTag.getDeep(SoulBound.NBT_ACTION_NODE);
 
         if (data == null) return;
         int id = data.asInt();
@@ -62,24 +63,22 @@ public class ZaphkielListener implements Listener {
         SoulBound.Action action = SoulBound.Action.getAction(id);
         if (action == null) return;
 
-        if (id == 0) {
-            if (player == null) {
-                e.addLore(SoulBound.DISPLAY_NODE, ConfigFile.unbound_format.replace("<desc>", action.getDesc()));
-            }
-            else {
-                itemTag.remove(SoulBound.ACTION_NODE);
-                itemTag.put(SoulBound.UUID_NODE, player.getUniqueId().toString());
-                itemTag.put(SoulBound.NAME_NODE, player.getName());
-                e.addLore(SoulBound.DISPLAY_NODE, ConfigFile.bound_format.replace("<owner>", player.getName()));
-            }
+        if (player != null && id == 0) {
+            itemTag.removeDeep(SoulBound.NBT_ACTION_NODE);
+            itemTag.putDeep(SoulBound.NBT_UUID_NODE, player.getUniqueId().toString());
+            itemTag.putDeep(SoulBound.NBT_NAME_NODE, player.getName());
+            e.addLore(SoulBound.DISPLAY_NODE, ConfigFile.bound_format.replace("<owner>", player.getName()));
+            return;
         }
+
+        e.addLore(SoulBound.DISPLAY_NODE, ConfigFile.unbound_format.replace("<desc>", action.getDesc()));
     }
 
     @EventHandler
     public void onRealm(ItemReleaseEvent.Display e) {
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 
-        ItemTagData data = itemTag.getDeep(Realm.REALM_NODE);
+        ItemTagData data = itemTag.getDeep(Realm.NBT_NODE);
 
         if (data == null) return;
         int limit = data.asInt();
@@ -91,7 +90,7 @@ public class ZaphkielListener implements Listener {
     public void onType(ItemReleaseEvent.Display e) {
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 
-        ItemTagData data = itemTag.getDeep(EquipType.TYPE_NODE);
+        ItemTagData data = itemTag.getDeep(EquipType.NBT_NODE);
 
         if (data == null) return;
         int id = data.asInt();

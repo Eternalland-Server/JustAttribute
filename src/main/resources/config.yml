@@ -31,3 +31,18 @@ role-promote:
   defence: 2
   restore-hp: 1.5
   restore-mp: 1.5
+slot-setting:
+  glasses_slot: 3
+  eardrop_slot: 4
+  cloak_slot: 5
+  ring1_slot: 6
+  ring2_slot: 6
+  ring3_slot: 6
+  ring4_slot: 6
+  medal_slot: 7
+  honor_slot: 8
+  pet_egg_slot: 9
+  pet_saddle_slot: 10
+  pet_equip1_slot: 11
+  pet_equip2_slot: 11
+  pet_equip3_slot: 11

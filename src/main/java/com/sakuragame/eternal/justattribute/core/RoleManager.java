@@ -29,7 +29,7 @@ public class RoleManager {
     }
 
     public void loadStateData(Player player) {
-        this.playerState.put(player.getUniqueId(), new RoleState(player));
+        playerState.put(player.getUniqueId(), JustAttribute.getStorageManager().getPlayerDate(player));
     }
 
     public void removeAttributeData(UUID uuid) {
@@ -37,7 +37,7 @@ public class RoleManager {
     }
 
     public void removeStateData(UUID uuid) {
-        this.playerState.remove(uuid);
+        this.playerState.remove(uuid).save();
     }
 
     public RoleAttribute getPlayerAttribute(UUID uuid) {

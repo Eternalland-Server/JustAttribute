@@ -2,8 +2,10 @@ package com.sakuragame.eternal.justattribute.file.sub;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ConfigFile {
@@ -42,6 +44,8 @@ public class ConfigFile {
         public static double restoreMP;
     }
 
+    public static HashMap<String, Integer> slotSetting;
+
     public static void init() {
         config = JustAttribute.getInstance().getFileManager().getConfig();
 
@@ -72,6 +76,8 @@ public class ConfigFile {
         RolePromote.defence = config.getDouble("role-promote.defence");
         RolePromote.restoreHP = config.getDouble("role-promote.restore-hp");
         RolePromote.restoreMP = config.getDouble("role-promote.restore-mp");
+
+        loadSlotSetting();
     }
 
     private static String getString(String path) {
@@ -80,5 +86,17 @@ public class ConfigFile {
 
     private static List<String> getStringList(String path) {
         return MegumiUtil.onReplace(config.getStringList(path));
+    }
+
+    private static void loadSlotSetting() {
+        slotSetting = new HashMap<>();
+
+        ConfigurationSection section = config.getConfigurationSection("slot-setting");
+        if (section == null) return;
+
+        for (String s : section.getKeys(false)) {
+            int type = section.getInt(s);
+            slotSetting.put(s, type);
+        }
     }
 }

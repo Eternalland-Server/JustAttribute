@@ -11,16 +11,18 @@ public enum EquipType {
     Glasses(3, "护目镜"),
     EarDrop(4, "耳坠"),
     Cloak(5, "披风"),
-    Ring(5, "戒指"),
-    Medal(6, "勋章"),
-    Honor(7, "头衔"),
-    PetEgg(8, "宠物");
+    Ring(6, "戒指"),
+    Medal(7, "勋章"),
+    Honor(8, "头衔"),
+    PetEgg(9, "宠物蛋"),
+    PetSaddle(10, "宠物鞍"),
+    PetEquip(11, "宠物装备");
 
 
     private final int id;
     private final String name;
 
-    public final static String TYPE_NODE = "justattribute.type";
+    public final static String NBT_NODE = "justattribute.type";
     public final static String DISPLAY_NODE = "type.display";
 
     EquipType(int id, String name) {

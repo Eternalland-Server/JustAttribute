@@ -13,13 +13,13 @@ public class RoleState {
 
     public RoleState(Player player) {
         this.player = player;
-        this.initState();
+        this.initRole();
     }
 
-    private void initState() {
-        double health = 0d;
-        mana = 0d;
-
+    public RoleState(Player player, double health, double mana) {
+        this.player = player;
+        this.setHealth(health);
+        this.setMana(mana);
         this.update();
     }
 
@@ -27,27 +27,49 @@ public class RoleState {
         RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
 
         double maxHealth = role.getTotalHealth();
+        double maxMana = role.getTotalMana();
+
         double currentHP = player.getHealth();
 
         if (maxHealth < currentHP) {
-            player.setHealth(maxHealth);
+            this.setHealth(maxHealth);
         }
-        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
 
-        maxMana = role.getTotalMana();
+        this.setMaxHealth(maxHealth);
+        this.setMaxHealth(maxMana);
     }
 
     public void restore() {
-        RoleAttribute attribute = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
-        double hp = JustAttribute.getAttributeManager().getAttribute(Identifier.Restore_Health).calculate(attribute);
-        double mp = JustAttribute.getAttributeManager().getAttribute(Identifier.Restore_Mana).calculate(attribute);
+        RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
+        double hp = JustAttribute.getAttributeManager().getAttribute(Identifier.Restore_Health).calculate(role);
+        double mp = JustAttribute.getAttributeManager().getAttribute(Identifier.Restore_Mana).calculate(role);
 
-        addHealth(hp);
-        addHealth(mp);
+        this.addHealth(hp);
+        this.addHealth(mp);
+    }
+
+    private void initRole() {
+        RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
+
+        double maxHealth = role.getTotalHealth();
+        double maxMana = role.getTotalMana();
+
+        this.setMaxHealth(maxHealth);
+        this.setMaxHealth(maxMana);
+        this.setHealth(maxHealth);
+        this.setMana(maxMana);
+    }
+
+    public void save() {
+        JustAttribute.getStorageManager().updatePlayerData(player, getHealth(), getMana());
     }
 
     public void setHealth(double value) {
         this.player.setHealth(Math.min(value, getMaxHealth()));
+    }
+
+    public void setMaxHealth(double value) {
+        this.player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(value);
     }
 
     public void addHealth(double value) {
@@ -64,6 +86,10 @@ public class RoleState {
 
     public void setMana(double value) {
         mana = Math.min(value, this.maxMana);
+    }
+
+    public void setMaxMana(double value) {
+        maxMana = value;
     }
 
     public void addMana(double value) {

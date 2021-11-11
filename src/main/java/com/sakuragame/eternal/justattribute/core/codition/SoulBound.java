@@ -6,9 +6,9 @@ import lombok.Getter;
 
 public class SoulBound {
 
-    public final static String ACTION_NODE = "justattribute.soulbound.action";
-    public final static String UUID_NODE = "justattribute.soulbound.uuid";
-    public final static String NAME_NODE = "justattribute.soulbound.name";
+    public final static String NBT_ACTION_NODE = "justattribute.soulbound.action";
+    public final static String NBT_UUID_NODE = "justattribute.soulbound.uuid";
+    public final static String NBT_NAME_NODE = "justattribute.soulbound.name";
     public final static String DISPLAY_NODE = "soulbound.display";
 
     @Getter

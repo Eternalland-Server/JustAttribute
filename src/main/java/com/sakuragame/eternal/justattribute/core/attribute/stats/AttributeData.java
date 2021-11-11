@@ -51,13 +51,13 @@ public class AttributeData {
         ItemTag stream = ZaphkielAPI.INSTANCE.getData(item);
         if (stream == null) return;
 
-        int typeID = stream.getDeepOrElse(EquipType.TYPE_NODE, new ItemTagData(-1)).asInt();
+        int typeID = stream.getDeepOrElse(EquipType.NBT_NODE, new ItemTagData(-1)).asInt();
         if (typeID != type.getId()) return;
 
-        int realm = stream.getDeepOrElse(Realm.REALM_NODE, new ItemTagData(-1)).asInt();
+        int realm = stream.getDeepOrElse(Realm.NBT_NODE, new ItemTagData(-1)).asInt();
         if (realm == -1 || JustLevelAPI.getData(player).getRealm() < realm) return;
 
-        ItemTagData bound = stream.getDeep(SoulBound.UUID_NODE);
+        ItemTagData bound = stream.getDeep(SoulBound.NBT_UUID_NODE);
         if (bound == null) return;
 
         for (BaseAttribute attr : JustAttribute.getAttributeManager().getAttrProfile().values()) {

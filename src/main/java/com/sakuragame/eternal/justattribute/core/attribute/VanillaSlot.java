@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.core.attribute;
 
 import com.sakuragame.eternal.justattribute.core.codition.EquipType;
 import lombok.Getter;
+import org.bukkit.Material;
 
 @Getter
 public enum VanillaSlot {
@@ -26,6 +27,16 @@ public enum VanillaSlot {
     public static VanillaSlot getSlot(int index) {
         for (VanillaSlot slot : values()) {
             if (slot.getIndex() == index) {
+                return slot;
+            }
+        }
+
+        return null;
+    }
+
+    public static VanillaSlot getSlot(Material material) {
+        for (VanillaSlot slot : values()) {
+            if (material.name().contains(slot.getIdent().toUpperCase())) {
                 return slot;
             }
         }
