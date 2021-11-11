@@ -4,10 +4,8 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.BaseAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
 import com.sakuragame.eternal.justattribute.core.attribute.attribute.*;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -41,6 +39,7 @@ public class AttributeManager {
         this.registerAttr(new CriticalChance());
         this.registerAttr(new CriticalDamage());
         this.registerAttr(new ExpAddition());
+        this.start();
     }
 
     private void registerAttr(BaseAttribute attribute) {
@@ -54,11 +53,8 @@ public class AttributeManager {
     private void start() {
         Bukkit.getScheduler().runTaskLater(JustAttribute.getInstance(), () -> Bukkit.getOnlinePlayers().forEach(player -> {
             UUID uuid = player.getUniqueId();
-            RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(uuid);
-            double hp = JustAttribute.getAttributeManager().getAttribute(Identifier.Restore_Health).calculate(role);
-            double mp = JustAttribute.getAttributeManager().getAttribute(Identifier.Restore_Mana).calculate(role);
 
-            player.setHealth(Math.min(player.getHealth() + hp, player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()));
+            JustAttribute.getRoleManager().getPlayerState(uuid).restore();
         }), 20);
     }
 }

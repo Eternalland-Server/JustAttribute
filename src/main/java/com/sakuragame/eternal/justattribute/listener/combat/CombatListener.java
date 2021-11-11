@@ -1,7 +1,7 @@
-package com.sakuragame.eternal.justattribute.listener;
+package com.sakuragame.eternal.justattribute.listener.combat;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.api.event.JAPlayerAttackEvent;
+import com.sakuragame.eternal.justattribute.api.event.JARoleAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import org.bukkit.entity.Entity;
@@ -30,7 +30,7 @@ public class CombatListener implements Listener {
         RoleAttribute attackData = getTargetAttrData(attacker);
         RoleAttribute sufferData = getTargetAttrData(sufferer);
 
-        JAPlayerAttackEvent attackEvent = CombatHandler.calculate(attackData, sufferData);
+        JARoleAttackEvent attackEvent = CombatHandler.calculate(attackData, sufferData);
 
         if (attackEvent.call()) {
             e.setCancelled(true);

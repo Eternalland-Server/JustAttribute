@@ -4,7 +4,6 @@ import com.sakuragame.eternal.justattribute.commands.MainCommand;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.file.FileManager;
-import com.sakuragame.eternal.justattribute.listener.SlotListener;
 import com.sakuragame.eternal.justattribute.listener.ZaphkielListener;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -29,7 +28,6 @@ public class JustAttribute extends JavaPlugin {
         fileManager.init();
 
         Bukkit.getPluginManager().registerEvents(new ZaphkielListener(), this);
-        Bukkit.getPluginManager().registerEvents(new SlotListener(), this);
         getCommand("jattribute").setExecutor(new MainCommand());
 
         long end = System.currentTimeMillis();

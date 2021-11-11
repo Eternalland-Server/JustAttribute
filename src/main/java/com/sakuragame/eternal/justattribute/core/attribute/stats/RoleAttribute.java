@@ -1,6 +1,7 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.api.event.JARoleInitFinishedEvent;
 import com.sakuragame.eternal.justattribute.api.event.JAUpdateAttributeEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
@@ -8,7 +9,6 @@ import com.sakuragame.eternal.justattribute.core.codition.EquipType;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import lombok.Getter;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -32,9 +32,9 @@ public class RoleAttribute {
 
     public RoleAttribute(LivingEntity role) {
         this.role = role;
-        this.initRole();
         this.base = new AttributeData();
         this.source = new HashMap<>();
+        this.initRole();
     }
 
     private void initRole() {
@@ -48,7 +48,9 @@ public class RoleAttribute {
         this.updateVanillaSlot(VanillaSlot.Boots);
         this.updateVanillaSlot(VanillaSlot.OffHand);
         this.updateRoleAttribute();
-        this.applyToRole();
+
+        JARoleInitFinishedEvent event = new JARoleInitFinishedEvent((Player) role, this);
+        event.call();
     }
 
     public void updateStageGrowth() {
@@ -81,11 +83,6 @@ public class RoleAttribute {
         this.totalAttribute = new AttributeData(ordinary, potency);
     }
 
-    public void applyToRole() {
-        double actualHealth = JustAttribute.getAttributeManager().getAttribute(Identifier.Health).calculate(this);
-        role.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(actualHealth);
-    }
-
     public void updateVanillaSlot(VanillaSlot slot) {
         if (!(role instanceof Player)) return;
         Player player = (Player) role;
@@ -109,7 +106,7 @@ public class RoleAttribute {
         updateEvent.call();
     }
 
-    public HashMap<Identifier, Double> getOrdinaryAttr() {
+    public HashMap<Identifier, Double> getOrdinaryAttributes() {
         HashMap<Identifier, Double> ordinary = new HashMap<>(base.getOrdinary());
         source.keySet().forEach(s -> {
             AttributeData data = source.get(s);
@@ -119,7 +116,7 @@ public class RoleAttribute {
         return ordinary;
     }
 
-    public HashMap<Identifier, Double> getPotencyAttr() {
+    public HashMap<Identifier, Double> getPotencyAttributes() {
         HashMap<Identifier, Double> potency = new HashMap<>(base.getOrdinary());
         source.keySet().forEach(s -> {
             AttributeData data = source.get(s);
@@ -127,6 +124,26 @@ public class RoleAttribute {
         });
 
         return potency;
+    }
+
+    public double getTotalValue(Identifier ident) {
+        return JustAttribute.getAttributeManager().getAttribute(ident).calculate(this);
+    }
+
+    public double getTotalHealth() {
+        return getTotalValue(Identifier.Health) + getTotalValue(Identifier.Stamina);
+    }
+
+    public double getTotalMana() {
+        return getTotalValue(Identifier.Mana) + getTotalValue(Identifier.Wisdom);
+    }
+
+    public double getTotalDamage() {
+        return getTotalValue(Identifier.Damage) + getTotalValue(Identifier.Energy);
+    }
+
+    public double getTotalDefence() {
+        return getTotalValue(Identifier.Defence) + getTotalValue(Identifier.Technique);
     }
 
     public double getOrdinaryTotalValue(Identifier ident) {

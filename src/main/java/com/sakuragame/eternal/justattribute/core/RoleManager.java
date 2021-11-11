@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.core;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
+import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.core.codition.EquipType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,22 +16,36 @@ public class RoleManager {
     private final JustAttribute plugin;
 
     private final HashMap<UUID, RoleAttribute> playerAttribute;
+    private final HashMap<UUID, RoleState> playerState;
 
     public RoleManager(JustAttribute plugin) {
         this.plugin = plugin;
         this.playerAttribute = new HashMap<>();
-    }
-
-    public RoleAttribute getPlayerAttribute(UUID uuid) {
-        return playerAttribute.get(uuid);
+        this.playerState = new HashMap<>();
     }
 
     public void loadAttributeData(Player player) {
         this.playerAttribute.put(player.getUniqueId(), new RoleAttribute(player));
     }
 
-    public void removeAttributeData(Player player) {
-        this.playerAttribute.remove(player.getUniqueId());
+    public void loadStateData(Player player) {
+        this.playerState.put(player.getUniqueId(), new RoleState(player));
+    }
+
+    public void removeAttributeData(UUID uuid) {
+        this.playerAttribute.remove(uuid);
+    }
+
+    public void removeStateData(UUID uuid) {
+        this.playerState.remove(uuid);
+    }
+
+    public RoleAttribute getPlayerAttribute(UUID uuid) {
+        return playerAttribute.get(uuid);
+    }
+
+    public RoleState getPlayerState(UUID uuid) {
+        return playerState.get(uuid);
     }
 
     public void updateVanillaSlot(Player player, VanillaSlot slot) {

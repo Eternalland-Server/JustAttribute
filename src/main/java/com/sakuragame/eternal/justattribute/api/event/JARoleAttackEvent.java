@@ -9,7 +9,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 @Getter
-public class JAPlayerAttackEvent extends Event implements Cancellable {
+public class JARoleAttackEvent extends Event implements Cancellable {
 
     private final Player player;
     private final LivingEntity victim;
@@ -19,7 +19,7 @@ public class JAPlayerAttackEvent extends Event implements Cancellable {
 
     private final static HandlerList handlerList = new HandlerList();
 
-    public JAPlayerAttackEvent(Player player, LivingEntity victim, double damage, boolean critical) {
+    public JARoleAttackEvent(Player player, LivingEntity victim, double damage, boolean critical) {
         this.player = player;
         this.victim = victim;
         this.damage = damage;
@@ -48,6 +48,6 @@ public class JAPlayerAttackEvent extends Event implements Cancellable {
 
     public boolean call() {
         Bukkit.getPluginManager().callEvent(this);
-        return isCancel();
+        return isCancelled();
     }
 }
