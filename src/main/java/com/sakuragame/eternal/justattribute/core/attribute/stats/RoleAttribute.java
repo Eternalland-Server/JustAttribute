@@ -41,12 +41,13 @@ public class RoleAttribute {
         if (!(role instanceof Player)) return;
 
         this.updateStageGrowth();
-        this.base.initPlayerAttr();
+        this.base.initBaseAttribute();
         this.updateVanillaSlot(VanillaSlot.Helmet);
         this.updateVanillaSlot(VanillaSlot.ChestPlate);
         this.updateVanillaSlot(VanillaSlot.Leggings);
         this.updateVanillaSlot(VanillaSlot.Boots);
         this.updateVanillaSlot(VanillaSlot.OffHand);
+        this.updateVanillaSlot(VanillaSlot.MainHand);
         this.updateRoleAttribute();
 
         JARoleInitFinishedEvent event = new JARoleInitFinishedEvent((Player) role, this);
@@ -87,7 +88,7 @@ public class RoleAttribute {
         if (!(role instanceof Player)) return;
         Player player = (Player) role;
 
-        ItemStack item = slot == VanillaSlot.MainHand ? player.getInventory().getItemInMainHand() : player.getInventory().getItem(slot.getIndex());
+        ItemStack item = (slot == VanillaSlot.MainHand) ? player.getInventory().getItemInMainHand() : player.getInventory().getItem(slot.getIndex());
         updateSlot(slot.getIdent(), slot.getType(), item);
     }
 

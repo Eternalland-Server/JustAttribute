@@ -31,7 +31,7 @@ public class AttributeData {
     public AttributeData(Player player, ItemStack item, EquipType type) {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
-        this.readItemAttr(player, item, type);
+        this.read(player, item, type);
     }
 
     public AttributeData(HashMap<Identifier, Double> ordinary, HashMap<Identifier, Double> potency) {
@@ -39,13 +39,13 @@ public class AttributeData {
         this.potency = potency;
     }
 
-    public void initPlayerAttr() {
+    public void initBaseAttribute() {
         for (BaseAttribute attr : JustAttribute.getAttributeManager().getAttrProfile().values()) {
             ordinary.put(attr.getIdentifier(), attr.getBase());
         }
     }
 
-    private void readItemAttr(Player player, ItemStack item, EquipType type) {
+    private void read(Player player, ItemStack item, EquipType type) {
         if (MegumiUtil.isEmpty(item)) return;
 
         ItemTag stream = ZaphkielAPI.INSTANCE.getData(item);
