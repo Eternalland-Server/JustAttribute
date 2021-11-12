@@ -3,11 +3,9 @@ package com.sakuragame.eternal.justattribute.listener;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.attribute.BaseAttribute;
-import com.sakuragame.eternal.justattribute.core.codition.EquipType;
-import com.sakuragame.eternal.justattribute.core.codition.Realm;
-import com.sakuragame.eternal.justattribute.core.codition.SoulBound;
+import com.sakuragame.eternal.justattribute.core.attribute.stats.AttributeData;
+import com.sakuragame.eternal.justattribute.core.special.*;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
-import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
@@ -29,6 +27,9 @@ public class ZaphkielListener implements Listener {
         List<String> ordinaryDisplay = new ArrayList<>();
         List<String> potencyDisplay = new ArrayList<>();
 
+        PotencyGrade grade = PotencyGrade.getGrade(tags.getDeepOrElse(PotencyGrade.NBT_TAG, new ItemTagData(-1)).asInt());
+        potencyDisplay.add(grade == null ? PotencyGrade.NONE.formatting() : grade.formatting());
+
         for (BaseAttribute attr : JustAttribute.getAttributeManager().getAttrProfile().values()) {
             ItemTagData ordinary = tags.getDeep(attr.getOrdinaryNode());
             ItemTagData potency = tags.getDeep(attr.getPotencyNode());
@@ -42,7 +43,7 @@ public class ZaphkielListener implements Listener {
         }
 
         e.addLore(AttributeManager.ORDINARY_DISPLAY_NODE, ordinaryDisplay);
-        if (potencyDisplay.isEmpty()) {
+        if (potencyDisplay.size() == 1) {
             e.addLore(AttributeManager.POTENCY_DISPLAY_NODE, ConfigFile.potency_empty);
         }
         else {
@@ -67,36 +68,60 @@ public class ZaphkielListener implements Listener {
             itemTag.removeDeep(SoulBound.NBT_ACTION_NODE);
             itemTag.putDeep(SoulBound.NBT_UUID_NODE, player.getUniqueId().toString());
             itemTag.putDeep(SoulBound.NBT_NAME_NODE, player.getName());
-            e.addLore(SoulBound.DISPLAY_NODE, ConfigFile.bound_format.replace("<owner>", player.getName()));
+
+            e.addLore(SoulBound.DISPLAY_NODE, SoulBound.format(player.getName()));
             return;
         }
 
-        e.addLore(SoulBound.DISPLAY_NODE, ConfigFile.unbound_format.replace("<desc>", action.getDesc()));
+        e.addLore(SoulBound.DISPLAY_NODE, action.formatting());
     }
 
     @EventHandler
     public void onRealm(ItemReleaseEvent.Display e) {
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 
-        ItemTagData data = itemTag.getDeep(Realm.NBT_NODE);
+        ItemTagData data = itemTag.getDeep(RealmLimit.NBT_NODE);
 
         if (data == null) return;
         int limit = data.asInt();
 
-        e.addLore(Realm.DISPLAY_NODE, ConfigFile.realm_format.replace("<realm>", String.valueOf(limit)));
+        e.addLore(RealmLimit.DISPLAY_NODE, RealmLimit.format(limit));
     }
 
     @EventHandler
-    public void onType(ItemReleaseEvent.Display e) {
+    public void onClassify(ItemReleaseEvent.Display e) {
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 
-        ItemTagData data = itemTag.getDeep(EquipType.NBT_NODE);
+        ItemTagData data = itemTag.getDeep(EquipClassify.NBT_NODE);
 
         if (data == null) return;
         int id = data.asInt();
-        EquipType type = EquipType.getType(id);
-        if (type == null) return;
+        EquipClassify equipClassify = EquipClassify.getType(id);
+        if (equipClassify == null) return;
 
-        e.addLore(Realm.DISPLAY_NODE, ConfigFile.type_format.replace("<type>", type.getName()));
+        e.addLore(EquipClassify.DISPLAY_NODE, equipClassify.formatting());
+    }
+
+    @EventHandler
+    public void onQuality(ItemReleaseEvent.Display e) {
+        ItemTag itemTag = e.getItemStream().getZaphkielData();
+
+        ItemTagData data = itemTag.getDeep(EquipQuality.NBT_NODE);
+
+        if (data == null) return;
+        int id = data.asInt();
+        EquipQuality equipQuality = EquipQuality.getQuality(id);
+        if (equipQuality == null) return;
+
+        e.addLore(EquipQuality.DISPLAY_NODE, equipQuality.formatting());
+    }
+
+    @EventHandler
+    public void onCombat(ItemReleaseEvent.Display e) {
+        AttributeData data = new AttributeData(e.getItemStream());
+
+        int combat = CombatCapacity.get(data);
+
+        e.addLore(CombatCapacity.DISPLAY_NODE, CombatCapacity.format(combat));
     }
 }

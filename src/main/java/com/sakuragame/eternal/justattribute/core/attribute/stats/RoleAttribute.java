@@ -5,10 +5,13 @@ import com.sakuragame.eternal.justattribute.api.event.JARoleInitFinishedEvent;
 import com.sakuragame.eternal.justattribute.api.event.JAUpdateAttributeEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
-import com.sakuragame.eternal.justattribute.core.codition.EquipType;
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
+import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.taylorswiftcn.justwei.util.MegumiUtil;
 import lombok.Getter;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -29,6 +32,8 @@ public class RoleAttribute {
     private final AttributeData base;
     private final HashMap<String, AttributeData> source;
     @Getter private AttributeData totalAttribute;
+
+    @Getter private int combat;
 
     public RoleAttribute(LivingEntity role) {
         this.role = role;
@@ -82,6 +87,7 @@ public class RoleAttribute {
         });
 
         this.totalAttribute = new AttributeData(ordinary, potency);
+        this.combat = CombatCapacity.get(totalAttribute);
     }
 
     public void updateVanillaSlot(VanillaSlot slot) {
@@ -92,14 +98,15 @@ public class RoleAttribute {
         updateSlot(slot.getIdent(), slot.getType(), item);
     }
 
-    public void updateCustomSlot(String ident, EquipType type, ItemStack item) {
+    public void updateCustomSlot(String ident, EquipClassify type, ItemStack item) {
         updateSlot(ident, type, item);
     }
 
-    private void updateSlot(String ident, EquipType type, ItemStack item) {
+    private void updateSlot(String ident, EquipClassify type, ItemStack item) {
         if (!(role instanceof Player)) return;
         Player player = (Player) role;
 
+        if (MegumiUtil.isEmpty(item)) item = new ItemStack(Material.AIR);
         this.source.put(ident, new AttributeData(player, item, type));
         this.updateRoleAttribute();
 

@@ -16,8 +16,8 @@ public class AttributeManager {
 
     @Getter private final HashMap<Identifier, BaseAttribute> attrProfile;
 
-    public final static String ORDINARY_DISPLAY_NODE = "ordinary.display";
-    public final static String POTENCY_DISPLAY_NODE = "potency.display";
+    public final static String ORDINARY_DISPLAY_NODE = "display.ordinary";
+    public final static String POTENCY_DISPLAY_NODE = "display.potency";
 
     public AttributeManager(JustAttribute plugin) {
         this.plugin = plugin;

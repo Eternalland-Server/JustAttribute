@@ -3,11 +3,11 @@ package com.sakuragame.eternal.justattribute.core.attribute.stats;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
 import com.sakuragame.eternal.justattribute.core.attribute.BaseAttribute;
-import com.sakuragame.eternal.justattribute.core.codition.EquipType;
-import com.sakuragame.eternal.justattribute.core.codition.Realm;
-import com.sakuragame.eternal.justattribute.core.codition.SoulBound;
-import com.taylorswiftcn.justwei.util.MegumiUtil;
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
+import com.sakuragame.eternal.justattribute.core.special.RealmLimit;
+import com.sakuragame.eternal.justattribute.core.special.SoulBound;
 import ink.ptms.zaphkiel.ZaphkielAPI;
+import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import lombok.Getter;
@@ -28,10 +28,22 @@ public class AttributeData {
         this.potency = new HashMap<>();
     }
 
-    public AttributeData(Player player, ItemStack item, EquipType type) {
+    public AttributeData(ItemStack item) {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
-        this.read(player, item, type);
+        this.read(ZaphkielAPI.INSTANCE.read(item));
+    }
+
+    public AttributeData(ItemStream itemStream) {
+        this.ordinary = new HashMap<>();
+        this.potency = new HashMap<>();
+        this.read(itemStream);
+    }
+
+    public AttributeData(Player player, ItemStack item, EquipClassify type) {
+        this.ordinary = new HashMap<>();
+        this.potency = new HashMap<>();
+        this.read(player, ZaphkielAPI.INSTANCE.read(item), type);
     }
 
     public AttributeData(HashMap<Identifier, Double> ordinary, HashMap<Identifier, Double> potency) {
@@ -45,24 +57,30 @@ public class AttributeData {
         }
     }
 
-    private void read(Player player, ItemStack item, EquipType type) {
-        if (MegumiUtil.isEmpty(item)) return;
+    private void read(Player player, ItemStream itemStream, EquipClassify type) {
+        if (itemStream.isVanilla()) return;
+        ItemTag stream = itemStream.getZaphkielData();
 
-        ItemTag stream = ZaphkielAPI.INSTANCE.getData(item);
-        if (stream == null) return;
-
-        int typeID = stream.getDeepOrElse(EquipType.NBT_NODE, new ItemTagData(-1)).asInt();
+        int typeID = stream.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
         if (typeID != type.getId()) return;
 
-        int realm = stream.getDeepOrElse(Realm.NBT_NODE, new ItemTagData(-1)).asInt();
+        int realm = stream.getDeepOrElse(RealmLimit.NBT_NODE, new ItemTagData(-1)).asInt();
         if (realm == -1 || JustLevelAPI.getData(player).getRealm() < realm) return;
 
         ItemTagData bound = stream.getDeep(SoulBound.NBT_UUID_NODE);
-        if (bound == null) return;
+        if (bound != null && !bound.asString().equals(player.getUniqueId().toString())) return;
+
+        read(itemStream);
+    }
+
+    private void read(ItemStream itemStream) {
+        if (itemStream.isVanilla()) return;
+
+        ItemTag itemTag = itemStream.getZaphkielData();
 
         for (BaseAttribute attr : JustAttribute.getAttributeManager().getAttrProfile().values()) {
-            ordinary.put(attr.getIdentifier(), stream.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble());
-            potency.put(attr.getIdentifier(), stream.getDeepOrElse(attr.getPotencyNode(), new ItemTagData(0)).asDouble() / 100d);
+            ordinary.put(attr.getIdentifier(), itemTag.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble());
+            potency.put(attr.getIdentifier(), itemTag.getDeepOrElse(attr.getPotencyNode(), new ItemTagData(0)).asDouble());
         }
     }
 }

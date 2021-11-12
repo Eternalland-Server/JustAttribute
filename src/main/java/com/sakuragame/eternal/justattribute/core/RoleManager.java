@@ -4,7 +4,7 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
-import com.sakuragame.eternal.justattribute.core.codition.EquipType;
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,10 +25,12 @@ public class RoleManager {
     }
 
     public void loadAttributeData(Player player) {
+        if (player == null) return;
         this.playerAttribute.put(player.getUniqueId(), new RoleAttribute(player));
     }
 
     public void loadStateData(Player player) {
+        if (player == null) return;
         playerState.put(player.getUniqueId(), JustAttribute.getStorageManager().getPlayerDate(player));
     }
 
@@ -52,7 +54,7 @@ public class RoleManager {
         playerAttribute.get(player.getUniqueId()).updateVanillaSlot(slot);
     }
 
-    public void updateCustomSlot(Player player, String ident, EquipType type, ItemStack item) {
+    public void updateCustomSlot(Player player, String ident, EquipClassify type, ItemStack item) {
         playerAttribute.get(player.getUniqueId()).updateCustomSlot(ident, type, item);
     }
 }

@@ -2,11 +2,10 @@ package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
-import com.sakuragame.eternal.justattribute.core.codition.EquipType;
-import com.sakuragame.eternal.justattribute.core.codition.Realm;
-import com.sakuragame.eternal.justattribute.core.codition.SoulBound;
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
+import com.sakuragame.eternal.justattribute.core.special.RealmLimit;
+import com.sakuragame.eternal.justattribute.core.special.SoulBound;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
-import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
@@ -18,9 +17,12 @@ import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -48,13 +50,13 @@ public class SlotListener implements Listener {
         if (itemStream.isVanilla()) return;
         ItemTag itemTag = itemStream.getZaphkielData();
 
-        int itemType = itemTag.getDeepOrElse(EquipType.NBT_NODE, new ItemTagData(-1)).asInt();
+        int itemType = itemTag.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
         if (slot.getType().getId() != itemType) {
             e.setCancelled(true);
             return;
         }
 
-        int realmLimit = itemTag.getDeepOrElse(Realm.NBT_NODE, new ItemTagData(-1)).asInt();
+        int realmLimit = itemTag.getDeepOrElse(RealmLimit.NBT_NODE, new ItemTagData(-1)).asInt();
         if (realmLimit != -1 && JustLevelAPI.getRealm(player) < realmLimit) {
             e.setCancelled(true);
         }
@@ -68,8 +70,8 @@ public class SlotListener implements Listener {
             ItemStack item = player.getInventory().getItem(index);
             if (MegumiUtil.isEmpty(item)) return;
 
-            if (Utils.isUseBind(item)) {
-                player.getInventory().setItem(index, Utils.binding(player, item));
+            if (SoulBound.isUseBind(item)) {
+                player.getInventory().setItem(index, SoulBound.binding(player, item));
             }
 
             JustAttribute.getRoleManager().updateVanillaSlot(player, slot);
@@ -85,7 +87,7 @@ public class SlotListener implements Listener {
         Integer id = ConfigFile.slotSetting.get(ident);
         if (id == null) return;
 
-        EquipType type = EquipType.getType(id);
+        EquipClassify type = EquipClassify.getType(id);
         if (type == null) return;
 
         JustAttribute.getRoleManager().updateCustomSlot(player, ident, type, item);
@@ -109,13 +111,13 @@ public class SlotListener implements Listener {
         }
         ItemTag itemTag = itemStream.getZaphkielData();
 
-        int itemType = itemTag.getDeepOrElse(EquipType.NBT_NODE, new ItemTagData(-1)).asInt();
+        int itemType = itemTag.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
         if (id != itemType) {
             e.setCancelled(true);
             return;
         }
 
-        int realmLimit = itemTag.getDeepOrElse(Realm.NBT_NODE, new ItemTagData(-1)).asInt();
+        int realmLimit = itemTag.getDeepOrElse(RealmLimit.NBT_NODE, new ItemTagData(-1)).asInt();
         if (realmLimit != -1 && JustLevelAPI.getRealm(player) < realmLimit) {
             e.setCancelled(true);
             return;
@@ -126,7 +128,31 @@ public class SlotListener implements Listener {
             e.setCancelled(true);
         }
         else {
-            e.setHandItem(Utils.binding(player, item));
+            e.setHandItem(SoulBound.binding(player, item));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInteract(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+
+        if (MegumiUtil.isEmpty(item)) return;
+
+        if (SoulBound.isUseBind(item)) {
+            player.getInventory().setItemInMainHand(SoulBound.binding(player, item));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onSwap(PlayerSwapHandItemsEvent e) {
+        Player player = e.getPlayer();
+        ItemStack item = e.getOffHandItem();
+
+        if (MegumiUtil.isEmpty(item)) return;
+
+        if (SoulBound.isUseBind(item)) {
+            player.getInventory().setItemInOffHand(SoulBound.binding(player, item));
         }
     }
 }

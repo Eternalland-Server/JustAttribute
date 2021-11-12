@@ -1,17 +1,40 @@
 prefix: ' &7[JustAttribute]'
 base:
   damage-immune-limit: 0.4
+  potency:
+    empty: '&3使用潜能卷轴进行鉴定'
+  soulbound:
+    auto: '自动绑定'
+    use: '使用后绑定'
 format:
   attribute: ' <symbol> &b<identifier>: &f<value>'
   bound: '&a已绑定: &7<owner>'
   unbound: '&a<desc>'
-  realm: '&f境界要求: &7<realm>'
-  type: '&f装备类型: &7<type>'
-potency:
-  empty: '&3使用潜能卷轴进行鉴定'
-soulbound:
-  auto: '自动绑定'
-  use: '使用后绑定'
+  realm: '&f境界要求: &7<name>(<realm>)'
+  classify: '&f装备分类: &7<classify>'
+  quality: '&f<name> &7(<desc>&7)'
+  combat:
+    - '&7装备评分'
+    - '<combat>'
+  potency: '<symbol> <desc>'
+combat-capability:
+  energy: 40
+  stamina: 20
+  wisdom: 20
+  technique: 30
+  damage: 40
+  defence: 30
+  health: 20
+  mana: 20
+  restore_health: 2000
+  restore_mana: 2000
+  vampire_damage: 20000
+  vampire_versatile: 36000
+  defence_penetration: 30000
+  damage_immune: 42000
+  critical_change: 40
+  critical_damage: 60
+  exp_addition: 0
 #玩家基础属性
 role-base:
   health: 120

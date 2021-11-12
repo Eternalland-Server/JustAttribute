@@ -1,6 +1,7 @@
 package com.sakuragame.eternal.justattribute.file.sub;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,17 +15,20 @@ public class ConfigFile {
     public static String prefix;
 
     public static double damage_immune_limit;
+    public static String potency_empty;
+    public static String soulbound_auto;
+    public static String soulbound_use;
 
     public static String attribute_format;
     public static String bound_format;
     public static String unbound_format;
     public static String realm_format;
-    public static String type_format;
+    public static String classify_format;
+    public static String quality_format;
+    public static List<String> combat_format;
+    public static String potency_format;
 
-    public static String potency_empty;
-
-    public static String soulbound_auto;
-    public static String soulbound_use;
+    public static HashMap<Identifier, Integer> combatCapability;
 
     public static class RoleBase {
         public static double health;
@@ -52,16 +56,17 @@ public class ConfigFile {
         prefix = getString("prefix");
 
         damage_immune_limit = config.getDouble("base.damage-immune-limit");
+        potency_empty = getString("base.potency.empty");
+        soulbound_auto = getString("base.soulbound.auto");
+        soulbound_use = getString("base.soulbound.use");
 
         attribute_format = getString("format.attribute");
         bound_format = getString("format.bound");
         unbound_format = getString("format.unbound");
-        type_format = getString("format.type");
-
-        potency_empty = getString("potency.empty");
-
-        soulbound_auto = getString("soulbound.auto");
-        soulbound_use = getString("soulbound.use");
+        classify_format = getString("format.classify");
+        quality_format = getString("format.quality");
+        combat_format = getStringList("format.combat");
+        potency_format = getString("format.potency");
 
         RoleBase.health = config.getDouble("role-base.health");
         RoleBase.mana = config.getDouble("role-base.mana");
@@ -78,6 +83,7 @@ public class ConfigFile {
         RolePromote.restoreMP = config.getDouble("role-promote.restore-mp");
 
         loadSlotSetting();
+        loadCombatCapability();
     }
 
     private static String getString(String path) {
@@ -97,6 +103,18 @@ public class ConfigFile {
         for (String s : section.getKeys(false)) {
             int type = section.getInt(s);
             slotSetting.put(s, type);
+        }
+    }
+
+    private static void loadCombatCapability() {
+        combatCapability = new HashMap<>();
+
+        ConfigurationSection section = config.getConfigurationSection("combat-capability");
+        if (section == null) return;
+
+        for (String s : section.getKeys(false)) {
+            int value = section.getInt(s);
+            combatCapability.put(Identifier.valueOf(s), value);
         }
     }
 }

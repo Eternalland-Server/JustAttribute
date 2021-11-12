@@ -55,6 +55,6 @@ public abstract class BaseAttribute {
     }
 
     public String getPotencyNode() {
-        return (JustAttribute.getInstance().getName() + ".potency." + identifier).toLowerCase();
+        return (JustAttribute.getInstance().getName() + ".potency.addition." + identifier).toLowerCase();
     }
 }

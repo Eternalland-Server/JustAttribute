@@ -7,7 +7,7 @@ import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
-import net.sakuragame.eternal.justlevel.event.JustPlayerStageChangeEvent;
+import net.sakuragame.eternal.justlevel.api.event.sub.JustPlayerStageChangeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
