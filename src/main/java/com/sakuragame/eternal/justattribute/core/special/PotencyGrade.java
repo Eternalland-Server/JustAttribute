@@ -9,8 +9,9 @@ public enum PotencyGrade {
     NONE(-1, "ㅐ", ""),
     B(0, "ㅑ", "B"),
     A(1, "ㅒ", "A"),
-    SS(2, "ㅓ", "SS"),
-    SSS(3, "ㅔ", "SSS");
+    S(2, "ㅓ", "S"),
+    SS(3, "ㅔ", "SS"),
+    SSS(4, "ㅏ", "SSS");
 
     private final int id;
     private final String symbol;

@@ -47,6 +47,18 @@
 | 0 | 自动绑定 |
 | 1 | 使用后绑定 |
 
+## 潜能评级
+> 节点: justattribute.potency.grade
+
+| ID | 符号 | 名称 |
+| :-----| :----: | :----: |
+| -1 | ㅐ | None |
+| 0 | ㅑ | B |
+| 1 | ㅒ | A |
+| 2 | ㅓ | S |
+| 3 | ㅔ | SS |
+| 4 | ㅏ | SSS |
+
 ## zaphkiel item example
 ```yaml
 example_item:
@@ -76,7 +88,7 @@ example_item:
         critical_chance: 0.2
         critical_damage: 0.75
       potency:
-        grade: a
+        grade: 1
         addition:
           damage: 0.06
           defence: 0.07
