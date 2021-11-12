@@ -4,7 +4,7 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
 import com.sakuragame.eternal.justattribute.core.attribute.BaseAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
-import net.sakuragame.eternal.justlevel.event.JustPlayerExpIncreaseEvent;
+import net.sakuragame.eternal.justlevel.api.event.sub.JustPlayerExpIncreaseEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
