@@ -38,12 +38,12 @@ public class JustAttribute extends JavaPlugin {
         fileManager.init();
         storageManager.init();
 
-        registerEvent(new ZaphkielListener());
-        registerEvent(new PlayerListener());
-        registerEvent(new RoleListener());
-        registerEvent(new SlotListener());
-        registerEvent(new CombatListener());
-        registerEvent(new VampireListener());
+        registerListener(new ZaphkielListener());
+        registerListener(new PlayerListener());
+        registerListener(new RoleListener());
+        registerListener(new SlotListener());
+        registerListener(new CombatListener());
+        registerListener(new VampireListener());
         getCommand("jattribute").setExecutor(new MainCommand());
 
         long end = System.currentTimeMillis();
@@ -61,7 +61,7 @@ public class JustAttribute extends JavaPlugin {
         return packet.substring(packet.lastIndexOf('.') + 1);
     }
 
-    public void registerEvent(Listener listener) {
+    public void registerListener(Listener listener) {
         Bukkit.getPluginManager().registerEvents(listener, this);
     }
 
