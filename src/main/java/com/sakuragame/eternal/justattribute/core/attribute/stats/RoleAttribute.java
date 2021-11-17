@@ -1,7 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.api.event.JARoleInitFinishedEvent;
 import com.sakuragame.eternal.justattribute.api.event.JAUpdateAttributeEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
@@ -54,9 +53,6 @@ public class RoleAttribute {
         this.updateVanillaSlot(VanillaSlot.OffHand);
         this.updateVanillaSlot(VanillaSlot.MainHand);
         this.updateRoleAttribute();
-
-        JARoleInitFinishedEvent event = new JARoleInitFinishedEvent((Player) role, this);
-        event.call();
     }
 
     public void updateStageGrowth() {
@@ -88,6 +84,9 @@ public class RoleAttribute {
 
         this.totalAttribute = new AttributeData(ordinary, potency);
         this.combat = CombatCapacity.get(totalAttribute);
+
+        JAUpdateAttributeEvent event = new JAUpdateAttributeEvent((Player) role, this);
+        event.call();
     }
 
     public void updateVanillaSlot(VanillaSlot slot) {

@@ -29,4 +29,14 @@ public enum Identifier {
         this.id = id;
     }
 
+    public static Identifier get(String id) {
+        for (Identifier ident : values()) {
+            if (ident.getId().equals(id)) {
+                return ident;
+            }
+        }
+
+        return null;
+    }
+
 }

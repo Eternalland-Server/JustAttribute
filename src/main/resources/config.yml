@@ -32,7 +32,7 @@ combat-capability:
   vampire_versatile: 36000
   defence_penetration: 30000
   damage_immune: 42000
-  critical_change: 40
+  critical_chance: 40
   critical_damage: 60
   exp_addition: 0
 #玩家基础属性

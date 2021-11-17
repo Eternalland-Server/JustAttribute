@@ -4,11 +4,11 @@ version: ${project.version}
 author: 'Megumi'
 api-version: '1.13'
 depend:
+  - JustLevel
   - DataManager
   - MegumiLib
   - Zaphkiel
   - DragonCore
-  - JustLevel
 
 commands:
   jattribute:

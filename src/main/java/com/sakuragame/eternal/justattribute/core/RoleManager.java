@@ -1,6 +1,8 @@
 package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.api.event.JARoleAttributeInitEvent;
+import com.sakuragame.eternal.justattribute.api.event.JARoleStateInitEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
@@ -26,12 +28,22 @@ public class RoleManager {
 
     public void loadAttributeData(Player player) {
         if (player == null) return;
-        this.playerAttribute.put(player.getUniqueId(), new RoleAttribute(player));
+
+        RoleAttribute attribute = new RoleAttribute(player);
+        playerAttribute.put(player.getUniqueId(), attribute);
+
+        JARoleAttributeInitEvent event = new JARoleAttributeInitEvent(player, attribute);
+        event.call();
     }
 
     public void loadStateData(Player player) {
         if (player == null) return;
-        playerState.put(player.getUniqueId(), JustAttribute.getStorageManager().getPlayerDate(player));
+
+        RoleState state = JustAttribute.getStorageManager().getPlayerDate(player);
+        playerState.put(player.getUniqueId(), state);
+
+        JARoleStateInitEvent event = new JARoleStateInitEvent(player, state);
+        event.call();
     }
 
     public void removeAttributeData(UUID uuid) {
@@ -51,10 +63,14 @@ public class RoleManager {
     }
 
     public void updateVanillaSlot(Player player, VanillaSlot slot) {
+        if (!playerAttribute.containsKey(player.getUniqueId())) return;
+
         playerAttribute.get(player.getUniqueId()).updateVanillaSlot(slot);
     }
 
     public void updateCustomSlot(Player player, String ident, EquipClassify type, ItemStack item) {
+        if (!playerAttribute.containsKey(player.getUniqueId())) return;
+
         playerAttribute.get(player.getUniqueId()).updateCustomSlot(ident, type, item);
     }
 }

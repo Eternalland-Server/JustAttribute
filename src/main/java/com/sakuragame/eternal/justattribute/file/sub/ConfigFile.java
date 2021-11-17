@@ -114,7 +114,7 @@ public class ConfigFile {
 
         for (String s : section.getKeys(false)) {
             int value = section.getInt(s);
-            combatCapability.put(Identifier.valueOf(s), value);
+            combatCapability.put(Identifier.get(s), value);
         }
     }
 }

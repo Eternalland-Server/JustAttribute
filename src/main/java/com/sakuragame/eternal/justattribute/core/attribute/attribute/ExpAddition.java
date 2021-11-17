@@ -4,7 +4,7 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
 import com.sakuragame.eternal.justattribute.core.attribute.BaseAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
-import net.sakuragame.eternal.justlevel.api.event.sub.JustPlayerExpIncreaseEvent;
+import net.sakuragame.eternal.justlevel.api.event.sub.JLPlayerExpIncreaseEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +16,7 @@ public class ExpAddition extends BaseAttribute implements Listener {
     }
 
     @EventHandler
-    public void onExpIncrease(JustPlayerExpIncreaseEvent e) {
+    public void onExpIncrease(JLPlayerExpIncreaseEvent e) {
         Player player = e.getPlayer();
         double increase = e.getIncrease();
 

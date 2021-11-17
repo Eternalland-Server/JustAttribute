@@ -12,6 +12,7 @@ import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import lombok.Getter;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -31,19 +32,24 @@ public class AttributeData {
     public AttributeData(ItemStack item) {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
-        this.read(ZaphkielAPI.INSTANCE.read(item));
+
+        if (item.getType() == Material.AIR) return;
+        read(ZaphkielAPI.INSTANCE.read(item));
     }
 
     public AttributeData(ItemStream itemStream) {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
-        this.read(itemStream);
+
+        read(itemStream);
     }
 
     public AttributeData(Player player, ItemStack item, EquipClassify type) {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
-        this.read(player, ZaphkielAPI.INSTANCE.read(item), type);
+
+        if (item.getType() == Material.AIR) return;
+        read(player, ZaphkielAPI.INSTANCE.read(item), type);
     }
 
     public AttributeData(HashMap<Identifier, Double> ordinary, HashMap<Identifier, Double> potency) {
