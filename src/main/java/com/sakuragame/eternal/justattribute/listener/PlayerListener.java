@@ -4,6 +4,7 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.JARoleAttributeInitEvent;
 import com.sakuragame.eternal.justattribute.api.event.JARoleStateInitEvent;
 import com.sakuragame.eternal.justattribute.api.event.JAUpdateAttributeEvent;
+import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
@@ -22,16 +23,13 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
 
     private final JustAttribute plugin = JustAttribute.getInstance();
     private final HashMap<UUID, RoleInitSync> sync = new HashMap<>();
-    private final List<UUID> backList = new ArrayList<>();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -41,7 +39,7 @@ public class PlayerListener implements Listener {
         roleInitSync.setInventory(true);
         sync.put(player.getUniqueId(), roleInitSync);
 
-        backList.add(player.getUniqueId());
+        AttributeManager.loading.add(player.getUniqueId());
     }
 
     @EventHandler
@@ -84,7 +82,7 @@ public class PlayerListener implements Listener {
         JustAttribute.getRoleManager().removeAttributeData(uuid);
         JustAttribute.getRoleManager().removeStateData(uuid);
         sync.remove(uuid);
-        backList.remove(uuid);
+        AttributeManager.loading.remove(uuid);
     }
 
     @EventHandler
@@ -98,16 +96,15 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        JustAttribute.getRoleManager().getPlayerState(uuid).update();
-        DragonCoreSync.send(player);
-        backList.remove(uuid);
+        AttributeManager.loading.remove(uuid);
+        JustAttribute.getRoleManager().getPlayerAttribute(uuid).updateRoleAttribute();
     }
 
     @EventHandler
     public void onUpdate(JAUpdateAttributeEvent e) {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
-        if (backList.contains(uuid)) return;
+        if (AttributeManager.loading.contains(uuid)) return;
 
         JustAttribute.getRoleManager().getPlayerState(uuid).update();
         DragonCoreSync.send(player);
@@ -130,7 +127,7 @@ public class PlayerListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onHold(PlayerItemHeldEvent e) {
         Player player = e.getPlayer();
-        if (backList.contains(player.getUniqueId())) return;
+        if (AttributeManager.loading.contains(player.getUniqueId())) return;
 
         JustAttribute.getRoleManager().updateMainHandSlot(player, e.getNewSlot());
     }

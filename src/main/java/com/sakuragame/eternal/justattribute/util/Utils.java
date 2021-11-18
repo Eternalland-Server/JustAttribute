@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.util;
 
+import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import org.bukkit.Material;
 
 import java.text.DecimalFormat;

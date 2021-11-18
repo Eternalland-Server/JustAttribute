@@ -2,7 +2,7 @@ package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
-import com.sakuragame.eternal.justattribute.core.attribute.BaseAttribute;
+import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.AttributeData;
 import com.sakuragame.eternal.justattribute.core.special.*;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
@@ -14,9 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class ZaphkielListener implements Listener {
 
@@ -33,7 +31,7 @@ public class ZaphkielListener implements Listener {
         potencyDisplay.add(grade == null ? PotencyGrade.NONE.formatting() : grade.formatting());
         potencyDisplay.add("");
 
-        for (BaseAttribute attr : JustAttribute.getAttributeManager().getAttrProfile().values()) {
+        for (Attribute attr : Attribute.values()) {
             ItemTagData ordinary = tags.getDeep(attr.getOrdinaryNode());
             ItemTagData potency = tags.getDeep(attr.getPotencyNode());
 

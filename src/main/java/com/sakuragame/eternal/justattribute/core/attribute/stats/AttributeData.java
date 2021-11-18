@@ -1,8 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
-import com.sakuragame.eternal.justattribute.core.attribute.BaseAttribute;
+import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.SoulBound;
 import ink.ptms.zaphkiel.ZaphkielAPI;
@@ -10,7 +8,6 @@ import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import lombok.Getter;
-import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -20,8 +17,8 @@ import java.util.HashMap;
 @Getter
 public class AttributeData {
 
-    private final HashMap<Identifier, Double> ordinary;
-    private final HashMap<Identifier, Double> potency;
+    private final HashMap<Attribute, Double> ordinary;
+    private final HashMap<Attribute, Double> potency;
 
     public AttributeData() {
         this.ordinary = new HashMap<>();
@@ -51,14 +48,15 @@ public class AttributeData {
         read(player, ZaphkielAPI.INSTANCE.read(item), type);
     }
 
-    public AttributeData(HashMap<Identifier, Double> ordinary, HashMap<Identifier, Double> potency) {
+    public AttributeData(HashMap<Attribute, Double> ordinary, HashMap<Attribute, Double> potency) {
         this.ordinary = ordinary;
         this.potency = potency;
     }
 
     public void initBaseAttribute() {
-        for (BaseAttribute attr : JustAttribute.getAttributeManager().getAttrProfile().values()) {
-            ordinary.put(attr.getIdentifier(), attr.getBase());
+        for (Attribute attr : Attribute.values()) {
+            ordinary.put(attr, attr.isOnlyPercent() ? 0 : attr.getBase());
+            potency.put(attr, attr.isOnlyPercent() ? attr.getBase() : 0);
         }
     }
 
@@ -80,9 +78,9 @@ public class AttributeData {
 
         ItemTag itemTag = itemStream.getZaphkielData();
 
-        for (BaseAttribute attr : JustAttribute.getAttributeManager().getAttrProfile().values()) {
-            ordinary.put(attr.getIdentifier(), itemTag.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble());
-            potency.put(attr.getIdentifier(), itemTag.getDeepOrElse(attr.getPotencyNode(), new ItemTagData(0)).asDouble());
+        for (Attribute attr : Attribute.values()) {
+            ordinary.put(attr, itemTag.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble());
+            potency.put(attr, itemTag.getDeepOrElse(attr.getPotencyNode(), new ItemTagData(0)).asDouble());
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.special;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
+import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.AttributeData;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Utils;
@@ -24,34 +23,34 @@ public class CombatCapacity {
         int combat = 0;
         double damage = 0d;
 
-        for (Identifier ident : Identifier.values()) {
-            if (ident == Identifier.Critical_Chance || ident == Identifier.Critical_Damage) continue;
+        for (Attribute ident : Attribute.values()) {
+            if (ident == Attribute.Critical_Chance || ident == Attribute.Critical_Damage) continue;
 
-            double value = JustAttribute.getAttributeManager().getAttribute(ident)
+            double value = ident
                     .calculate(
                             data.getOrdinary().get(ident),
                             data.getPotency().get(ident)
                     );
-            if (ident == Identifier.Damage || ident == Identifier.Energy) {
+            if (ident == Attribute.Damage || ident == Attribute.Energy) {
                 damage += value;
             }
 
             combat += value * ConfigFile.combatCapability.get(ident);
         }
 
-        double cDamage = (JustAttribute.getAttributeManager().getAttribute(Identifier.Critical_Damage)
+        double cDamage = (Attribute.Critical_Damage
                 .calculate(
-                        data.getOrdinary().get(Identifier.Critical_Damage),
-                        data.getPotency().get(Identifier.Critical_Damage)
+                        data.getOrdinary().get(Attribute.Critical_Damage),
+                        data.getPotency().get(Attribute.Critical_Damage)
                 ) - 1) * damage;
-        double cChance = JustAttribute.getAttributeManager().getAttribute(Identifier.Critical_Chance)
+        double cChance = Attribute.Critical_Chance
                 .calculate(
-                        data.getOrdinary().get(Identifier.Critical_Chance),
-                        data.getPotency().get(Identifier.Critical_Chance)
+                        data.getOrdinary().get(Attribute.Critical_Chance),
+                        data.getPotency().get(Attribute.Critical_Chance)
                 ) * cDamage;
 
-        combat += cDamage * ConfigFile.combatCapability.get(Identifier.Critical_Damage);
-        combat += cChance * ConfigFile.combatCapability.get(Identifier.Critical_Chance);
+        combat += cDamage * ConfigFile.combatCapability.get(Attribute.Critical_Damage);
+        combat += cChance * ConfigFile.combatCapability.get(Attribute.Critical_Chance);
 
         return combat;
     }

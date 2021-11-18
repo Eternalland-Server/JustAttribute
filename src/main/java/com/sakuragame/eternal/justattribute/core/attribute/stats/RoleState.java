@@ -1,8 +1,7 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
-import org.bukkit.attribute.Attribute;
+import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import org.bukkit.entity.Player;
 
 public class RoleState {
@@ -12,6 +11,8 @@ public class RoleState {
     private double maxHealth;
     private double mana;
     private double maxMana;
+    private double restoreHP;
+    private double restoreMP;
 
     public RoleState(Player player) {
         this.player = player;
@@ -42,15 +43,13 @@ public class RoleState {
 
         this.setHealth(health == -1 ? maxHealth : health);
         this.setMana(mana == -1 ? maxMana : mana);
+        this.setRestoreHP((1 + Attribute.Restore_Health.calculate(role)) * role.getRestoreHP());
+        this.setRestoreMP((1 + Attribute.Restore_Mana.calculate(role)) * role.getRestoreMP());
     }
 
     public void restore() {
-        RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
-        double hp = JustAttribute.getAttributeManager().getAttribute(Identifier.Restore_Health).calculate(role);
-        double mp = JustAttribute.getAttributeManager().getAttribute(Identifier.Restore_Mana).calculate(role);
-
-        this.addHealth(hp);
-        this.addHealth(mp);
+        this.addHealth(getRestoreHP());
+        this.addHealth(getRestoreMP());
     }
 
     public void save() {
@@ -65,7 +64,7 @@ public class RoleState {
 
     public void setMaxHealth(double value) {
         this.maxHealth = value;
-        this.player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(value);
+        this.player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).setBaseValue(value);
     }
 
     public void addHealth(double value) {
@@ -107,5 +106,21 @@ public class RoleState {
 
     public double getMaxMana() {
         return maxMana;
+    }
+
+    public void setRestoreHP(double restoreHP) {
+        this.restoreHP = restoreHP;
+    }
+
+    public void setRestoreMP(double restoreMP) {
+        this.restoreMP = restoreMP;
+    }
+
+    public double getRestoreHP() {
+        return restoreHP;
+    }
+
+    public double getRestoreMP() {
+        return restoreMP;
     }
 }

@@ -1,7 +1,7 @@
 package com.sakuragame.eternal.justattribute.file.sub;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
+import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,7 +28,7 @@ public class ConfigFile {
     public static List<String> combat_format;
     public static String potency_format;
 
-    public static HashMap<Identifier, Integer> combatCapability;
+    public static HashMap<Attribute, Integer> combatCapability;
 
     public static class RoleBase {
         public static double health;
@@ -115,7 +115,7 @@ public class ConfigFile {
 
         for (String s : section.getKeys(false)) {
             int value = section.getInt(s);
-            combatCapability.put(Identifier.get(s), value);
+            combatCapability.put(Attribute.get(s), value);
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.sakuragame.eternal.justattribute.hook;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
+import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
 import org.bukkit.entity.Player;
@@ -15,11 +15,10 @@ public class DragonCoreSync {
 
         RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
 
-        JustAttribute.getAttributeManager().getAttrProfile().values().forEach(attr -> {
-            Identifier ident = attr.getIdentifier();
-            double value = role.getTotalValue(ident);
+        for (Attribute attr : Attribute.values()) {
+            double value = role.getTotalValue(attr);
             map.put(attr.getPlaceholder(), attr.formatting(value));
-        });
+        }
 
         PacketSender.sendSyncPlaceholder(player, map);
     }

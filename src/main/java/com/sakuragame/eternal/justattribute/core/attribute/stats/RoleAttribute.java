@@ -1,8 +1,8 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.JAUpdateAttributeEvent;
-import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
+import com.sakuragame.eternal.justattribute.core.AttributeManager;
+import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
@@ -51,7 +51,6 @@ public class RoleAttribute {
         this.updateStageGrowth();
         this.loadVanillaSlot();
         this.loadDragonSlot();
-        this.updateRoleAttribute();
     }
 
     public void updateStageGrowth() {
@@ -92,18 +91,43 @@ public class RoleAttribute {
     }
 
     public void updateRoleAttribute() {
-        HashMap<Identifier, Double> ordinary = new HashMap<>(base.getOrdinary());
-        HashMap<Identifier, Double> potency = new HashMap<>(base.getOrdinary());
+        if (AttributeManager.loading.contains(role.getUniqueId())) return;
 
-        ordinary.merge(Identifier.Health, health, Double::sum);
-        ordinary.merge(Identifier.Mana, mana, Double::sum);
-        ordinary.merge(Identifier.Damage, damage, Double::sum);
-        ordinary.merge(Identifier.Defence, defence, Double::sum);
+        HashMap<Attribute, Double> ordinary = new HashMap<>(base.getOrdinary());
+        HashMap<Attribute, Double> potency = new HashMap<>(base.getPotency());
 
+        System.out.println("Base Ordinary:");
+        for (Attribute attr : ordinary.keySet()) {
+            System.out.println(" " + attr.getId() + ": " + ordinary.get(attr));
+        }
+        System.out.println("Base Potency:");
+        for (Attribute attr : potency.keySet()) {
+            System.out.println(" " + attr.getId() + ": " + potency.get(attr));
+        }
+
+        System.out.println("Realm Health: " + health);
+        System.out.println("Realm Mana: " + mana);
+        System.out.println("Realm Damage: " + damage);
+        System.out.println("Realm Defence: " + defence);
+        System.out.println("Realm restoreHP：" + restoreHP);
+        System.out.println("Realm restoreMP: " + restoreMP);
+
+        ordinary.merge(Attribute.Health, health, Double::sum);
+        ordinary.merge(Attribute.Mana, mana, Double::sum);
+        ordinary.merge(Attribute.Damage, damage, Double::sum);
+        ordinary.merge(Attribute.Defence, defence, Double::sum);
+
+        System.out.println("Source: ");
         source.keySet().forEach(s -> {
             AttributeData data = source.get(s);
-            data.getOrdinary().forEach((key, value) -> ordinary.merge(key, value, Double::sum));
-            data.getPotency().forEach((key, value) -> potency.merge(key, value, Double::sum));
+            data.getOrdinary().forEach((key, value) -> {
+                ordinary.merge(key, value, Double::sum);
+                System.out.println("Ordinary " + key.getId() + ": " + value);
+            });
+            data.getPotency().forEach((key, value) -> {
+                potency.merge(key, value, Double::sum);
+                System.out.println("Potency " + key.getId() + ": " + value);
+            });
         });
 
         this.totalAttribute = new AttributeData(ordinary, potency);
@@ -149,8 +173,8 @@ public class RoleAttribute {
         return (Player) role;
     }
 
-    public HashMap<Identifier, Double> getOrdinaryAttributes() {
-        HashMap<Identifier, Double> ordinary = new HashMap<>(base.getOrdinary());
+    public HashMap<Attribute, Double> getOrdinaryAttributes() {
+        HashMap<Attribute, Double> ordinary = new HashMap<>(base.getOrdinary());
         source.keySet().forEach(s -> {
             AttributeData data = source.get(s);
             data.getOrdinary().forEach((key, value) -> ordinary.merge(key, value, Double::sum));
@@ -159,8 +183,8 @@ public class RoleAttribute {
         return ordinary;
     }
 
-    public HashMap<Identifier, Double> getPotencyAttributes() {
-        HashMap<Identifier, Double> potency = new HashMap<>(base.getOrdinary());
+    public HashMap<Attribute, Double> getPotencyAttributes() {
+        HashMap<Attribute, Double> potency = new HashMap<>(base.getOrdinary());
         source.keySet().forEach(s -> {
             AttributeData data = source.get(s);
             data.getPotency().forEach((key, value) -> potency.merge(key, value, Double::sum));
@@ -169,31 +193,31 @@ public class RoleAttribute {
         return potency;
     }
 
-    public double getTotalValue(Identifier ident) {
-        return JustAttribute.getAttributeManager().getAttribute(ident).calculate(this);
+    public double getTotalValue(Attribute ident) {
+        return ident.calculate(this);
     }
 
     public double getTotalHealth() {
-        return getTotalValue(Identifier.Health) + getTotalValue(Identifier.Stamina);
+        return getTotalValue(Attribute.Health) + getTotalValue(Attribute.Stamina);
     }
 
     public double getTotalMana() {
-        return getTotalValue(Identifier.Mana) + getTotalValue(Identifier.Wisdom);
+        return getTotalValue(Attribute.Mana) + getTotalValue(Attribute.Wisdom);
     }
 
     public double getTotalDamage() {
-        return getTotalValue(Identifier.Damage) + getTotalValue(Identifier.Energy);
+        return getTotalValue(Attribute.Damage) + getTotalValue(Attribute.Energy);
     }
 
     public double getTotalDefence() {
-        return getTotalValue(Identifier.Defence) + getTotalValue(Identifier.Technique);
+        return getTotalValue(Attribute.Defence) + getTotalValue(Attribute.Technique);
     }
 
-    public double getOrdinaryTotalValue(Identifier ident) {
+    public double getOrdinaryTotalValue(Attribute ident) {
         return totalAttribute.getOrdinary().get(ident);
     }
 
-    public double getPotencyTotalValue(Identifier ident) {
+    public double getPotencyTotalValue(Attribute ident) {
         return totalAttribute.getPotency().get(ident);
     }
 }
