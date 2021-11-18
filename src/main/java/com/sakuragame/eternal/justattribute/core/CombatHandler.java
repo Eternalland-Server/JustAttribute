@@ -14,12 +14,12 @@ public class CombatHandler {
 
     public static JARoleAttackEvent calculate(RoleAttribute attacker, RoleAttribute sufferer) {
         boolean critical = false;
-        double damage = attacker.getTotalDamage();
+        double damage = getValue(attacker, Identifier.Damage);
         double dp = getValue(attacker, Identifier.Defence_Penetration);
         double cc = getValue(attacker, Identifier.Critical_Chance);
         double cd = getValue(attacker, Identifier.Critical_Damage);
 
-        double defence = sufferer.getTotalDefence();
+        double defence = getValue(sufferer, Identifier.Defence);
         double di = getValue(sufferer, Identifier.Damage_Immune);
 
         double lastDamage = damage - (Math.max(defence - dp, 0));
@@ -57,7 +57,12 @@ public class CombatHandler {
     }
 
     private static double getValue(RoleAttribute role, Identifier ident) {
-        if (role == null) return 0d;
+        if (!(role.getRole() instanceof Player)) return 0d;
+
+        if (ident == Identifier.Damage) return role.getTotalDamage();
+
+        if (ident == Identifier.Defence) return role.getTotalDefence();
+
         return JustAttribute.getAttributeManager().getAttribute(ident).calculate(role);
     }
 }

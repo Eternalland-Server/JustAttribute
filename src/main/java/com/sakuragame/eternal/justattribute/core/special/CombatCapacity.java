@@ -4,6 +4,7 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.AttributeData;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.sakuragame.eternal.justattribute.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ public class CombatCapacity {
 
     public static List<String> format(int combat) {
         List<String> display = new ArrayList<>();
-        ConfigFile.combat_format.forEach(s -> display.add(s.replace("<combat>", String.valueOf(combat))));
+        ConfigFile.combat_format.forEach(s -> display.add(s.replace("<combat>", Utils.getSource(combat))));
 
         return display;
     }

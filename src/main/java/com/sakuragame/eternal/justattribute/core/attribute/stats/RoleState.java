@@ -8,19 +8,21 @@ import org.bukkit.entity.Player;
 public class RoleState {
 
     private final Player player;
+    private double health;
+    private double maxHealth;
     private double mana;
     private double maxMana;
 
     public RoleState(Player player) {
         this.player = player;
-        this.initRole();
+        this.health = -1;
+        this.mana = -1;
     }
 
     public RoleState(Player player, double health, double mana) {
         this.player = player;
-        this.setHealth(health);
-        this.setMana(mana);
-        this.update();
+        this.health = health;
+        this.mana = mana;
     }
 
     public void update() {
@@ -37,6 +39,9 @@ public class RoleState {
 
         this.setMaxHealth(maxHealth);
         this.setMaxHealth(maxMana);
+
+        this.setHealth(health == -1 ? maxHealth : health);
+        this.setMana(mana == -1 ? maxMana : mana);
     }
 
     public void restore() {
@@ -48,40 +53,33 @@ public class RoleState {
         this.addHealth(mp);
     }
 
-    private void initRole() {
-        RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
-
-        double maxHealth = role.getTotalHealth();
-        double maxMana = role.getTotalMana();
-
-        this.setMaxHealth(maxHealth);
-        this.setMaxHealth(maxMana);
-        this.setHealth(maxHealth);
-        this.setMana(maxMana);
-    }
-
     public void save() {
         JustAttribute.getStorageManager().updatePlayerData(player, getHealth(), getMana());
     }
 
     public void setHealth(double value) {
-        this.player.setHealth(Math.min(value, getMaxHealth()));
+        value = Math.min(value, getMaxHealth());
+        this.health = value;
+        this.player.setHealth(value);
     }
 
     public void setMaxHealth(double value) {
+        this.maxHealth = value;
         this.player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(value);
     }
 
     public void addHealth(double value) {
-        this.player.setHealth(Math.min(value + getHealth(), getMaxHealth()));
+        value = Math.min(value + getHealth(), getMaxHealth());
+        this.health = value;
+        this.player.setHealth(value);
     }
 
     public double getHealth() {
-        return player.getHealth();
+        return this.health;
     }
 
     public double getMaxHealth() {
-        return player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+        return this.maxHealth;
     }
 
     public void setMana(double value) {

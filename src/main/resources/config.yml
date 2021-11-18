@@ -7,14 +7,13 @@ base:
     auto: '自动绑定'
     use: '使用后绑定'
 format:
-  attribute: ' <symbol> &b<identifier>: &f<value>'
+  attribute: '   <symbol> &b<identifier>: &f<value>'
   bound: '&a已绑定: &7<owner>'
   unbound: '&a<desc>'
-  realm: '&f境界要求: &7<name>(<realm>)'
   classify: '&f装备分类: &7<classify>'
   quality: '&f<name> &7(<desc>&7)'
   combat:
-    - '&7装备评分'
+    - '  &7装备评分'
     - '<combat>'
   potency: '<symbol> <desc>'
 combat-capability:

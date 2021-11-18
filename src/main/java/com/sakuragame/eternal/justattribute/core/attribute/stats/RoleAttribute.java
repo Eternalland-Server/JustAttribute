@@ -9,6 +9,8 @@ import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import lombok.Getter;
+import net.sakuragame.eternal.dragoncore.api.SlotAPI;
+import net.sakuragame.eternal.dragoncore.config.FileManager;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -44,19 +46,16 @@ public class RoleAttribute {
     private void initRole() {
         if (!(role instanceof Player)) return;
 
-        this.updateStageGrowth();
         this.base.initBaseAttribute();
-        this.updateVanillaSlot(VanillaSlot.Helmet);
-        this.updateVanillaSlot(VanillaSlot.ChestPlate);
-        this.updateVanillaSlot(VanillaSlot.Leggings);
-        this.updateVanillaSlot(VanillaSlot.Boots);
-        this.updateVanillaSlot(VanillaSlot.OffHand);
-        this.updateVanillaSlot(VanillaSlot.MainHand);
+
+        this.updateStageGrowth();
+        this.loadVanillaSlot();
+        this.loadDragonSlot();
         this.updateRoleAttribute();
     }
 
     public void updateStageGrowth() {
-        Player player = (Player) role;
+        Player player = getPlayer();
         int stage = JustLevelAPI.getTotalStage(player);
 
         this.health = ConfigFile.RoleBase.health + ConfigFile.RolePromote.health * stage;
@@ -65,6 +64,31 @@ public class RoleAttribute {
         this.defence = ConfigFile.RoleBase.defence + ConfigFile.RolePromote.defence * stage;
         this.restoreHP = ConfigFile.RoleBase.restoreHP + ConfigFile.RolePromote.restoreHP * stage;
         this.restoreMP = ConfigFile.RoleBase.restoreMP + ConfigFile.RolePromote.restoreMP * stage;
+    }
+
+    private void loadVanillaSlot() {
+        this.updateVanillaSlot(VanillaSlot.Helmet);
+        this.updateVanillaSlot(VanillaSlot.ChestPlate);
+        this.updateVanillaSlot(VanillaSlot.Leggings);
+        this.updateVanillaSlot(VanillaSlot.Boots);
+        this.updateVanillaSlot(VanillaSlot.OffHand);
+        this.updateVanillaSlot(VanillaSlot.MainHand);
+    }
+
+    private void loadDragonSlot() {
+        Player player = getPlayer();
+
+        for (String key : ConfigFile.slotSetting.keySet()) {
+            if (!FileManager.getSlotSettings().containsKey(key)) continue;
+
+            int id = ConfigFile.slotSetting.get(key);
+            EquipClassify classify = EquipClassify.getType(id);
+            if (classify == null) continue;
+
+            ItemStack item = SlotAPI.getCacheSlotItem(player, key);
+
+            updateCustomSlot(key, classify, item);
+        }
     }
 
     public void updateRoleAttribute() {
@@ -85,16 +109,26 @@ public class RoleAttribute {
         this.totalAttribute = new AttributeData(ordinary, potency);
         this.combat = CombatCapacity.get(totalAttribute);
 
-        JAUpdateAttributeEvent event = new JAUpdateAttributeEvent((Player) role, this);
+        JAUpdateAttributeEvent event = new JAUpdateAttributeEvent(getPlayer(), this);
         event.call();
     }
 
     public void updateVanillaSlot(VanillaSlot slot) {
-        if (!(role instanceof Player)) return;
-        Player player = (Player) role;
+        Player player = getPlayer();
 
         ItemStack item = (slot == VanillaSlot.MainHand) ? player.getInventory().getItemInMainHand() : player.getInventory().getItem(slot.getIndex());
         updateSlot(slot.getIdent(), slot.getType(), item);
+    }
+
+    public void updateMainHandSlot(int slot) {
+        Player player = getPlayer();
+
+        ItemStack item = player.getInventory().getItem(slot);
+        if (MegumiUtil.isEmpty(item)) item = new ItemStack(Material.AIR);
+
+        this.source.put(VanillaSlot.MainHand.getIdent(), new AttributeData(player, item, VanillaSlot.MainHand.getType()));
+
+        this.updateRoleAttribute();
     }
 
     public void updateCustomSlot(String ident, EquipClassify type, ItemStack item) {
@@ -102,15 +136,17 @@ public class RoleAttribute {
     }
 
     private void updateSlot(String ident, EquipClassify type, ItemStack item) {
-        if (!(role instanceof Player)) return;
-        Player player = (Player) role;
+        Player player = getPlayer();
 
         if (MegumiUtil.isEmpty(item)) item = new ItemStack(Material.AIR);
-        this.source.put(ident, new AttributeData(player, item, type));
-        this.updateRoleAttribute();
 
-        JAUpdateAttributeEvent updateEvent = new JAUpdateAttributeEvent(player, this);
-        updateEvent.call();
+        this.source.put(ident, new AttributeData(player, item, type));
+
+        this.updateRoleAttribute();
+    }
+
+    private Player getPlayer() {
+        return (Player) role;
     }
 
     public HashMap<Identifier, Double> getOrdinaryAttributes() {

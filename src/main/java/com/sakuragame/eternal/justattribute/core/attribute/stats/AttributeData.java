@@ -4,7 +4,6 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Identifier;
 import com.sakuragame.eternal.justattribute.core.attribute.BaseAttribute;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
-import com.sakuragame.eternal.justattribute.core.special.RealmLimit;
 import com.sakuragame.eternal.justattribute.core.special.SoulBound;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
@@ -69,9 +68,6 @@ public class AttributeData {
 
         int typeID = stream.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
         if (typeID != type.getId()) return;
-
-        int realm = stream.getDeepOrElse(RealmLimit.NBT_NODE, new ItemTagData(-1)).asInt();
-        if (realm == -1 || JustLevelAPI.getData(player).getRealm() < realm) return;
 
         ItemTagData bound = stream.getDeep(SoulBound.NBT_UUID_NODE);
         if (bound != null && !bound.asString().equals(player.getUniqueId().toString())) return;

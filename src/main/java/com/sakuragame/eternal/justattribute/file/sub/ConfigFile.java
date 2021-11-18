@@ -63,6 +63,7 @@ public class ConfigFile {
         attribute_format = getString("format.attribute");
         bound_format = getString("format.bound");
         unbound_format = getString("format.unbound");
+        realm_format = getString("format.realm");
         classify_format = getString("format.classify");
         quality_format = getString("format.quality");
         combat_format = getStringList("format.combat");

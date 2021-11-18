@@ -3,7 +3,6 @@ package com.sakuragame.eternal.justattribute.listener;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
-import com.sakuragame.eternal.justattribute.core.special.RealmLimit;
 import com.sakuragame.eternal.justattribute.core.special.SoulBound;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
@@ -13,7 +12,6 @@ import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotHandleEvent;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotUpdateEvent;
-import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,11 +52,6 @@ public class SlotListener implements Listener {
         if (slot.getType().getId() != itemType) {
             e.setCancelled(true);
             return;
-        }
-
-        int realmLimit = itemTag.getDeepOrElse(RealmLimit.NBT_NODE, new ItemTagData(-1)).asInt();
-        if (realmLimit != -1 && JustLevelAPI.getRealm(player) < realmLimit) {
-            e.setCancelled(true);
         }
 
         String owner = itemTag.getDeepOrElse(SoulBound.NBT_UUID_NODE, new ItemTagData("")).asString();
@@ -113,12 +106,6 @@ public class SlotListener implements Listener {
 
         int itemType = itemTag.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
         if (id != itemType) {
-            e.setCancelled(true);
-            return;
-        }
-
-        int realmLimit = itemTag.getDeepOrElse(RealmLimit.NBT_NODE, new ItemTagData(-1)).asInt();
-        if (realmLimit != -1 && JustLevelAPI.getRealm(player) < realmLimit) {
             e.setCancelled(true);
             return;
         }

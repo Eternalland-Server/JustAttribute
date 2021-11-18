@@ -5,7 +5,6 @@ import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.file.FileManager;
 import com.sakuragame.eternal.justattribute.listener.PlayerListener;
-import com.sakuragame.eternal.justattribute.listener.RoleListener;
 import com.sakuragame.eternal.justattribute.listener.SlotListener;
 import com.sakuragame.eternal.justattribute.listener.ZaphkielListener;
 import com.sakuragame.eternal.justattribute.listener.combat.CombatListener;
@@ -40,7 +39,6 @@ public class JustAttribute extends JavaPlugin {
 
         registerListener(new ZaphkielListener());
         registerListener(new PlayerListener());
-        registerListener(new RoleListener());
         registerListener(new SlotListener());
         registerListener(new CombatListener());
         registerListener(new VampireListener());

@@ -21,4 +21,19 @@ public class Utils {
                 name.contains("LEGGINGS") ||
                 name.contains("BOOTS");
     }
+
+    public static String getSource(int i) {
+        String s = String.valueOf(i);
+        return s
+                .replace("0", "❿")
+                .replace("1", "❶")
+                .replace("2", "❷")
+                .replace("3", "❸")
+                .replace("4", "❹")
+                .replace("5", "❺")
+                .replace("6", "❻")
+                .replace("7", "❼")
+                .replace("8", "❽")
+                .replace("9", "❾");
+    }
 }

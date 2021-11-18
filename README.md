@@ -75,7 +75,6 @@ example_item:
       soulbound:
         action: 0
       classify: 0
-      realm: 10
       ordinary:
         energy: 999
         stamina: 999

@@ -7,6 +7,7 @@ import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,11 +40,13 @@ public class RoleManager {
     public void loadStateData(Player player) {
         if (player == null) return;
 
-        RoleState state = JustAttribute.getStorageManager().getPlayerDate(player);
-        playerState.put(player.getUniqueId(), state);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            RoleState state = JustAttribute.getStorageManager().getPlayerDate(player);
+            playerState.put(player.getUniqueId(), state);
 
-        JARoleStateInitEvent event = new JARoleStateInitEvent(player, state);
-        event.call();
+            JARoleStateInitEvent event = new JARoleStateInitEvent(player, state);
+            event.call();
+        });
     }
 
     public void removeAttributeData(UUID uuid) {
@@ -63,14 +66,29 @@ public class RoleManager {
     }
 
     public void updateVanillaSlot(Player player, VanillaSlot slot) {
-        if (!playerAttribute.containsKey(player.getUniqueId())) return;
+        UUID uuid = player.getUniqueId();
 
-        playerAttribute.get(player.getUniqueId()).updateVanillaSlot(slot);
+        RoleAttribute attribute = playerAttribute.get(uuid);
+        if (attribute == null) return;
+
+        attribute.updateVanillaSlot(slot);
+    }
+
+    public void updateMainHandSlot(Player player, int slot) {
+        UUID uuid = player.getUniqueId();
+
+        RoleAttribute attribute = playerAttribute.get(uuid);
+        if (attribute == null) return;
+
+        attribute.updateMainHandSlot(slot);
     }
 
     public void updateCustomSlot(Player player, String ident, EquipClassify type, ItemStack item) {
-        if (!playerAttribute.containsKey(player.getUniqueId())) return;
+        UUID uuid = player.getUniqueId();
 
-        playerAttribute.get(player.getUniqueId()).updateCustomSlot(ident, type, item);
+        RoleAttribute attribute = playerAttribute.get(uuid);
+        if (attribute == null) return;
+
+        attribute.updateCustomSlot(ident, type, item);
     }
 }

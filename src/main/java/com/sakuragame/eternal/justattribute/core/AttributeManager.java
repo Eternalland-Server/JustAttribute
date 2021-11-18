@@ -7,21 +7,21 @@ import com.sakuragame.eternal.justattribute.core.attribute.attribute.*;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 
 public class AttributeManager {
 
     private final JustAttribute plugin;
 
-    @Getter private final HashMap<Identifier, BaseAttribute> attrProfile;
+    @Getter private final LinkedHashMap<Identifier, BaseAttribute> attrProfile;
 
     public final static String ORDINARY_DISPLAY_NODE = "display.ordinary";
     public final static String POTENCY_DISPLAY_NODE = "display.potency";
 
     public AttributeManager(JustAttribute plugin) {
         this.plugin = plugin;
-        this.attrProfile = new HashMap<>();
+        this.attrProfile = new LinkedHashMap<>();
         this.registerAttr(new Energy());
         this.registerAttr(new Stamina());
         this.registerAttr(new Wisdom());

@@ -6,6 +6,7 @@ import com.sakuragame.eternal.justattribute.core.attribute.BaseAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.AttributeData;
 import com.sakuragame.eternal.justattribute.core.special.*;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
@@ -14,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ZaphkielListener implements Listener {
@@ -24,11 +26,12 @@ public class ZaphkielListener implements Listener {
     public void onAttribute(ItemReleaseEvent.Display e) {
         ItemTag tags = e.getItemStream().getZaphkielData();
 
-        List<String> ordinaryDisplay = new ArrayList<>();
-        List<String> potencyDisplay = new ArrayList<>();
+        LinkedList<String> ordinaryDisplay = new LinkedList<>();
+        LinkedList<String> potencyDisplay = new LinkedList<>();
 
         PotencyGrade grade = PotencyGrade.getGrade(tags.getDeepOrElse(PotencyGrade.NBT_TAG, new ItemTagData(-1)).asInt());
         potencyDisplay.add(grade == null ? PotencyGrade.NONE.formatting() : grade.formatting());
+        potencyDisplay.add("");
 
         for (BaseAttribute attr : JustAttribute.getAttributeManager().getAttrProfile().values()) {
             ItemTagData ordinary = tags.getDeep(attr.getOrdinaryNode());
@@ -52,7 +55,7 @@ public class ZaphkielListener implements Listener {
     }
 
     @EventHandler
-    public void onSoulBound(ItemReleaseEvent.Display e) {
+    public void onSoulBound(ItemBuildEvent.Pre e) {
         Player player = e.getPlayer();
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 
@@ -64,12 +67,10 @@ public class ZaphkielListener implements Listener {
         SoulBound.Action action = SoulBound.Action.getAction(id);
         if (action == null) return;
 
-        if (player != null && id == 0) {
+        if (player != null && action == SoulBound.Action.AUTO) {
             itemTag.removeDeep(SoulBound.NBT_ACTION_NODE);
             itemTag.putDeep(SoulBound.NBT_UUID_NODE, player.getUniqueId().toString());
             itemTag.putDeep(SoulBound.NBT_NAME_NODE, player.getName());
-
-            e.addLore(SoulBound.DISPLAY_NODE, SoulBound.format(player.getName()));
             return;
         }
 
@@ -77,15 +78,18 @@ public class ZaphkielListener implements Listener {
     }
 
     @EventHandler
-    public void onRealm(ItemReleaseEvent.Display e) {
+    public void onSoulBound(ItemReleaseEvent.Display e) {
+        Player player = e.getPlayer();
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 
-        ItemTagData data = itemTag.getDeep(RealmLimit.NBT_NODE);
+        ItemTagData data = itemTag.getDeep(SoulBound.NBT_NAME_NODE);
 
         if (data == null) return;
-        int limit = data.asInt();
+        String name = data.asString();
 
-        e.addLore(RealmLimit.DISPLAY_NODE, RealmLimit.format(limit));
+        if (player == null) return;
+
+        e.addLore(SoulBound.DISPLAY_NODE, SoulBound.format(player.getName()));
     }
 
     @EventHandler
