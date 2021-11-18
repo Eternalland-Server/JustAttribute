@@ -39,8 +39,16 @@ public abstract class BaseAttribute {
         return ordinaryValue * (1 + potencyValue);
     }
 
+    public String getPlaceholder() {
+        return "attribute_" + identifier.getId();
+    }
+
     public String format(double value) {
         return format(value, onlyPercent);
+    }
+
+    public String formatting(double value) {
+        return Utils.format(value, onlyPercent);
     }
 
     public String format(double value, boolean isPercent) {

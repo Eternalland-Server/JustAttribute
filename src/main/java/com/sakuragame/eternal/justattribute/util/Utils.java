@@ -6,11 +6,17 @@ import java.text.DecimalFormat;
 
 public class Utils {
 
-    private final static DecimalFormat a = new DecimalFormat("#.#");
+    private final static DecimalFormat a = new DecimalFormat("0.0");
 
     public static String formatValue(double value, boolean isPercent) {
         value = isPercent ? value * 100 : value;
-        String s = value > 0 ? "+" + a.format(value) : "-" + a.format(value);
+        String s = value >= 0 ? "+" + a.format(value) : "-" + a.format(value);
+        return isPercent ? s + "%" : s;
+    }
+
+    public static String format(double value, boolean isPercent) {
+        value = isPercent ? value * 100 : value;
+        String s = a.format(value);
         return isPercent ? s + "%" : s;
     }
 
