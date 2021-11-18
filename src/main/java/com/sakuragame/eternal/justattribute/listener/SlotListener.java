@@ -33,38 +33,42 @@ public class SlotListener implements Listener {
         if (!(e.getWhoClicked() instanceof Player)) return;
 
         Player player = (Player) e.getWhoClicked();
-        Inventory gui = e.getClickedInventory();
+        Inventory gui = e.getInventory();
 
         if (!(gui.getType() == InventoryType.PLAYER || gui.getType() == InventoryType.CRAFTING)) return;
 
         int index = e.getRawSlot();
 
-        VanillaSlot slot = VanillaSlot.getSlot(index);
+        if (index == -1) return;
+
+        VanillaSlot slot = player.getInventory().getHeldItemSlot() == e.getSlot() ? VanillaSlot.MainHand : VanillaSlot.getSlot(index);
         if (slot == null) return;
 
         ItemStack handItem = e.getCursor();
+        if (!MegumiUtil.isEmpty(handItem) && slot != VanillaSlot.MainHand) {
+            ItemStream itemStream = ZaphkielAPI.INSTANCE.read(handItem);
+            if (itemStream.isVanilla()) return;
+            ItemTag itemTag = itemStream.getZaphkielData();
 
-        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(handItem);
-        if (itemStream.isVanilla()) return;
-        ItemTag itemTag = itemStream.getZaphkielData();
+            int itemType = itemTag.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
+            if (slot.getType().getId() != itemType) {
+                e.setCancelled(true);
+                return;
+            }
 
-        int itemType = itemTag.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
-        if (slot.getType().getId() != itemType) {
-            e.setCancelled(true);
-            return;
-        }
-
-        String owner = itemTag.getDeepOrElse(SoulBound.NBT_UUID_NODE, new ItemTagData("")).asString();
-        if (!owner.isEmpty() && !player.getUniqueId().toString().equals(owner)) {
-            e.setCancelled(true);
+            String owner = itemTag.getDeepOrElse(SoulBound.NBT_UUID_NODE, new ItemTagData("")).asString();
+            if (!owner.isEmpty() && !player.getUniqueId().toString().equals(owner)) {
+                e.setCancelled(true);
+            }
         }
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             ItemStack item = player.getInventory().getItem(index);
-            if (MegumiUtil.isEmpty(item)) return;
 
-            if (SoulBound.isUseBind(item)) {
-                player.getInventory().setItem(index, SoulBound.binding(player, item));
+            if (!MegumiUtil.isEmpty(item) && slot != VanillaSlot.MainHand) {
+                if (SoulBound.isUseBind(item)) {
+                    player.getInventory().setItem(index, SoulBound.binding(player, item));
+                }
             }
 
             JustAttribute.getRoleManager().updateVanillaSlot(player, slot);
