@@ -24,6 +24,8 @@ public class JustAttribute extends JavaPlugin {
     private RoleManager roleManager;
     private StorageManager storageManager;
 
+    public final static boolean debug = false;
+
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();

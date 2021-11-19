@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.listener;
 
+import com.mengcraft.playersql.event.PlayerDataProcessedEvent;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.JARoleAttributeInitEvent;
 import com.sakuragame.eternal.justattribute.api.event.JARoleStateInitEvent;
@@ -36,7 +37,6 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
 
         RoleInitSync roleInitSync = new RoleInitSync();
-        roleInitSync.setInventory(true);
         sync.put(player.getUniqueId(), roleInitSync);
 
         AttributeManager.loading.add(player.getUniqueId());
@@ -51,7 +51,6 @@ public class PlayerListener implements Listener {
         if (initSync == null) return;
 
         initSync.setJustLevel(true);
-
         if (initSync.isFinished()) {
             sync.remove(uuid);
             JustAttribute.getRoleManager().loadAttributeData(player);
@@ -67,7 +66,21 @@ public class PlayerListener implements Listener {
         if (initSync == null) return;
 
         initSync.setDragonSlot(true);
+        if (initSync.isFinished()) {
+            sync.remove(uuid);
+            JustAttribute.getRoleManager().loadAttributeData(player);
+        }
+    }
 
+    @EventHandler
+    public void onDataProcessed(PlayerDataProcessedEvent e) {
+        Player player = e.getPlayer();
+        UUID uuid = player.getUniqueId();
+
+        RoleInitSync initSync = sync.get(uuid);
+        if (initSync == null) return;
+
+        initSync.setInventory(true);
         if (initSync.isFinished()) {
             sync.remove(uuid);
             JustAttribute.getRoleManager().loadAttributeData(player);

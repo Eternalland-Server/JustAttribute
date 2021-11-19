@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
+import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.JAUpdateAttributeEvent;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
@@ -96,37 +97,45 @@ public class RoleAttribute {
         HashMap<Attribute, Double> ordinary = new HashMap<>(base.getOrdinary());
         HashMap<Attribute, Double> potency = new HashMap<>(base.getPotency());
 
-        System.out.println("Base Ordinary:");
-        for (Attribute attr : ordinary.keySet()) {
-            System.out.println(" " + attr.getId() + ": " + ordinary.get(attr));
-        }
-        System.out.println("Base Potency:");
-        for (Attribute attr : potency.keySet()) {
-            System.out.println(" " + attr.getId() + ": " + potency.get(attr));
-        }
+        if (JustAttribute.debug) {
+            System.out.println("Base Ordinary:");
+            for (Attribute attr : ordinary.keySet()) {
+                System.out.println(" " + attr.getId() + ": " + ordinary.get(attr));
+            }
+            System.out.println("Base Potency:");
+            for (Attribute attr : potency.keySet()) {
+                System.out.println(" " + attr.getId() + ": " + potency.get(attr));
+            }
 
-        System.out.println("Realm Health: " + health);
-        System.out.println("Realm Mana: " + mana);
-        System.out.println("Realm Damage: " + damage);
-        System.out.println("Realm Defence: " + defence);
-        System.out.println("Realm restoreHP：" + restoreHP);
-        System.out.println("Realm restoreMP: " + restoreMP);
+            System.out.println("Realm Health: " + health);
+            System.out.println("Realm Mana: " + mana);
+            System.out.println("Realm Damage: " + damage);
+            System.out.println("Realm Defence: " + defence);
+            System.out.println("Realm restoreHP：" + restoreHP);
+            System.out.println("Realm restoreMP: " + restoreMP);
+        }
 
         ordinary.merge(Attribute.Health, health, Double::sum);
         ordinary.merge(Attribute.Mana, mana, Double::sum);
         ordinary.merge(Attribute.Damage, damage, Double::sum);
         ordinary.merge(Attribute.Defence, defence, Double::sum);
 
-        System.out.println("Source: ");
+        if (JustAttribute.debug) {
+            System.out.println("Source: ");
+        }
         source.keySet().forEach(s -> {
             AttributeData data = source.get(s);
             data.getOrdinary().forEach((key, value) -> {
                 ordinary.merge(key, value, Double::sum);
-                System.out.println("Ordinary " + key.getId() + ": " + value);
+                if (JustAttribute.debug) {
+                    System.out.println("Ordinary " + key.getId() + ": " + value);
+                }
             });
             data.getPotency().forEach((key, value) -> {
                 potency.merge(key, value, Double::sum);
-                System.out.println("Potency " + key.getId() + ": " + value);
+                if (JustAttribute.debug) {
+                    System.out.println("Potency " + key.getId() + ": " + value);
+                }
             });
         });
 
