@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.core.attribute.stats;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.SoulBound;
+import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
@@ -68,7 +69,15 @@ public class AttributeData {
         if (typeID != type.getId()) return;
 
         ItemTagData bound = stream.getDeep(SoulBound.NBT_UUID_NODE);
-        if (bound != null && !bound.asString().equals(player.getUniqueId().toString())) return;
+        if (bound != null && !bound.asString().equals(player.getUniqueId().toString())) {
+            if (type == EquipClassify.MainHand) {
+                player.sendMessage(" &e&l[&4&l!&e&l]&c你不是这件装备的所有者");
+            }
+            return;
+        }
+
+        ItemTagData boundType = stream.getDeep(SoulBound.NBT_ACTION_NODE);
+        if (boundType != null) return;
 
         read(itemStream);
     }

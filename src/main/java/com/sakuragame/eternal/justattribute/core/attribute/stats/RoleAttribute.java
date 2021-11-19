@@ -173,7 +173,7 @@ public class RoleAttribute {
 
         if (MegumiUtil.isEmpty(item)) item = new ItemStack(Material.AIR);
 
-        this.source.put(ident, new AttributeData(player, item, type));
+        this.source.put(ident, new AttributeData(player, item.clone(), type));
 
         this.updateRoleAttribute();
     }

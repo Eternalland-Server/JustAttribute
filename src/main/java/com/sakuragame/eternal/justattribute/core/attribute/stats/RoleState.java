@@ -34,12 +34,18 @@ public class RoleState {
 
         double currentHP = player.getHealth();
 
+        System.out.println("max hp: " + maxHealth);
+        System.out.println("max mp: " + maxMana);
+        System.out.println("current hp: " + currentHP);
+        System.out.println("hp: " + health);
+        System.out.println("mp: " + mana);
+
         if (maxHealth < currentHP) {
             this.setHealth(maxHealth);
         }
 
         this.setMaxHealth(maxHealth);
-        this.setMaxHealth(maxMana);
+        this.setMaxMana(maxMana);
 
         this.setHealth(health == -1 ? maxHealth : health);
         this.setMana(mana == -1 ? maxMana : mana);

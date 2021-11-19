@@ -1,12 +1,13 @@
 name: JustAttribute
 main: com.sakuragame.eternal.justattribute.JustAttribute
 version: ${project.version}
-author: 'Megumi'
+author: 'justwei'
 api-version: '1.13'
 depend:
   - MegumiLib
-  - JustLevel
   - DataManager
+  - JustLevel
+  - JustMessage
   - PlayerSQL
   - Zaphkiel
   - DragonCore

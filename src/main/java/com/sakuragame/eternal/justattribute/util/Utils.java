@@ -1,13 +1,26 @@
 package com.sakuragame.eternal.justattribute.util;
 
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class Utils {
 
+    @Getter
+    @AllArgsConstructor
+    public static class NoticeHistory {
+        private String content;
+        private long time;
+    }
+
     private final static DecimalFormat a = new DecimalFormat("0.0");
+    private final static HashMap<UUID, NoticeHistory> history = new HashMap<>();
 
     public static String formatValue(double value, boolean isPercent) {
         value = isPercent ? value * 100 : value;
@@ -42,5 +55,18 @@ public class Utils {
                 .replace("7", "❼")
                 .replace("8", "❽")
                 .replace("9", "❾");
+    }
+
+    public static void sendActionTip(Player player, String screenID, String message) {
+        NoticeHistory record = history.get(player.getUniqueId());
+        if (record != null && record.getContent().equals(message)) {
+            long time = record.getTime();
+            if (System.currentTimeMillis() - time < 1000) {
+                return;
+            }
+        }
+
+        MessageAPI.sendActionTip(player, screenID, message);
+        history.put(player.getUniqueId(), new NoticeHistory(message, System.currentTimeMillis()));
     }
 }
