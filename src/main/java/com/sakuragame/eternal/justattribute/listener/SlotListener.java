@@ -152,6 +152,8 @@ public class SlotListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSwap(PlayerSwapHandItemsEvent e) {
+        if (e.isCancelled()) return;
+
         Player player = e.getPlayer();
         ItemStack item = e.getOffHandItem();
 

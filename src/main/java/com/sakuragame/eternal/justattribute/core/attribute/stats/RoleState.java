@@ -16,8 +16,8 @@ public class RoleState {
 
     public RoleState(Player player) {
         this.player = player;
-        this.health = -1;
-        this.mana = -1;
+        this.health = 0;
+        this.mana = 0;
     }
 
     public RoleState(Player player, double health, double mana) {
@@ -34,11 +34,13 @@ public class RoleState {
 
         double currentHP = player.getHealth();
 
-        System.out.println("max hp: " + maxHealth);
-        System.out.println("max mp: " + maxMana);
-        System.out.println("current hp: " + currentHP);
-        System.out.println("hp: " + health);
-        System.out.println("mp: " + mana);
+        if (JustAttribute.debug) {
+            System.out.println("max hp: " + maxHealth);
+            System.out.println("max mp: " + maxMana);
+            System.out.println("current hp: " + currentHP);
+            System.out.println("hp: " + health);
+            System.out.println("mp: " + mana);
+        }
 
         if (maxHealth < currentHP) {
             this.setHealth(maxHealth);
@@ -47,8 +49,8 @@ public class RoleState {
         this.setMaxHealth(maxHealth);
         this.setMaxMana(maxMana);
 
-        this.setHealth(health == -1 ? maxHealth : health);
-        this.setMana(mana == -1 ? maxMana : mana);
+        this.setHealth(health <= 0 ? maxHealth : health);
+        this.setMana(mana <= 0 ? maxMana : mana);
         this.setRestoreHP((1 + Attribute.Restore_Health.calculate(role)) * role.getRestoreHP());
         this.setRestoreMP((1 + Attribute.Restore_Mana.calculate(role)) * role.getRestoreMP());
     }
@@ -80,7 +82,7 @@ public class RoleState {
     }
 
     public double getHealth() {
-        return this.health;
+        return this.player.getHealth();
     }
 
     public double getMaxHealth() {

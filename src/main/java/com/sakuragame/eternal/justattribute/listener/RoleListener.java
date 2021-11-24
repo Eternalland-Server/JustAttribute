@@ -64,7 +64,7 @@ public class RoleListener implements Listener {
         role.updateRoleAttribute();
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler
     public void onSwapHand(PlayerSwapHandItemsEvent e) {
         e.setCancelled(true);
     }
