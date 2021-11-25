@@ -33,6 +33,8 @@ public class RoleManager {
         RoleAttribute attribute = new RoleAttribute(player);
         playerAttribute.put(player.getUniqueId(), attribute);
 
+        plugin.getLogger().info(" 初始化 " + player.getName() + " 属性成功！");
+
         JARoleAttributeInitEvent event = new JARoleAttributeInitEvent(player, attribute);
         event.call();
     }
@@ -44,17 +46,23 @@ public class RoleManager {
             RoleState state = JustAttribute.getStorageManager().getPlayerDate(player);
             playerState.put(player.getUniqueId(), state);
 
+            plugin.getLogger().info(" 初始化 " + player.getName() + " 角色成功！");
+
             JARoleStateInitEvent event = new JARoleStateInitEvent(player, state);
             event.call();
         });
     }
 
-    public void removeAttributeData(UUID uuid) {
-        this.playerAttribute.remove(uuid);
+    public void removeAttributeData(Player player) {
+        this.playerAttribute.remove(player.getUniqueId());
     }
 
-    public void removeStateData(UUID uuid) {
-        this.playerState.remove(uuid).save();
+    public void removeStateData(Player player) {
+        RoleState state = this.playerState.remove(player.getUniqueId());
+        if (state != null) {
+            state.save();
+            plugin.getLogger().info(" 保存 " + player.getName() + " 角色数据成功！");
+        }
     }
 
     public RoleAttribute getPlayerAttribute(UUID uuid) {

@@ -2,6 +2,8 @@ package com.sakuragame.eternal.justattribute.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
+import net.sakuragame.eternal.justlevel.level.PlayerLevelData;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,7 +21,7 @@ public class Utils {
         private long time;
     }
 
-    private final static DecimalFormat a = new DecimalFormat("0");
+    public final static DecimalFormat a = new DecimalFormat("0");
     private final static HashMap<UUID, NoticeHistory> history = new HashMap<>();
 
     public static String formatValue(double value, boolean isPercent) {
@@ -68,5 +70,17 @@ public class Utils {
 
         MessageAPI.sendActionTip(player, screenID, message);
         history.put(player.getUniqueId(), new NoticeHistory(message, System.currentTimeMillis()));
+    }
+
+    public static double getDamagePromote(Player player) {
+        PlayerLevelData data = JustLevelAPI.getData(player);
+
+        return ((data.getStage() - 1) * 0.1 + (data.getRealm() - 1) * 0.7) * 0.5 + 1;
+    }
+
+    public static double getDefencePromote(Player player) {
+        PlayerLevelData data = JustLevelAPI.getData(player);
+
+        return ((data.getStage() - 1) * 0.1 + (data.getRealm() - 1) * 0.7) * 0.35 + 1;
     }
 }

@@ -1,7 +1,10 @@
 package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +25,20 @@ public class AttributeManager {
     }
 
     private void start() {
-        Bukkit.getScheduler().runTaskLater(JustAttribute.getInstance(), () -> Bukkit.getOnlinePlayers().forEach(player -> {
-            UUID uuid = player.getUniqueId();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (!player.isOnline()) continue;
 
-            JustAttribute.getRoleManager().getPlayerState(uuid).restore();
-        }), 20);
+                    UUID uuid = player.getUniqueId();
+                    RoleState state = JustAttribute.getRoleManager().getPlayerState(uuid);
+
+                    if (state == null) continue;
+
+                    state.restore();
+                }
+            }
+        }.runTaskTimer(plugin, 20, 20);
     }
 }

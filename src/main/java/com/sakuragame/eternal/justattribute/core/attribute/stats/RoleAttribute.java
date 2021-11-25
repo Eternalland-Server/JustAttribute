@@ -8,6 +8,7 @@ import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import lombok.Getter;
 import net.sakuragame.eternal.dragoncore.api.SlotAPI;
@@ -226,17 +227,25 @@ public class RoleAttribute {
     }
 
     public double getTotalDamage() {
-        PlayerLevelData data = JustLevelAPI.getData(getPlayer());
-        double damage = getTotalValue(Attribute.Damage) + getTotalValue(Attribute.Energy) * 0.5;
-
-        return damage * ((data.getStage() * 0.1) + data.getRealm()) * 0.5;
+        return getTotalValue(Attribute.Damage) + getTotalValue(Attribute.Energy) * 0.5;
     }
 
     public double getTotalDefence() {
-        PlayerLevelData data = JustLevelAPI.getData(getPlayer());
-        double defence = getTotalValue(Attribute.Defence) + getTotalValue(Attribute.Technique) * 0.5;
+        return getTotalValue(Attribute.Defence) + getTotalValue(Attribute.Technique) * 0.5;
+    }
 
-        return defence * ((data.getStage() * 0.1) + data.getRealm()) * 0.35;
+    public double getActualDamage() {
+        Player player = getPlayer();
+        double damage = getTotalDamage();
+
+        return damage * Utils.getDamagePromote(player);
+    }
+
+    public double getActualDefence() {
+        Player player = getPlayer();
+        double defence = getTotalDefence();
+
+        return defence * Utils.getDefencePromote(player);
     }
 
     public double getOrdinaryTotalValue(Attribute ident) {

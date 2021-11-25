@@ -79,8 +79,8 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        JustAttribute.getRoleManager().removeAttributeData(uuid);
-        JustAttribute.getRoleManager().removeStateData(uuid);
+        JustAttribute.getRoleManager().removeAttributeData(player);
+        JustAttribute.getRoleManager().removeStateData(player);
         sync.remove(uuid);
         AttributeManager.loading.remove(uuid);
     }
