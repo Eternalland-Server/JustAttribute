@@ -19,7 +19,7 @@ public class Utils {
         private long time;
     }
 
-    private final static DecimalFormat a = new DecimalFormat("0.0");
+    private final static DecimalFormat a = new DecimalFormat("0");
     private final static HashMap<UUID, NoticeHistory> history = new HashMap<>();
 
     public static String formatValue(double value, boolean isPercent) {

@@ -15,9 +15,25 @@ public class DragonCoreSync {
 
         RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
 
-        for (Attribute attr : Attribute.values()) {
-            double value = role.getTotalValue(attr);
-            map.put(attr.getPlaceholder(), attr.formatting(value));
+        for (Attribute ident : Attribute.values()) {
+            double value = role.getTotalValue(ident);
+            if (ident == Attribute.Damage) {
+                map.put(ident.getPlaceholder(), ident.format(role.getTotalDamage()));
+                continue;
+            }
+            if (ident == Attribute.Defence) {
+                map.put(ident.getPlaceholder(), ident.format(role.getTotalDefence()));
+                continue;
+            }
+            if (ident == Attribute.Health) {
+                map.put(ident.getPlaceholder(), ident.format(role.getTotalHealth()));
+                continue;
+            }
+            if (ident == Attribute.Mana) {
+                map.put(ident.getPlaceholder(), ident.format(role.getTotalMana()));
+                continue;
+            }
+            map.put(ident.getPlaceholder(), ident.formatting(value));
         }
 
         PacketSender.sendSyncPlaceholder(player, map);

@@ -13,6 +13,7 @@ import lombok.Getter;
 import net.sakuragame.eternal.dragoncore.api.SlotAPI;
 import net.sakuragame.eternal.dragoncore.config.FileManager;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
+import net.sakuragame.eternal.justlevel.level.PlayerLevelData;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -178,6 +179,16 @@ public class RoleAttribute {
         this.updateRoleAttribute();
     }
 
+    public void addAttributeSource(String key, ItemStack item) {
+        if (MegumiUtil.isEmpty(item)) item = new ItemStack(Material.AIR);
+
+        this.source.put(key, new AttributeData(item));
+    }
+
+    public void addAttributeSource(String key, AttributeData source) {
+        this.source.put(key, source);
+    }
+
     private Player getPlayer() {
         return (Player) role;
     }
@@ -207,19 +218,25 @@ public class RoleAttribute {
     }
 
     public double getTotalHealth() {
-        return getTotalValue(Attribute.Health) + getTotalValue(Attribute.Stamina);
+        return getTotalValue(Attribute.Health) + getTotalValue(Attribute.Stamina) * 0.5;
     }
 
     public double getTotalMana() {
-        return getTotalValue(Attribute.Mana) + getTotalValue(Attribute.Wisdom);
+        return getTotalValue(Attribute.Mana) + getTotalValue(Attribute.Wisdom) * 0.5;
     }
 
     public double getTotalDamage() {
-        return getTotalValue(Attribute.Damage) + getTotalValue(Attribute.Energy);
+        PlayerLevelData data = JustLevelAPI.getData(getPlayer());
+        double damage = getTotalValue(Attribute.Damage) + getTotalValue(Attribute.Energy) * 0.5;
+
+        return damage * ((data.getStage() * 0.1) + data.getRealm()) * 0.5;
     }
 
     public double getTotalDefence() {
-        return getTotalValue(Attribute.Defence) + getTotalValue(Attribute.Technique);
+        PlayerLevelData data = JustLevelAPI.getData(getPlayer());
+        double defence = getTotalValue(Attribute.Defence) + getTotalValue(Attribute.Technique) * 0.5;
+
+        return defence * ((data.getStage() * 0.1) + data.getRealm()) * 0.35;
     }
 
     public double getOrdinaryTotalValue(Attribute ident) {

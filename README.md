@@ -8,6 +8,12 @@
 ```text
   /attribute - 查看全部
 ```
+
+## PAPI
+```text
+%attribute_<属性ID>%
+```
+
 ## 装备品质
 > 节点: justattribute.quality
 
