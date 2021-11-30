@@ -5,6 +5,7 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.util.RoleInitSync;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotLoadedEvent;
+import net.sakuragame.eternal.dragoncore.api.event.YamlSendFinishedEvent;
 import net.sakuragame.eternal.justlevel.api.event.sub.JLPlayerInitFinishedEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,6 +23,9 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
+
+        player.setHealthScale(20);
+        player.setHealthScaled(true);
 
         RoleInitSync roleInitSync = new RoleInitSync();
         sync.put(player.getUniqueId(), roleInitSync);
@@ -42,6 +46,13 @@ public class PlayerListener implements Listener {
             sync.remove(uuid);
             JustAttribute.getRoleManager().loadAttributeData(player);
         }
+    }
+
+    @EventHandler
+    public void onDCFinished(YamlSendFinishedEvent e) {
+        Player player = e.getPlayer();
+
+        player.setHealthScaled(false);
     }
 
     @EventHandler
