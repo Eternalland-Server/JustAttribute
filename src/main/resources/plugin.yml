@@ -8,9 +8,10 @@ depend:
   - DataManager
   - JustLevel
   - JustMessage
-  - PlayerSQL
   - Zaphkiel
   - DragonCore
+softdepend:
+  - PlayerSQL
 
 commands:
   jattribute:

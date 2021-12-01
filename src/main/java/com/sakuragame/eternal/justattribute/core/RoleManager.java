@@ -7,6 +7,8 @@ import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
+import com.sakuragame.eternal.justattribute.util.RoleSync;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,11 +20,15 @@ public class RoleManager {
 
     private final JustAttribute plugin;
 
+    @Getter
+    private final HashMap<UUID, RoleSync> sync;
+
     private final HashMap<UUID, RoleAttribute> playerAttribute;
     private final HashMap<UUID, RoleState> playerState;
 
     public RoleManager(JustAttribute plugin) {
         this.plugin = plugin;
+        this.sync = new HashMap<>();
         this.playerAttribute = new HashMap<>();
         this.playerState = new HashMap<>();
     }

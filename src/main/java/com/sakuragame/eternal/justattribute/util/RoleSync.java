@@ -1,12 +1,14 @@
 package com.sakuragame.eternal.justattribute.util;
 
-public class RoleInitSync {
+import com.sakuragame.eternal.justattribute.JustAttribute;
+
+public class RoleSync {
 
     private boolean justLevel;
     private boolean dragonSlot;
     private boolean inventory;
 
-    public RoleInitSync() {
+    public RoleSync() {
         this.justLevel = false;
         this.dragonSlot = false;
         this.inventory = false;
@@ -25,6 +27,6 @@ public class RoleInitSync {
     }
 
     public boolean isFinished() {
-        return justLevel && dragonSlot && inventory;
+        return justLevel && dragonSlot && (!JustAttribute.playerSQL || inventory);
     }
 }

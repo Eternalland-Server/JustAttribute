@@ -8,6 +8,7 @@ import com.sakuragame.eternal.justattribute.hook.AttributePlaceholder;
 import com.sakuragame.eternal.justattribute.listener.*;
 import com.sakuragame.eternal.justattribute.listener.combat.CombatListener;
 import com.sakuragame.eternal.justattribute.listener.combat.VampireListener;
+import com.sakuragame.eternal.justattribute.listener.hook.PlayerSQLListener;
 import com.sakuragame.eternal.justattribute.storage.StorageManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -22,6 +23,8 @@ public class JustAttribute extends JavaPlugin {
     private AttributeManager attributeManager;
     private RoleManager roleManager;
     private StorageManager storageManager;
+
+    public static boolean playerSQL = false;
 
     public final static boolean debug = false;
 
@@ -47,6 +50,17 @@ public class JustAttribute extends JavaPlugin {
         registerListener(new CombatListener());
         registerListener(new VampireListener());
         registerListener(new SoulBoundListener());
+
+        if (Bukkit.getPluginManager().getPlugin("PlayerSQL") != null) {
+            playerSQL = true;
+            registerListener(new PlayerSQLListener());
+            getLogger().info("Hook: 已关联 PlayerSQL");
+        }
+        else {
+            playerSQL = false;
+            getLogger().info("Hook: 未关联 PlayerSQL");
+        }
+
         getCommand("jattribute").setExecutor(new MainCommand());
 
         long end = System.currentTimeMillis();
