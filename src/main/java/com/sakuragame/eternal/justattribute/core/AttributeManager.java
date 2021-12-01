@@ -31,6 +31,8 @@ public class AttributeManager {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (!player.isOnline()) continue;
 
+                    if (player.isDead()) continue;
+
                     UUID uuid = player.getUniqueId();
                     RoleState state = JustAttribute.getRoleManager().getPlayerState(uuid);
 
