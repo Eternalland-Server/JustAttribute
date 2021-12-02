@@ -105,4 +105,10 @@ public class RoleManager {
 
         attribute.updateCustomSlot(ident, type, item);
     }
+
+    public void saveAllRole() {
+        for (RoleState state : playerState.values()) {
+            state.save();
+        }
+    }
 }

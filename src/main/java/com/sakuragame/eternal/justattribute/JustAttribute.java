@@ -70,6 +70,7 @@ public class JustAttribute extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        roleManager.saveAllRole();
         Bukkit.getScheduler().cancelTasks(this);
         getLogger().info("卸载成功!");
     }
