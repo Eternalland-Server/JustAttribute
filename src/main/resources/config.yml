@@ -11,11 +11,12 @@ format:
   bound: '&a已绑定: &7<owner>'
   unbound: '&a<desc>'
   classify: '&f装备分类: &7<classify>'
+  skin: '&f时装分类: %7<skin-type>'
   quality: '&f<name> &7(<desc>&7)'
   combat:
     - '  &7装备评分'
     - '<combat>'
-  potency: '<symbol> <desc>'
+  potency: ' <symbol> <desc>'
 combat-capability:
   energy: 40
   stamina: 20

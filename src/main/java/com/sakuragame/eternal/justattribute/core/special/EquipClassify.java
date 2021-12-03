@@ -22,7 +22,14 @@ public enum EquipClassify {
     Honor(8, "头衔"),
     PetEgg(9, "宠物蛋"),
     PetSaddle(10, "宠物鞍"),
-    PetEquip(11, "宠物装备");
+    PetEquip(11, "宠物装备"),
+    Skin_Suit(100, "时装(套装)"),
+    SKin_Weapon(101, "时装(武器)"),
+    Skin_HandWear(102, "时装(头饰)"),
+    Skin_Clothes(103, "时装(上衣)"),
+    Skin_Pants(104, "时装(裤子)"),
+    Skin_Shoes(105, "时装(鞋子)"),
+    Skin_Wings(106, "时装(翅膀)");
 
 
     private final int id;
