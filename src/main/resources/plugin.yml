@@ -10,6 +10,7 @@ depend:
   - JustMessage
   - Zaphkiel
   - DragonCore
+  - ProtocolLib
 softdepend:
   - PlayerSQL
 

@@ -1,5 +1,9 @@
 package com.sakuragame.eternal.justattribute.util;
 
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
+import ink.ptms.zaphkiel.ZaphkielAPI;
+import ink.ptms.zaphkiel.api.ItemStream;
+import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
@@ -7,6 +11,7 @@ import net.sakuragame.eternal.justlevel.level.PlayerLevelData;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -34,6 +39,17 @@ public class Utils {
         value = isPercent ? value * 100 : value;
         String s = a.format(value);
         return isPercent ? s + "%" : s;
+    }
+
+    public static boolean isWeaponClassify(ItemStack item) {
+        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
+        if (itemStream.isVanilla()) return false;
+
+        ItemTagData data = itemStream.getZaphkielData().getDeep(EquipClassify.NBT_NODE);
+        if (data == null) return false;
+
+        int i = data.asInt();
+        return i <= 1;
     }
 
     public static boolean isArmor(Material material) {

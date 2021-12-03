@@ -4,6 +4,9 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.JARoleAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
+import com.sakuragame.eternal.justattribute.util.CombatUtil;
+import com.sakuragame.eternal.justattribute.util.Utils;
+import com.taylorswiftcn.justwei.util.MegumiUtil;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -12,10 +15,30 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.event.player.PlayerAnimationType;
+import org.bukkit.inventory.ItemStack;
 
 public class CombatListener implements Listener {
 
     private final JustAttribute plugin = JustAttribute.getInstance();
+
+    @EventHandler
+    public void onAnimation(PlayerAnimationEvent e) {
+        Player player = e.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+
+        if (MegumiUtil.isEmpty(item)) return;
+        if (!Utils.isWeaponClassify(item)) return;
+
+        if (e.getAnimationType() != PlayerAnimationType.ARM_SWING) return;
+
+        if (Math.random() < 0.5) return;
+
+        CombatUtil.offhandAnimation(player);
+
+        e.setCancelled(true);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onDamage(EntityDamageByEntityEvent e) {
