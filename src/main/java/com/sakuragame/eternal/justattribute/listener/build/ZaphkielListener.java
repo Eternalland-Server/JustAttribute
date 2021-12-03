@@ -44,7 +44,14 @@ public class ZaphkielListener implements Listener {
         }
 
         e.addLore(AttributeManager.ORDINARY_DISPLAY_NODE, ordinaryDisplay);
-        if (potencyDisplay.size() == 1) {
+
+        ItemTagData data = tags.getDeep(EquipClassify.NBT_NODE);
+        if (data == null) return;
+        int id = data.asInt();
+
+        if (id >= 100) return;
+
+        if (potencyDisplay.size() == 2) {
             e.addLore(AttributeManager.POTENCY_DISPLAY_NODE, ConfigFile.potency_empty);
         }
         else {
