@@ -1,6 +1,5 @@
 package com.sakuragame.eternal.justattribute;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.sakuragame.eternal.justattribute.commands.MainCommand;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
@@ -28,8 +27,6 @@ public class JustAttribute extends JavaPlugin {
     private RoleManager roleManager;
     private StorageManager storageManager;
 
-    public ProtocolManager protocolManager;
-
     public static boolean playerSQL = false;
 
     public final static boolean debug = false;
@@ -39,8 +36,6 @@ public class JustAttribute extends JavaPlugin {
         long start = System.currentTimeMillis();
 
         instance = this;
-
-        protocolManager = ProtocolLibrary.getProtocolManager();
 
         fileManager = new FileManager(this);
         attributeManager = new AttributeManager(this);
@@ -103,9 +98,5 @@ public class JustAttribute extends JavaPlugin {
 
     public static StorageManager getStorageManager() {
         return instance.storageManager;
-    }
-
-    public static ProtocolManager getProtocolManager() {
-        return instance.protocolManager;
     }
 }

@@ -62,9 +62,8 @@
         <!--Spigot API-->
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
+            <artifactId>spigot</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -94,12 +93,6 @@
             <version>1.7.6</version>
             <scope>system</scope>
             <systemPath>${pom.basedir}/.lib/Zaphkiel-1.7.6.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>4.7.0</version>
         </dependency>
 
         <dependency>
