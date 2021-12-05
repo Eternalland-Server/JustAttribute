@@ -78,12 +78,7 @@ public class RoleListener implements Listener {
 
     @EventHandler
     public void onDrop(PlayerDropItemEvent e) {
-        Player player = e.getPlayer();
-        if (!player.isOp()) {
-            e.setCancelled(true);
-            return;
-        }
-        JustAttribute.getRoleManager().updateVanillaSlot(player, VanillaSlot.MainHand);
+        e.setCancelled(true);
     }
 
     @EventHandler

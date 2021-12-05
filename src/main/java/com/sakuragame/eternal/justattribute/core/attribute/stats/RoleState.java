@@ -58,7 +58,7 @@ public class RoleState {
 
     public void restore() {
         this.addHealth(getRestoreHP());
-        this.addHealth(getRestoreMP());
+        this.addMana(getRestoreMP());
     }
 
     public void save() {

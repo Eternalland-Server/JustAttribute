@@ -66,6 +66,8 @@ public class DragonCoreSync {
         map.put(ROLE_CURRENT_MANA, String.valueOf((int) state.getMana()));
         map.put(ROLE_MAX_MANA, String.valueOf((int) state.getMaxMana()));
 
+        System.out.println(map);
+
         PacketSender.sendSyncPlaceholder(player, map);
     }
 
