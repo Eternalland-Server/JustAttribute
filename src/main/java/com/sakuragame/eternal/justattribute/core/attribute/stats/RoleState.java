@@ -100,7 +100,7 @@ public class RoleState {
     }
 
     public void addMana(double value) {
-        mana = Math.min(value + getMana(), maxMana);
+        setMana(getMana() + value);
     }
 
     public boolean takeMana(double value) {
