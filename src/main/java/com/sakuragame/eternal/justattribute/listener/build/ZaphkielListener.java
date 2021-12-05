@@ -52,11 +52,9 @@ public class ZaphkielListener implements Listener {
         if (id >= 100) return;
 
         if (potencyDisplay.size() == 2) {
-            e.addLore(AttributeManager.POTENCY_DISPLAY_NODE, ConfigFile.potency_empty);
+            potencyDisplay.add(ConfigFile.potency_empty);
         }
-        else {
-            e.addLore(AttributeManager.POTENCY_DISPLAY_NODE, potencyDisplay);
-        }
+        e.addLore(AttributeManager.POTENCY_DISPLAY_NODE, potencyDisplay);
     }
 
     @EventHandler

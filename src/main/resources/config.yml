@@ -2,7 +2,7 @@ prefix: ' &7[JustAttribute]'
 base:
   damage-immune-limit: 0.4
   potency:
-    empty: '&3使用潜能卷轴进行鉴定'
+    empty: '  &3使用潜能卷轴进行鉴定'
   soulbound:
     auto: '自动绑定'
     use: '使用后绑定'
