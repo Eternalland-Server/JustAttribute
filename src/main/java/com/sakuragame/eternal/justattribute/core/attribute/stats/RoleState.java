@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
+import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
 import org.bukkit.entity.Player;
 
 public class RoleState {
@@ -90,7 +91,8 @@ public class RoleState {
     }
 
     public void setMana(double value) {
-        mana = Math.min(value, this.maxMana);
+        mana = Math.max(0, Math.min(value, this.maxMana));
+        DragonCoreSync.sendMana(player);
     }
 
     public void setMaxMana(double value) {

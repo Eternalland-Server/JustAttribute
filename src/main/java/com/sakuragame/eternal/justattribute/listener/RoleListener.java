@@ -13,7 +13,6 @@ import com.taylorswiftcn.justwei.util.MegumiUtil;
 import net.sakuragame.eternal.justlevel.api.event.sub.JLPlayerStageChangeEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -52,7 +51,7 @@ public class RoleListener implements Listener {
         if (AttributeManager.loading.contains(uuid)) return;
 
         JustAttribute.getRoleManager().getPlayerState(uuid).update();
-        DragonCoreSync.send(player);
+        DragonCoreSync.sendAttribute(player);
     }
 
     @EventHandler
