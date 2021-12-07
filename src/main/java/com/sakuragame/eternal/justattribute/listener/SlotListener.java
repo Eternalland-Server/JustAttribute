@@ -14,6 +14,7 @@ import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import net.sakuragame.eternal.dragoncore.api.CoreAPI;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotHandleEvent;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotUpdateEvent;
+import net.sakuragame.eternal.justmessage.screen.hud.ActionTip;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -117,7 +118,7 @@ public class SlotListener implements Listener {
         EquipClassify classify = EquipClassify.getType(id);
         if (classify == null) return;
 
-        String currentScreen = CoreAPI.getOpenScreen(player.getUniqueId());
+        String currentScreen = ActionTip.screenID;
 
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
         if (itemStream.isVanilla()) {
