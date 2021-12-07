@@ -75,19 +75,6 @@ public class Utils {
                 .replace("9", "❾");
     }
 
-    public static void sendActionTip(Player player, String screenID, String message) {
-        NoticeHistory record = history.get(player.getUniqueId());
-        if (record != null && record.getContent().equals(message)) {
-            long time = record.getTime();
-            if (System.currentTimeMillis() - time < 1000) {
-                return;
-            }
-        }
-
-        MessageAPI.sendActionTip(player, screenID, message);
-        history.put(player.getUniqueId(), new NoticeHistory(message, System.currentTimeMillis()));
-    }
-
     public static double getDamagePromote(Player player) {
         PlayerLevelData data = JustLevelAPI.getData(player);
 

@@ -5,16 +5,14 @@ import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.SoulBound;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
-import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
-import net.sakuragame.eternal.dragoncore.api.CoreAPI;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotHandleEvent;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotUpdateEvent;
-import net.sakuragame.eternal.justmessage.screen.hud.ActionTip;
+import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,8 +52,6 @@ public class SlotListener implements Listener {
         VanillaSlot slot = player.getInventory().getHeldItemSlot() == e.getSlot() ? VanillaSlot.MainHand : VanillaSlot.getSlot(index);
         if (slot == null) return;
 
-        String currentScreen = CoreAPI.getOpenScreen(player.getUniqueId());
-
         ItemStack handItem = e.getCursor();
         if (!MegumiUtil.isEmpty(handItem) && slot != VanillaSlot.MainHand) {
             ItemStream itemStream = ZaphkielAPI.INSTANCE.read(handItem);
@@ -64,14 +60,14 @@ public class SlotListener implements Listener {
 
             int itemType = itemTag.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
             if (slot.getType().getId() != itemType) {
-                Utils.sendActionTip(player, currentScreen, "§a§l该槽位只能放入 §c§l" + slot.getType().getName() + " §a§l类型的装备");
+                MessageAPI.sendActionTip(player, "§a§l该槽位只能放入 §c§l" + slot.getType().getName() + " §a§l类型的装备");
                 e.setCancelled(true);
                 return;
             }
 
             String owner = itemTag.getDeepOrElse(SoulBound.NBT_UUID_NODE, new ItemTagData("")).asString();
             if (!owner.isEmpty() && !player.getUniqueId().toString().equals(owner)) {
-                Utils.sendActionTip(player, currentScreen, "§c§l你不是这件装备的所有者");
+                MessageAPI.sendActionTip(player, "§c§l你不是这件装备的所有者");
                 e.setCancelled(true);
             }
         }
@@ -118,11 +114,9 @@ public class SlotListener implements Listener {
         EquipClassify classify = EquipClassify.getType(id);
         if (classify == null) return;
 
-        String currentScreen = ActionTip.screenID;
-
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
         if (itemStream.isVanilla()) {
-            Utils.sendActionTip(player, currentScreen, "§a§l该槽位不能放入该物品");
+            MessageAPI.sendActionTip(player, "§a§l该槽位不能放入该物品");
             e.setCancelled(true);
             return;
         }
@@ -130,14 +124,14 @@ public class SlotListener implements Listener {
 
         int itemType = itemTag.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
         if (classify.getId() != itemType) {
-            Utils.sendActionTip(player, currentScreen, "§a§l该槽位只能放入 §c§l" + classify.getName() + " §a§l类型的装备");
+            MessageAPI.sendActionTip(player, "§a§l该槽位只能放入 §c§l" + classify.getName() + " §a§l类型的装备");
             e.setCancelled(true);
             return;
         }
 
         String owner = itemTag.getDeepOrElse(SoulBound.NBT_UUID_NODE, new ItemTagData("")).asString();
         if (!owner.isEmpty() && !player.getUniqueId().toString().equals(owner)) {
-            Utils.sendActionTip(player, currentScreen, "§c§l这件装备绑定的是其他人");
+            MessageAPI.sendActionTip(player, "§c§l这件装备绑定的是其他人");
             e.setCancelled(true);
         }
         else {
