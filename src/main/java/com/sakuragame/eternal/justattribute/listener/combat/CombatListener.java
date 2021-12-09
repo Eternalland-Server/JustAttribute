@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 public class CombatListener implements Listener {
 
@@ -43,6 +44,8 @@ public class CombatListener implements Listener {
 
         if (attacker == null || sufferer == null) return;
         if (!(attacker instanceof Player)) return;
+
+        if (e.getCause() == EntityDamageEvent.DamageCause.CUSTOM) return;
 
         RoleAttribute attackData = getTargetAttrData(attacker);
         RoleAttribute sufferData = getTargetAttrData(sufferer);
