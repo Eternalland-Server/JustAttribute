@@ -69,7 +69,7 @@ public class RoleAttribute {
 
     public void loadVanillaSlot() {
         this.updateVanillaSlot(VanillaSlot.Helmet);
-        this.updateVanillaSlot(VanillaSlot.ChestPlate);
+        this.updateVanillaSlot(VanillaSlot.Chestplate);
         this.updateVanillaSlot(VanillaSlot.Leggings);
         this.updateVanillaSlot(VanillaSlot.Boots);
         this.updateVanillaSlot(VanillaSlot.OffHand);
@@ -150,7 +150,8 @@ public class RoleAttribute {
     public void updateVanillaSlot(VanillaSlot slot) {
         Player player = getPlayer();
 
-        ItemStack item = (slot == VanillaSlot.MainHand) ? player.getInventory().getItemInMainHand() : player.getInventory().getItem(slot.getIndex());
+        ItemStack item = slot.getItem(player);
+
         updateSlot(slot.getIdent(), slot.getType(), item);
     }
 

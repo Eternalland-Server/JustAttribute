@@ -3,12 +3,14 @@ package com.sakuragame.eternal.justattribute.core.attribute;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 @Getter
 public enum VanillaSlot {
 
     Helmet(5, EquipClassify.Armor, "helmet"),
-    ChestPlate(6, EquipClassify.Armor, "chestplate"),
+    Chestplate(6, EquipClassify.Armor, "chestplate"),
     Leggings(7, EquipClassify.Armor, "leggings"),
     Boots(8, EquipClassify.Armor, "boots"),
     MainHand(-1, EquipClassify.MainHand, "mainhand"),
@@ -39,6 +41,25 @@ public enum VanillaSlot {
             if (material.name().contains(slot.getIdent().toUpperCase())) {
                 return slot;
             }
+        }
+
+        return null;
+    }
+
+    public ItemStack getItem(Player player) {
+        switch (this) {
+            case Helmet:
+                return player.getInventory().getHelmet();
+            case Chestplate:
+                return player.getInventory().getChestplate();
+            case Leggings:
+                return player.getInventory().getLeggings();
+            case Boots:
+                return player.getInventory().getBoots();
+            case MainHand:
+                return player.getInventory().getItemInMainHand();
+            case OffHand:
+                return player.getInventory().getItemInOffHand();
         }
 
         return null;
