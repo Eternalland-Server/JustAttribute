@@ -5,8 +5,8 @@ import com.sakuragame.eternal.justattribute.api.event.JAUpdateAttributeEvent;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
-import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
@@ -14,7 +14,6 @@ import lombok.Getter;
 import net.sakuragame.eternal.dragoncore.api.SlotAPI;
 import net.sakuragame.eternal.dragoncore.config.FileManager;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
-import net.sakuragame.eternal.justlevel.level.PlayerLevelData;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -68,7 +67,7 @@ public class RoleAttribute {
         this.restoreMP = ConfigFile.RoleBase.restoreMP + ConfigFile.RolePromote.restoreMP * stage;
     }
 
-    private void loadVanillaSlot() {
+    public void loadVanillaSlot() {
         this.updateVanillaSlot(VanillaSlot.Helmet);
         this.updateVanillaSlot(VanillaSlot.ChestPlate);
         this.updateVanillaSlot(VanillaSlot.Leggings);
@@ -77,7 +76,7 @@ public class RoleAttribute {
         this.updateVanillaSlot(VanillaSlot.MainHand);
     }
 
-    private void loadDragonSlot() {
+    public void loadDragonSlot() {
         Player player = getPlayer();
 
         for (String key : ConfigFile.slotSetting.keySet()) {
