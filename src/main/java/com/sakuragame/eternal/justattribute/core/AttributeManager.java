@@ -2,11 +2,14 @@ package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
+import com.sakuragame.eternal.justattribute.util.RoleSync;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,11 +20,22 @@ public class AttributeManager {
     public final static String ORDINARY_DISPLAY_NODE = "display.ordinary";
     public final static String POTENCY_DISPLAY_NODE = "display.potency";
 
+    public final static HashMap<UUID, RoleSync> sync = new HashMap<>();
     public final static List<UUID> loading = new ArrayList<>();
 
     public AttributeManager(JustAttribute plugin) {
         this.plugin = plugin;
         this.start();
+    }
+
+    public void loadPlayer(Player player) {
+        player.setHealthScale(20);
+        player.setHealthScaled(true);
+
+        RoleSync roleSync = new RoleSync();
+        sync.put(player.getUniqueId(), roleSync);
+
+        loading.add(player.getUniqueId());
     }
 
     private void start() {

@@ -1,12 +1,14 @@
 package com.sakuragame.eternal.justattribute;
 
-import com.comphenix.protocol.ProtocolManager;
 import com.sakuragame.eternal.justattribute.commands.MainCommand;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.file.FileManager;
 import com.sakuragame.eternal.justattribute.hook.AttributePlaceholder;
-import com.sakuragame.eternal.justattribute.listener.*;
+import com.sakuragame.eternal.justattribute.listener.PlayerListener;
+import com.sakuragame.eternal.justattribute.listener.RoleListener;
+import com.sakuragame.eternal.justattribute.listener.SlotListener;
+import com.sakuragame.eternal.justattribute.listener.SoulBoundListener;
 import com.sakuragame.eternal.justattribute.listener.build.SkinListener;
 import com.sakuragame.eternal.justattribute.listener.build.ZaphkielListener;
 import com.sakuragame.eternal.justattribute.listener.combat.CombatListener;
@@ -65,6 +67,8 @@ public class JustAttribute extends JavaPlugin {
             getLogger().info("Hook: 未关联 PlayerSQL");
         }
 
+        loadOnlinePlayer();
+
         getCommand("jattribute").setExecutor(new MainCommand());
 
         long end = System.currentTimeMillis();
@@ -79,9 +83,17 @@ public class JustAttribute extends JavaPlugin {
         getLogger().info("卸载成功!");
     }
 
+    public void reload() {
+        fileManager.init();
+    }
+
     public String getVersion() {
         String packet = Bukkit.getServer().getClass().getPackage().getName();
         return packet.substring(packet.lastIndexOf('.') + 1);
+    }
+
+    private void loadOnlinePlayer() {
+        Bukkit.getOnlinePlayers().forEach(player -> attributeManager.loadPlayer(player));
     }
 
     public void registerListener(Listener listener) {

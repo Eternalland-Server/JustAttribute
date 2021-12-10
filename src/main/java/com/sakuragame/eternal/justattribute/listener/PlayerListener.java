@@ -20,13 +20,7 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
-        player.setHealthScale(20);
-        player.setHealthScaled(true);
-
-        RoleSync roleSync = new RoleSync();
-        JustAttribute.getRoleManager().getSync().put(player.getUniqueId(), roleSync);
-
-        AttributeManager.loading.add(player.getUniqueId());
+        JustAttribute.getAttributeManager().loadPlayer(player);
     }
 
     @EventHandler
@@ -34,12 +28,12 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        RoleSync initSync = JustAttribute.getRoleManager().getSync().get(uuid);
+        RoleSync initSync = AttributeManager.sync.get(uuid);
         if (initSync == null) return;
 
         initSync.setJustLevel(true);
         if (initSync.isFinished()) {
-            JustAttribute.getRoleManager().getSync().remove(uuid);
+            AttributeManager.sync.remove(uuid);
             JustAttribute.getRoleManager().loadAttributeData(player);
         }
     }
@@ -47,7 +41,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onDCFinished(YamlSendFinishedEvent e) {
         Player player = e.getPlayer();
-
         player.setHealthScaled(false);
     }
 
@@ -56,12 +49,12 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        RoleSync initSync = JustAttribute.getRoleManager().getSync().get(uuid);
+        RoleSync initSync = AttributeManager.sync.get(uuid);
         if (initSync == null) return;
 
         initSync.setDragonSlot(true);
         if (initSync.isFinished()) {
-            JustAttribute.getRoleManager().getSync().remove(uuid);
+            AttributeManager.sync.remove(uuid);
             JustAttribute.getRoleManager().loadAttributeData(player);
         }
     }
@@ -75,7 +68,7 @@ public class PlayerListener implements Listener {
 
         JustAttribute.getRoleManager().removeAttributeData(player);
         JustAttribute.getRoleManager().removeStateData(player);
-        JustAttribute.getRoleManager().getSync().remove(uuid);
+        AttributeManager.sync.remove(uuid);
         AttributeManager.loading.remove(uuid);
     }
 }

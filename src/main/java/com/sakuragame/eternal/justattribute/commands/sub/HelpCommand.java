@@ -12,10 +12,10 @@ public class HelpCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSender CommandSender, String[] Strings) {
-        MessageFile.help.forEach(CommandSender::sendMessage);
-        if (CommandSender.hasPermission("justrpg.admin"))
-            MessageFile.adminHelp.forEach(CommandSender::sendMessage);
+    public void perform(CommandSender sender, String[] args) {
+        MessageFile.help.forEach(sender::sendMessage);
+        if (sender.hasPermission("justrpg.admin"))
+            MessageFile.adminHelp.forEach(sender::sendMessage);
     }
 
     @Override
