@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.listener.hook;
 
 import com.mengcraft.playersql.event.PlayerDataProcessedEvent;
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.util.RoleSync;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,12 +17,12 @@ public class PlayerSQLListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        RoleSync initSync = JustAttribute.getRoleManager().getSync().get(uuid);
+        RoleSync initSync = AttributeManager.sync.get(uuid);
         if (initSync == null) return;
 
         initSync.setInventory(true);
         if (initSync.isFinished()) {
-            JustAttribute.getRoleManager().getSync().remove(uuid);
+            AttributeManager.sync.remove(uuid);
             JustAttribute.getRoleManager().loadAttributeData(player);
         }
     }
