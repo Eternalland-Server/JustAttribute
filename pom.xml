@@ -51,11 +51,6 @@
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
-
-        <repository>
-            <id>ptms</id>
-            <url>https://repo2s.ptms.ink/repository/maven-releases</url>
-        </repository>
     </repositories>
 
     <dependencies>

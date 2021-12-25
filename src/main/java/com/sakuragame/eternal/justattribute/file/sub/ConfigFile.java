@@ -18,6 +18,7 @@ public class ConfigFile {
     public static String potency_empty;
     public static String soulbound_auto;
     public static String soulbound_use;
+    public static String soulbound_prop;
 
     public static String attribute_format;
     public static String bound_format;
@@ -59,6 +60,7 @@ public class ConfigFile {
         potency_empty = getString("base.potency.empty");
         soulbound_auto = getString("base.soulbound.auto");
         soulbound_use = getString("base.soulbound.use");
+        soulbound_prop = getString("base.soulbound.prop");
 
         attribute_format = getString("format.attribute");
         bound_format = getString("format.bound");

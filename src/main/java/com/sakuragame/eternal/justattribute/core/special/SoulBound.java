@@ -23,7 +23,8 @@ public class SoulBound {
     public enum Action {
 
         AUTO(0, ConfigFile.soulbound_auto),
-        USE(1, ConfigFile.soulbound_use);
+        USE(1, ConfigFile.soulbound_use),
+        PROP(2, ConfigFile.soulbound_prop);
 
         private final int id;
         private final String desc;

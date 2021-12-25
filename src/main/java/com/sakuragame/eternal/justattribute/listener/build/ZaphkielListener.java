@@ -70,17 +70,30 @@ public class ZaphkielListener implements Listener {
         SoulBound.Action action = SoulBound.Action.getAction(id);
         if (action == null) return;
 
-        if (player != null && action == SoulBound.Action.AUTO) {
-            itemTag.removeDeep(SoulBound.NBT_ACTION_NODE);
-            itemTag.putDeep(SoulBound.NBT_UUID_NODE, player.getUniqueId().toString());
-            itemTag.putDeep(SoulBound.NBT_NAME_NODE, player.getName());
-            return;
+        if (player != null) {
+            if (action == SoulBound.Action.AUTO) {
+                itemTag.removeDeep(SoulBound.NBT_ACTION_NODE);
+                itemTag.putDeep(SoulBound.NBT_UUID_NODE, player.getUniqueId().toString());
+                itemTag.putDeep(SoulBound.NBT_NAME_NODE, player.getName());
+
+                e.addLore(SoulBound.DISPLAY_NODE, SoulBound.format(player.getName()));
+                return;
+            }
+
+            if (action == SoulBound.Action.PROP) {
+                itemTag.removeDeep(SoulBound.NBT_ACTION_NODE);
+                itemTag.putDeep(SoulBound.NBT_UUID_NODE, player.getUniqueId().toString());
+                itemTag.putDeep(SoulBound.NBT_NAME_NODE, player.getName());
+
+                e.addLore(SoulBound.DISPLAY_NODE, action.formatting());
+                return;
+            }
         }
 
         e.addLore(SoulBound.DISPLAY_NODE, action.formatting());
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onSoulBound(ItemReleaseEvent.Display e) {
         Player player = e.getPlayer();
         ItemTag itemTag = e.getItemStream().getZaphkielData();
@@ -88,12 +101,10 @@ public class ZaphkielListener implements Listener {
         ItemTagData data = itemTag.getDeep(SoulBound.NBT_NAME_NODE);
 
         if (data == null) return;
-        String name = data.asString();
-
         if (player == null) return;
 
         e.addLore(SoulBound.DISPLAY_NODE, SoulBound.format(player.getName()));
-    }
+    }*/
 
     @EventHandler
     public void onClassify(ItemReleaseEvent.Display e) {
