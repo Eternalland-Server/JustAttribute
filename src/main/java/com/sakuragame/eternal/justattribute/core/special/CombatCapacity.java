@@ -1,6 +1,5 @@
 package com.sakuragame.eternal.justattribute.core.special;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.AttributeData;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
