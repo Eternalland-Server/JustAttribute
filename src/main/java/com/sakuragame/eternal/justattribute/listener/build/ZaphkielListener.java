@@ -75,8 +75,6 @@ public class ZaphkielListener implements Listener {
                 itemTag.removeDeep(SoulBound.NBT_ACTION_NODE);
                 itemTag.putDeep(SoulBound.NBT_UUID_NODE, player.getUniqueId().toString());
                 itemTag.putDeep(SoulBound.NBT_NAME_NODE, player.getName());
-
-                e.addLore(SoulBound.DISPLAY_NODE, SoulBound.format(player.getName()));
                 return;
             }
 
@@ -93,7 +91,7 @@ public class ZaphkielListener implements Listener {
         e.addLore(SoulBound.DISPLAY_NODE, action.formatting());
     }
 
-    /*@EventHandler
+    @EventHandler
     public void onSoulBound(ItemReleaseEvent.Display e) {
         Player player = e.getPlayer();
         ItemTag itemTag = e.getItemStream().getZaphkielData();
@@ -104,7 +102,7 @@ public class ZaphkielListener implements Listener {
         if (player == null) return;
 
         e.addLore(SoulBound.DISPLAY_NODE, SoulBound.format(player.getName()));
-    }*/
+    }
 
     @EventHandler
     public void onClassify(ItemReleaseEvent.Display e) {
