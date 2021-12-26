@@ -4,6 +4,10 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.JARoleAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
+import com.sakuragame.eternal.justattribute.hook.DamageModify;
+import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -14,9 +18,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import java.util.Optional;
+import java.util.UUID;
+
 public class CombatListener implements Listener {
 
-    private final JustAttribute plugin = JustAttribute.getInstance();
+    private final MobManager mobManager;
+
+    public CombatListener() {
+        this.mobManager = MythicMobs.inst().getMobManager();
+    }
 
     /*@EventHandler
     public void onAnimation(PlayerAnimationEvent e) {
@@ -43,21 +54,54 @@ public class CombatListener implements Listener {
         LivingEntity sufferer = getActualSufferer(e.getEntity());
 
         if (attacker == null || sufferer == null) return;
-        if (!(attacker instanceof Player)) return;
 
-        if (e.getCause() == EntityDamageEvent.DamageCause.CUSTOM) return;
+        if (e.getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
+            double damage = e.getDamage();
 
-        RoleAttribute attackData = getTargetAttrData(attacker);
-        RoleAttribute sufferData = getTargetAttrData(sufferer);
+            if (!(attacker instanceof Player)) return;
 
-        JARoleAttackEvent attackEvent = CombatHandler.calculate(attackData, sufferData);
+            ActiveMob mob = getMob(sufferer.getUniqueId());
+            if (mob == null) return;
 
-        if (attackEvent.call()) {
+            double damageModify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ABILITY_ATTACK.name(), 1.0);
+            double lastDamage = damage * damageModify;
+
+            e.setDamage(lastDamage);
+            return;
+        }
+
+        JARoleAttackEvent event;
+
+        if (attacker instanceof Player) {
+            RoleAttribute attackData = getTargetAttrData((Player) attacker);
+
+            if (sufferer instanceof Player) {
+                RoleAttribute sufferData = getTargetAttrData((Player) sufferer);
+                event = CombatHandler.calculate(attackData, sufferData);
+            }
+            else {
+                ActiveMob mob = getMob(sufferer.getUniqueId());
+                if (mob == null) return;
+                event = CombatHandler.calculate(attackData, mob);
+            }
+        }
+        else {
+            if (!(sufferer instanceof Player)) return;
+
+            ActiveMob mob = getMob(attacker.getUniqueId());
+            if (mob == null) return;
+
+            double damage = mob.getType().getDamage().get();
+            e.setDamage(damage);
+            return;
+        }
+
+        if (event.call()) {
             e.setCancelled(true);
             return;
         }
 
-        e.setDamage(attackEvent.getDamage());
+        e.setDamage(event.getDamage());
     }
 
     private LivingEntity getActualAttacker(Entity target) {
@@ -85,11 +129,23 @@ public class CombatListener implements Listener {
         return null;
     }
 
-    private RoleAttribute getTargetAttrData(LivingEntity target) {
-        if (target instanceof Player) {
-            return JustAttribute.getRoleManager().getPlayerAttribute(target.getUniqueId());
+    private RoleAttribute getTargetAttrData(Player target) {
+        RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(target.getUniqueId());
+        if (role == null) {
+            role = new RoleAttribute(target);
         }
 
-        return new RoleAttribute(target);
+        return role;
+    }
+
+    private ActiveMob getMob(UUID uuid) {
+        if (mobManager.isActiveMob(uuid)) {
+            Optional<ActiveMob> optional = mobManager.getActiveMob(uuid);
+            if (optional.isPresent()) {
+                return optional.get();
+            }
+        }
+
+        return null;
     }
 }

@@ -74,7 +74,7 @@
 | 3   |  ㅔ  |  SS  |
 | 4   |  ㅏ  | SSS  |
 
-## zaphkiel item example
+## Zaphkiel item example
 ```yaml
 example_item:
   display: example_display
@@ -117,7 +117,7 @@ example_item:
           exp_addition: 1
 ```
 
-## zaphkiel display example
+## Zaphkiel display example
 ```yaml
 example_display:
   name: '&7<NAME>'
@@ -133,4 +133,13 @@ example_display:
     - '<display.potency...>'
     - ''
     - '&f<DESC...>'
+```
+
+## MythicMobs DamageModifiers
+```yaml
+  DamageModifiers:
+    # 属性伤害
+    - ATTRIBUTE_ATTACK 0.5
+    # 技能伤害
+    - ABILITY_ATTACK 0.5
 ```

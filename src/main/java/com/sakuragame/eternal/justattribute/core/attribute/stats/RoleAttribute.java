@@ -15,7 +15,6 @@ import net.sakuragame.eternal.dragoncore.api.SlotAPI;
 import net.sakuragame.eternal.dragoncore.config.FileManager;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,7 +22,7 @@ import java.util.HashMap;
 
 public class RoleAttribute {
 
-    @Getter private final LivingEntity role;
+    @Getter private final Player player;
 
     private double health;
     private double mana;
@@ -38,16 +37,14 @@ public class RoleAttribute {
 
     @Getter private int combat;
 
-    public RoleAttribute(LivingEntity role) {
-        this.role = role;
+    public RoleAttribute(Player player) {
+        this.player = player;
         this.base = new AttributeData();
         this.source = new HashMap<>();
         this.initRole();
     }
 
     private void initRole() {
-        if (!(role instanceof Player)) return;
-
         this.base.initBaseAttribute();
 
         this.updateStageGrowth();
@@ -56,7 +53,6 @@ public class RoleAttribute {
     }
 
     public void updateStageGrowth() {
-        Player player = getPlayer();
         int stage = JustLevelAPI.getTotalStage(player);
 
         this.health = ConfigFile.RoleBase.health + ConfigFile.RolePromote.health * stage;
@@ -93,7 +89,7 @@ public class RoleAttribute {
     }
 
     public void updateRoleAttribute() {
-        if (AttributeManager.loading.contains(role.getUniqueId())) return;
+        if (AttributeManager.loading.contains(player.getUniqueId())) return;
 
         HashMap<Attribute, Double> ordinary = new HashMap<>(base.getOrdinary());
         HashMap<Attribute, Double> potency = new HashMap<>(base.getPotency());
@@ -180,10 +176,6 @@ public class RoleAttribute {
 
     public void addAttributeSource(String key, AttributeData source) {
         this.source.put(key, source);
-    }
-
-    private Player getPlayer() {
-        return (Player) role;
     }
 
     public HashMap<Attribute, Double> getOrdinaryAttributes() {
