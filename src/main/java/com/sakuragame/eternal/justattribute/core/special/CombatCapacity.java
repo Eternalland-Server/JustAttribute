@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.core.special;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.AttributeData;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.sakuragame.eternal.justattribute.util.Debug;
 import com.sakuragame.eternal.justattribute.util.Utils;
 
 import java.util.ArrayList;
@@ -35,22 +36,36 @@ public class CombatCapacity {
                 damage += value;
             }
 
-            combat += value * ConfigFile.combatCapability.get(ident);
+            int source = (int) value * ConfigFile.combatCapability.get(ident);
+
+            Debug.info(Debug.CombatCapacity, ident.getId() + ": " + value + " x " + ConfigFile.combatCapability.get(ident) + " = " + source);
+
+            combat += source;
         }
 
-        double cDamage = (Attribute.Critical_Damage
-                .calculate(
-                        data.getOrdinary().get(Attribute.Critical_Damage),
-                        data.getPotency().get(Attribute.Critical_Damage)
-                ) - 1) * damage;
-        double cChance = Attribute.Critical_Chance
-                .calculate(
-                        data.getOrdinary().get(Attribute.Critical_Chance),
-                        data.getPotency().get(Attribute.Critical_Chance)
-                ) * cDamage;
+        double cDamage = Math.max(0,
+                Attribute.Critical_Damage
+                        .calculate(
+                            data.getOrdinary().get(Attribute.Critical_Damage),
+                            data.getPotency().get(Attribute.Critical_Damage)
+                        ) - 1) * damage;
+        double cChance = Math.min(0,
+                Attribute.Critical_Chance
+                        .calculate(
+                                data.getOrdinary().get(Attribute.Critical_Chance),
+                                data.getPotency().get(Attribute.Critical_Chance)
+                        )) * cDamage;
 
-        combat += cDamage * ConfigFile.combatCapability.get(Attribute.Critical_Damage);
-        combat += cChance * ConfigFile.combatCapability.get(Attribute.Critical_Chance);
+        int cdSource = (int) cDamage * ConfigFile.combatCapability.get(Attribute.Critical_Damage);
+        int ccSource = (int) cChance * ConfigFile.combatCapability.get(Attribute.Critical_Chance);
+
+        Debug.info(Debug.CombatCapacity, Attribute.Critical_Damage.getId() + ": " + cDamage + " x " + ConfigFile.combatCapability.get(Attribute.Critical_Damage) + " = " + cdSource);
+        Debug.info(Debug.CombatCapacity, Attribute.Critical_Chance.getId() + ": " + cChance + " x " + ConfigFile.combatCapability.get(Attribute.Critical_Chance) + " = " + ccSource);
+
+        combat += cdSource;
+        combat += ccSource;
+
+        Debug.info(Debug.CombatCapacity, "Total Source: " + combat);
 
         return combat;
     }
