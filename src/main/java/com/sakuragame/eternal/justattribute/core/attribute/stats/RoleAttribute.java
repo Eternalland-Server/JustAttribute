@@ -8,12 +8,14 @@ import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.sakuragame.eternal.justattribute.util.Debug;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import lombok.Getter;
 import net.sakuragame.eternal.dragoncore.api.SlotAPI;
 import net.sakuragame.eternal.dragoncore.config.FileManager;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -98,45 +100,37 @@ public class RoleAttribute {
         HashMap<Attribute, Double> ordinary = new HashMap<>(base.getOrdinary());
         HashMap<Attribute, Double> potency = new HashMap<>(base.getPotency());
 
-        if (JustAttribute.debug) {
-            System.out.println("Base Ordinary:");
-            for (Attribute attr : ordinary.keySet()) {
-                System.out.println(" " + attr.getId() + ": " + ordinary.get(attr));
-            }
-            System.out.println("Base Potency:");
-            for (Attribute attr : potency.keySet()) {
-                System.out.println(" " + attr.getId() + ": " + potency.get(attr));
-            }
-
-            System.out.println("Realm Health: " + health);
-            System.out.println("Realm Mana: " + mana);
-            System.out.println("Realm Damage: " + damage);
-            System.out.println("Realm Defence: " + defence);
-            System.out.println("Realm restoreHP：" + restoreHP);
-            System.out.println("Realm restoreMP: " + restoreMP);
+        Debug.info(Debug.Role, "Base Ordinary:");
+        for (Attribute attr : ordinary.keySet()) {
+            Debug.info(Debug.Role, "" + attr.getId() + ": " + ordinary.get(attr));
         }
+        Debug.info(Debug.Role, "Base Potency:");
+        for (Attribute attr : potency.keySet()) {
+            Debug.info(Debug.Role, "" + attr.getId() + ": " + potency.get(attr));
+        }
+
+        Debug.info(Debug.Role, "Realm Health: " + health);
+        Debug.info(Debug.Role, "Realm Mana: " + mana);
+        Debug.info(Debug.Role, "Realm Damage: " + damage);
+        Debug.info(Debug.Role, "Realm Defence: " + defence);
+        Debug.info(Debug.Role, "Realm restoreHP：" + restoreHP);
+        Debug.info(Debug.Role, "Realm restoreMP: " + restoreMP);
 
         ordinary.merge(Attribute.Health, health, Double::sum);
         ordinary.merge(Attribute.Mana, mana, Double::sum);
         ordinary.merge(Attribute.Damage, damage, Double::sum);
         ordinary.merge(Attribute.Defence, defence, Double::sum);
 
-        if (JustAttribute.debug) {
-            System.out.println("Source: ");
-        }
+        Debug.info(Debug.Role, "Source: ");
         source.keySet().forEach(s -> {
             AttributeData data = source.get(s);
             data.getOrdinary().forEach((key, value) -> {
                 ordinary.merge(key, value, Double::sum);
-                if (JustAttribute.debug) {
-                    System.out.println("Ordinary " + key.getId() + ": " + value);
-                }
+                Debug.info(Debug.Role, "Ordinary " + key.getId() + ": " + value);
             });
             data.getPotency().forEach((key, value) -> {
                 potency.merge(key, value, Double::sum);
-                if (JustAttribute.debug) {
-                    System.out.println("Potency " + key.getId() + ": " + value);
-                }
+                Debug.info(Debug.Role, "Potency " + key.getId() + ": " + value);
             });
         });
 

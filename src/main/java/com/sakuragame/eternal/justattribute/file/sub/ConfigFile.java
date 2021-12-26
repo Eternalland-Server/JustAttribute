@@ -14,6 +14,8 @@ public class ConfigFile {
 
     public static String prefix;
 
+    public static int debug;
+
     public static double damage_immune_limit;
     public static String potency_empty;
     public static String soulbound_auto;
@@ -55,6 +57,8 @@ public class ConfigFile {
         config = JustAttribute.getInstance().getFileManager().getConfig();
 
         prefix = getString("prefix");
+
+        debug = config.getInt("debug");
 
         damage_immune_limit = config.getDouble("base.damage-immune-limit");
         potency_empty = getString("base.potency.empty");

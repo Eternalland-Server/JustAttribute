@@ -1,4 +1,5 @@
 prefix: ' &7[JustAttribute]'
+debug: 0
 base:
   damage-immune-limit: 0.4
   potency:

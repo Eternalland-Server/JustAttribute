@@ -31,8 +31,6 @@ public class JustAttribute extends JavaPlugin {
 
     public static boolean playerSQL = false;
 
-    public final static boolean debug = false;
-
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();

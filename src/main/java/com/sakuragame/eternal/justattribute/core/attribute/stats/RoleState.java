@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.core.attribute.stats;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
+import com.sakuragame.eternal.justattribute.util.Debug;
 import org.bukkit.entity.Player;
 
 public class RoleState {
@@ -35,13 +36,11 @@ public class RoleState {
 
         double currentHP = player.getHealth();
 
-        if (JustAttribute.debug) {
-            System.out.println("max hp: " + maxHealth);
-            System.out.println("max mp: " + maxMana);
-            System.out.println("current hp: " + currentHP);
-            System.out.println("hp: " + health);
-            System.out.println("mp: " + mana);
-        }
+        Debug.info(Debug.Role, "max hp: " + maxHealth);
+        Debug.info(Debug.Role, "max mp: " + maxMana);
+        Debug.info(Debug.Role, "current hp: " + currentHP);
+        Debug.info(Debug.Role, "hp: " + health);
+        Debug.info(Debug.Role, "mp: " + mana);
 
         if (maxHealth < currentHP) {
             this.setHealth(maxHealth);
