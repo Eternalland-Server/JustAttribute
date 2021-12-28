@@ -21,7 +21,7 @@ public class MobAttribute {
     private final Map<String, Double> damageModifiers;
 
     public MobAttribute(ActiveMob mob) {
-        this.entity = (LivingEntity) mob.getEntity();
+        this.entity = (LivingEntity) mob.getEntity().getBukkitEntity();
 
         MythicMob type = mob.getType();
         MythicConfig config = type.getConfig();

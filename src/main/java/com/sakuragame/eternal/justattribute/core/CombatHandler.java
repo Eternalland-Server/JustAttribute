@@ -45,7 +45,6 @@ public class CombatHandler {
         double cd = getValue(attacker, Attribute.Critical_Damage);
 
         double defence = sufferer.getDefence();
-
         double lastDamage = damage - defence;
 
         if (cc >= 1 || cc > Math.random()) {
@@ -54,7 +53,6 @@ public class CombatHandler {
         }
 
         double damageModify = sufferer.getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1.0);
-
         lastDamage = lastDamage * damageModify;
 
         return new JARoleAttackEvent(attacker.getPlayer(), sufferer.getEntity(), lastDamage, critical);
@@ -66,7 +64,7 @@ public class CombatHandler {
         double cc = attacker.getCriticalChance();
         double cd = attacker.getCriticalDamage();
 
-        double defence = getValue(sufferer, Attribute.Damage);
+        double defence = getValue(sufferer, Attribute.Defence);
         double di = getValue(sufferer, Attribute.Damage_Immune);
 
         double lastDamage = damage - (Math.max(defence - dp, 0));
@@ -105,8 +103,8 @@ public class CombatHandler {
     }
 
     private static double getValue(RoleAttribute role, Attribute ident) {
-        if (ident == Attribute.Damage) return role.getTotalDamage();
-        if (ident == Attribute.Defence) return role.getTotalDefence();
+        if (ident == Attribute.Damage) return role.getActualDamage();
+        if (ident == Attribute.Defence) return role.getActualDefence();
 
         return ident.calculate(role);
     }

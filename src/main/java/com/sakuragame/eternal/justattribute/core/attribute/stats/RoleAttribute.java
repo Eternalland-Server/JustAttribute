@@ -222,14 +222,14 @@ public class RoleAttribute {
         Player player = getPlayer();
         double damage = getTotalDamage();
 
-        return damage * Utils.getDamagePromote(player);
+        return damage * Utils.getRealmDamagePromote(player);
     }
 
     public double getActualDefence() {
         Player player = getPlayer();
         double defence = getTotalDefence();
 
-        return defence * Utils.getDefencePromote(player);
+        return defence * Utils.getRealmDefencePromote(player);
     }
 
     public double getOrdinaryTotalValue(Attribute ident) {

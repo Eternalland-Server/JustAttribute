@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import net.sakuragame.eternal.justlevel.level.PlayerLevelData;
-import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -75,13 +74,13 @@ public class Utils {
                 .replace("9", "❾");
     }
 
-    public static double getDamagePromote(Player player) {
+    public static double getRealmDamagePromote(Player player) {
         PlayerLevelData data = JustLevelAPI.getData(player);
 
         return ((data.getStage() - 1) * 0.1 + (data.getRealm() - 1) * 0.7) * 0.5 + 1;
     }
 
-    public static double getDefencePromote(Player player) {
+    public static double getRealmDefencePromote(Player player) {
         PlayerLevelData data = JustLevelAPI.getData(player);
 
         return ((data.getStage() - 1) * 0.1 + (data.getRealm() - 1) * 0.7) * 0.35 + 1;

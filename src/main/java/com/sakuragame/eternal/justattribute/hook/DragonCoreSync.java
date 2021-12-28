@@ -51,8 +51,8 @@ public class DragonCoreSync {
 
         map.put(RESTORE_HP_PAPI, formatRestoreHP(state.getRestoreHP()));
         map.put(RESTORE_MP_PAPI, formatRestoreMP(state.getRestoreMP()));
-        map.put(DAMAGE_PROMOTE_PAPI, formatPercent(Utils.getDamagePromote(player) - 1));
-        map.put(DEFENCE_PROMOTE_PAPI, formatPercent(Utils.getDefencePromote(player) - 1));
+        map.put(DAMAGE_PROMOTE_PAPI, formatPercent(Utils.getRealmDamagePromote(player) - 1));
+        map.put(DEFENCE_PROMOTE_PAPI, formatPercent(Utils.getRealmDefencePromote(player) - 1));
         map.put(ROLE_DAMAGE_PAPI, Attribute.Damage.formatting(role.getTotalDamage()));
         map.put(ROLE_DEFENCE_PAPI, Attribute.Defence.formatting(role.getTotalDefence()));
 
