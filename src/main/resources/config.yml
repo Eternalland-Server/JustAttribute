@@ -59,7 +59,7 @@ role-promote:
 slot-setting:
   glasses_slot: 3
   eardrop_slot: 4
-  cloak_slot: 5
+  gloves_slot: 5
   ring1_slot: 6
   ring2_slot: 6
   ring3_slot: 6
