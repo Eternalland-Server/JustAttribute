@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.listener.combat;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.JARoleAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
+import com.sakuragame.eternal.justattribute.core.attribute.stats.MobAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.hook.DamageModify;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -82,7 +83,7 @@ public class CombatListener implements Listener {
             else {
                 ActiveMob mob = getMob(sufferer.getUniqueId());
                 if (mob == null) return;
-                event = CombatHandler.calculate(attackData, mob);
+                event = CombatHandler.calculate(attackData, new MobAttribute(mob));
             }
         }
         else {
@@ -91,7 +92,7 @@ public class CombatListener implements Listener {
             ActiveMob mob = getMob(attacker.getUniqueId());
             if (mob == null) return;
 
-            double damage = mob.getType().getDamage().get();
+            double damage = CombatHandler.calculate(new MobAttribute(mob), getTargetAttrData((Player) sufferer));
             e.setDamage(damage);
             return;
         }

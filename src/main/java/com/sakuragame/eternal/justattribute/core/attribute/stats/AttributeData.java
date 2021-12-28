@@ -3,7 +3,6 @@ package com.sakuragame.eternal.justattribute.core.attribute.stats;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.SoulBound;
-import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
