@@ -67,13 +67,13 @@ public class CombatHandler {
         double defence = getValue(sufferer, Attribute.Defence);
         double di = getValue(sufferer, Attribute.Damage_Immune);
 
-        double lastDamage = damage - (Math.max(defence - dp, 0));
+        double lastDamage = damage - defence * dp;
 
         if (cc >= 1 || cc > Math.random()) {
             lastDamage = lastDamage * cd;
         }
 
-        lastDamage = lastDamage * (1 - di);
+        lastDamage = Math.max(attacker.getMinimumDamage(), lastDamage * (1 - di));
 
         return lastDamage;
     }
