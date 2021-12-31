@@ -11,10 +11,12 @@ import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import net.sakuragame.eternal.justlevel.api.event.sub.JLPlayerStageChangeEvent;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -100,5 +102,14 @@ public class RoleListener implements Listener {
         if (!Utils.isArmor(item.getType())) return;
 
         JustAttribute.getRoleManager().updateVanillaSlot(player, VanillaSlot.getSlot(item.getType()));
+    }
+
+    @EventHandler
+    public void onFallDamage(EntityDamageEvent e) {
+        Entity entity = e.getEntity();
+        if (!(entity instanceof Player)) return;
+        if (!e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) return;
+
+        e.setCancelled(true);
     }
 }
