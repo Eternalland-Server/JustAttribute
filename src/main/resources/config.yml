@@ -66,11 +66,12 @@ slot-setting:
   ring4_slot: 6
   medal_slot: 7
   honor_slot: 8
-  pet_egg_slot: 9
-  pet_saddle_slot: 10
-  pet_equip1_slot: 11
-  pet_equip2_slot: 11
-  pet_equip3_slot: 11
+  potion_slot: 9
+  pet_egg_slot: 21
+  pet_saddle_slot: 22
+  pet_equip1_slot: 23
+  pet_equip2_slot: 23
+  pet_equip3_slot: 23
   suit_skin: 100
   mainhand_skin: 101
   offhand_skin: 102
