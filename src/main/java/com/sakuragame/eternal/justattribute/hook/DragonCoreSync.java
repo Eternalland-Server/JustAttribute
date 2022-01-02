@@ -6,6 +6,7 @@ import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.util.Utils;
+import com.taylorswiftcn.justwei.util.UnitConvert;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
 import org.bukkit.entity.Player;
 
@@ -21,6 +22,7 @@ public class DragonCoreSync {
     private final static String ROLE_DEFENCE_PAPI = "attribute_role_defence";
     private final static String ROLE_CURRENT_MANA = "attribute_role_current_mana";
     private final static String ROLE_MAX_MANA = "attribute_role_max_mana";
+    private final static String ROLE_TOTAL_COMBAT = "attribute_role_total_combat";
 
     public static void sendAttribute(Player player) {
         HashMap<String, String> map = new HashMap<>();
@@ -55,6 +57,7 @@ public class DragonCoreSync {
         map.put(DEFENCE_PROMOTE_PAPI, formatPercent(Utils.getRealmDefencePromote(player) - 1));
         map.put(ROLE_DAMAGE_PAPI, Attribute.Damage.formatting(role.getTotalDamage()));
         map.put(ROLE_DEFENCE_PAPI, Attribute.Defence.formatting(role.getTotalDefence()));
+        map.put(ROLE_TOTAL_COMBAT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombat()));
 
         PacketSender.sendSyncPlaceholder(player, map);
     }
