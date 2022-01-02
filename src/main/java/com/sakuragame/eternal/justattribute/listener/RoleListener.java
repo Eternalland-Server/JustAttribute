@@ -1,16 +1,15 @@
 package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.api.event.JARoleAttributeInitEvent;
-import com.sakuragame.eternal.justattribute.api.event.JARoleStateInitEvent;
+import com.sakuragame.eternal.justattribute.api.event.JARoleAttributeLoadedEvent;
+import com.sakuragame.eternal.justattribute.api.event.JARoleStateLoadedEvent;
 import com.sakuragame.eternal.justattribute.api.event.JAUpdateAttributeEvent;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
+import com.sakuragame.eternal.justattribute.util.Scheduler;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
-import net.sakuragame.eternal.justlevel.api.event.sub.JLPlayerStageChangeEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,20 +29,20 @@ public class RoleListener implements Listener {
 
     private final JustAttribute plugin = JustAttribute.getInstance();
 
-
     @EventHandler
-    public void onAttrInit(JARoleAttributeInitEvent e) {
+    public void onAttributeLoaded(JARoleAttributeLoadedEvent e) {
         Player player = e.getPlayer();
         JustAttribute.getRoleManager().loadStateData(player);
     }
 
     @EventHandler
-    public void onStateInit(JARoleStateInitEvent e) {
+    public void onStateLoaded(JARoleStateLoadedEvent e) {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
         AttributeManager.loading.remove(uuid);
-        JustAttribute.getRoleManager().getPlayerAttribute(uuid).updateRoleAttribute();
+
+        Scheduler.runAsync(() -> JustAttribute.getRoleManager().getPlayerAttribute(uuid).updateRoleAttribute());
     }
 
     @EventHandler
@@ -54,15 +53,6 @@ public class RoleListener implements Listener {
 
         JustAttribute.getRoleManager().getPlayerState(uuid).update();
         DragonCoreSync.sendAttribute(player);
-    }
-
-    @EventHandler
-    public void onStageChange(JLPlayerStageChangeEvent e) {
-        Player player = e.getPlayer();
-
-        RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
-        role.updateStageGrowth();
-        role.updateRoleAttribute();
     }
 
     @EventHandler

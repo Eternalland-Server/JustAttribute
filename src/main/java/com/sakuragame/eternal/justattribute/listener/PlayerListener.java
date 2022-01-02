@@ -20,7 +20,13 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
-        JustAttribute.getAttributeManager().loadPlayer(player);
+        player.setHealthScale(20);
+        player.setHealthScaled(true);
+
+        RoleSync roleSync = new RoleSync();
+        AttributeManager.sync.put(player.getUniqueId(), roleSync);
+
+        AttributeManager.loading.add(player.getUniqueId());
     }
 
     @EventHandler
@@ -39,12 +45,6 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onDCFinished(YamlSendFinishedEvent e) {
-        Player player = e.getPlayer();
-        player.setHealthScaled(false);
-    }
-
-    @EventHandler
     public void onSlotLoaded(PlayerSlotLoadedEvent e) {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
@@ -57,6 +57,12 @@ public class PlayerListener implements Listener {
             AttributeManager.sync.remove(uuid);
             JustAttribute.getRoleManager().loadAttributeData(player);
         }
+    }
+
+    @EventHandler
+    public void onDCFinished(YamlSendFinishedEvent e) {
+        Player player = e.getPlayer();
+        player.setHealthScaled(false);
     }
 
     @EventHandler

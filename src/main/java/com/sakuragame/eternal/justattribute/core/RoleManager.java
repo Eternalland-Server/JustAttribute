@@ -1,13 +1,13 @@
 package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.api.event.JARoleAttributeInitEvent;
-import com.sakuragame.eternal.justattribute.api.event.JARoleStateInitEvent;
+import com.sakuragame.eternal.justattribute.api.event.JARoleAttributeLoadedEvent;
+import com.sakuragame.eternal.justattribute.api.event.JARoleStateLoadedEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
-import org.bukkit.Bukkit;
+import com.sakuragame.eternal.justattribute.util.Scheduler;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -35,20 +35,20 @@ public class RoleManager {
 
         plugin.getLogger().info(" 初始化 " + player.getName() + " 属性成功！");
 
-        JARoleAttributeInitEvent event = new JARoleAttributeInitEvent(player, attribute);
+        JARoleAttributeLoadedEvent event = new JARoleAttributeLoadedEvent(player, attribute);
         event.call();
     }
 
     public void loadStateData(Player player) {
         if (player == null) return;
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        Scheduler.runAsync(() -> {
             RoleState state = JustAttribute.getStorageManager().getPlayerDate(player);
             playerState.put(player.getUniqueId(), state);
 
             plugin.getLogger().info(" 初始化 " + player.getName() + " 角色成功！");
 
-            JARoleStateInitEvent event = new JARoleStateInitEvent(player, state);
+            JARoleStateLoadedEvent event = new JARoleStateLoadedEvent(player, state);
             event.call();
         });
     }

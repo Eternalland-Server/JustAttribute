@@ -8,13 +8,13 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
 @Getter
-public class JARoleAttributeInitEvent extends PlayerEvent {
+public class JARoleAttributeLoadedEvent extends PlayerEvent {
 
     private final RoleAttribute attribute;
 
     private final static HandlerList handlerList = new HandlerList();
 
-    public JARoleAttributeInitEvent(Player who, RoleAttribute attribute) {
+    public JARoleAttributeLoadedEvent(Player who, RoleAttribute attribute) {
         super(who);
         this.attribute = attribute;
     }

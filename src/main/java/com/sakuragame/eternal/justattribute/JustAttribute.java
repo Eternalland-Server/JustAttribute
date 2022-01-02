@@ -13,7 +13,8 @@ import com.sakuragame.eternal.justattribute.listener.build.SkinListener;
 import com.sakuragame.eternal.justattribute.listener.build.ZaphkielListener;
 import com.sakuragame.eternal.justattribute.listener.combat.CombatListener;
 import com.sakuragame.eternal.justattribute.listener.combat.VampireListener;
-import com.sakuragame.eternal.justattribute.listener.hook.PlayerSQLListener;
+import com.sakuragame.eternal.justattribute.listener.hook.LevelListener;
+import com.sakuragame.eternal.justattribute.listener.hook.StorageListener;
 import com.sakuragame.eternal.justattribute.storage.StorageManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -54,18 +55,17 @@ public class JustAttribute extends JavaPlugin {
         registerListener(new CombatListener());
         registerListener(new VampireListener());
         registerListener(new SoulBoundListener());
+        registerListener(new LevelListener());
 
         if (Bukkit.getPluginManager().getPlugin("PlayerSQL") != null) {
             playerSQL = true;
-            registerListener(new PlayerSQLListener());
+            registerListener(new StorageListener());
             getLogger().info("Hook: 已关联 PlayerSQL");
         }
         else {
             playerSQL = false;
             getLogger().info("Hook: 未关联 PlayerSQL");
         }
-
-        loadOnlinePlayer();
 
         getCommand("jattribute").setExecutor(new MainCommand());
 
@@ -88,10 +88,6 @@ public class JustAttribute extends JavaPlugin {
     public String getVersion() {
         String packet = Bukkit.getServer().getClass().getPackage().getName();
         return packet.substring(packet.lastIndexOf('.') + 1);
-    }
-
-    private void loadOnlinePlayer() {
-        Bukkit.getOnlinePlayers().forEach(player -> attributeManager.loadPlayer(player));
     }
 
     public void registerListener(Listener listener) {

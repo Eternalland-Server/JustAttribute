@@ -28,16 +28,6 @@ public class AttributeManager {
         this.start();
     }
 
-    public void loadPlayer(Player player) {
-        player.setHealthScale(20);
-        player.setHealthScaled(true);
-
-        RoleSync roleSync = new RoleSync();
-        sync.put(player.getUniqueId(), roleSync);
-
-        loading.add(player.getUniqueId());
-    }
-
     private void start() {
         new BukkitRunnable() {
             @Override

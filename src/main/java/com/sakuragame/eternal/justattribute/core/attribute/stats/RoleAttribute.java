@@ -8,6 +8,7 @@ import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Debug;
+import com.sakuragame.eternal.justattribute.util.Scheduler;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import lombok.Getter;
@@ -151,7 +152,7 @@ public class RoleAttribute {
 
         this.source.put(VanillaSlot.MainHand.getIdent(), new AttributeData(player, item, VanillaSlot.MainHand.getType()));
 
-        this.updateRoleAttribute();
+        Scheduler.runAsync(this::updateRoleAttribute);
     }
 
     public void updateCustomSlot(String ident, EquipClassify type, ItemStack item) {
@@ -165,7 +166,7 @@ public class RoleAttribute {
 
         this.source.put(ident, new AttributeData(player, item.clone(), type));
 
-        this.updateRoleAttribute();
+        Scheduler.runAsync(this::updateRoleAttribute);
     }
 
     public void addAttributeSource(String key, ItemStack item) {

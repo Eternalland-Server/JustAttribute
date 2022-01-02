@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 
 import java.util.UUID;
 
-public class PlayerSQLListener implements Listener {
+public class StorageListener implements Listener {
 
     @EventHandler
     public void onDataProcessed(PlayerDataProcessedEvent e) {
