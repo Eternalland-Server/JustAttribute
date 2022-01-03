@@ -58,10 +58,10 @@ public class RoleState {
     }
 
     public void restore() {
-        if (health == getMaxHealth() && mana == getMaxMana()) return;
+        if (health >= getMaxHealth() && mana >= getMaxMana()) return;
 
-        this.health += getRestoreHP();
-        this.mana += getRestoreMP();
+        this.health = Math.min(getMaxHealth(), getHealth() + getRestoreHP());
+        this.mana = Math.min(getMaxMana(), getMana() + getRestoreMP());
 
         RoleStateUpdateEvent event = new RoleStateUpdateEvent(player, this);
         event.call();
