@@ -1,6 +1,6 @@
-package com.sakuragame.eternal.justattribute.api.event;
+package com.sakuragame.eternal.justattribute.api.event.role;
 
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
+import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,15 +8,15 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
 @Getter
-public class JAUpdateAttributeEvent extends PlayerEvent {
+public class RoleStateUpdateEvent extends PlayerEvent {
 
-    private final RoleAttribute attribute;
+    private final RoleState state;
 
     private final static HandlerList handlerList = new HandlerList();
 
-    public JAUpdateAttributeEvent(Player who, RoleAttribute attribute) {
+    public RoleStateUpdateEvent(Player who, RoleState state) {
         super(who);
-        this.attribute = attribute;
+        this.state = state;
     }
 
     @Override

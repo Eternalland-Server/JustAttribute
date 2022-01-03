@@ -1,4 +1,4 @@
-package com.sakuragame.eternal.justattribute.api.event;
+package com.sakuragame.eternal.justattribute.api.event.role;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -9,7 +9,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 @Getter
-public class JARoleAttackEvent extends Event implements Cancellable {
+public class RoleAttackEvent extends Event implements Cancellable {
 
     private final Player player;
     private final LivingEntity victim;
@@ -19,7 +19,7 @@ public class JARoleAttackEvent extends Event implements Cancellable {
 
     private final static HandlerList handlerList = new HandlerList();
 
-    public JARoleAttackEvent(Player player, LivingEntity victim, double damage, boolean critical) {
+    public RoleAttackEvent(Player player, LivingEntity victim, double damage, boolean critical) {
         this.player = player;
         this.victim = victim;
         this.damage = damage;

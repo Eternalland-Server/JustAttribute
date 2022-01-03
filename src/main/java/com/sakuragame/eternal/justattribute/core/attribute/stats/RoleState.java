@@ -1,9 +1,11 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
 import com.sakuragame.eternal.justattribute.util.Debug;
+import com.sakuragame.eternal.justattribute.util.Scheduler;
 import org.bukkit.entity.Player;
 
 public class RoleState {
@@ -18,8 +20,8 @@ public class RoleState {
 
     public RoleState(Player player) {
         this.player = player;
-        this.health = 0;
-        this.mana = 0;
+        this.health = 20;
+        this.mana = 20;
     }
 
     public RoleState(Player player, double health, double mana) {
@@ -49,13 +51,15 @@ public class RoleState {
         this.setMaxHealth(maxHealth);
         this.setMaxMana(maxMana);
 
-        this.setHealth(health <= 0 ? maxHealth : health);
-        this.setMana(mana <= 0 ? maxMana : mana);
+        this.setHealth(health <= 20 ? maxHealth : health);
+        this.setMana(mana <= 20 ? maxMana : mana);
         this.setRestoreHP((1 + Attribute.Restore_Health.calculate(role)) * role.getRestoreHP());
         this.setRestoreMP((1 + Attribute.Restore_Mana.calculate(role)) * role.getRestoreMP());
     }
 
     public void restore() {
+        if (health == getMaxHealth() && mana == getMaxMana()) return;
+
         this.addHealth(getRestoreHP());
         this.addMana(getRestoreMP());
     }
@@ -69,13 +73,16 @@ public class RoleState {
     }
 
     public void takeHealth(double value) {
-        setHealth(getHealth() - value);
+        setHealth(Math.max(0, getHealth() - value));
     }
 
     public void setHealth(double value) {
         value = Math.min(value, getMaxHealth());
         this.health = value;
         this.player.setHealth(value);
+
+        RoleStateUpdateEvent event = new RoleStateUpdateEvent(player, this);
+        event.call();
     }
 
     public void setMaxHealth(double value) {
@@ -84,7 +91,7 @@ public class RoleState {
     }
 
     public double getHealth() {
-        return this.player.getHealth();
+        return health;
     }
 
     public double getMaxHealth() {
@@ -96,12 +103,14 @@ public class RoleState {
     }
 
     public void takeMana(double value) {
-        setMana(getMana() - value);
+        setMana(Math.max(0, getMana() - value));
     }
 
     public void setMana(double value) {
         mana = Math.max(0, Math.min(value, this.maxMana));
-        DragonCoreSync.sendMana(player);
+
+        RoleStateUpdateEvent event = new RoleStateUpdateEvent(player, this);
+        event.call();
     }
 
     public void setMaxMana(double value) {
@@ -130,5 +139,12 @@ public class RoleState {
 
     public double getRestoreMP() {
         return restoreMP;
+    }
+
+    public void updateHealth(double health) {
+        this.health = Math.max(0, Math.min(health, getMaxHealth()));
+
+        RoleStateUpdateEvent event = new RoleStateUpdateEvent(player, this);
+        event.call();
     }
 }

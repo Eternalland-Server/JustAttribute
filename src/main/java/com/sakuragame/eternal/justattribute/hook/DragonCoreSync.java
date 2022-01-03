@@ -20,8 +20,12 @@ public class DragonCoreSync {
     private final static String DEFENCE_PROMOTE_PAPI = "attribute_defence_promote";
     private final static String ROLE_DAMAGE_PAPI = "attribute_role_damage";
     private final static String ROLE_DEFENCE_PAPI = "attribute_role_defence";
+
+    private final static String ROLE_CURRENT_HEALTH = "attribute_role_current_health";
+    private final static String ROLE_MAX_HEALTH = "attribute_role_max_health";
     private final static String ROLE_CURRENT_MANA = "attribute_role_current_mana";
     private final static String ROLE_MAX_MANA = "attribute_role_max_mana";
+
     private final static String ROLE_TOTAL_COMBAT = "attribute_role_total_combat";
 
     public static void sendAttribute(Player player) {
@@ -62,10 +66,12 @@ public class DragonCoreSync {
         PacketSender.sendSyncPlaceholder(player, map);
     }
 
-    public static void sendMana(Player player) {
+    public static void sendState(Player player) {
         HashMap<String, String> map = new HashMap<>();
 
         RoleState state = JustAttributeAPI.getRoleState(player.getUniqueId());
+        map.put(ROLE_CURRENT_HEALTH, String.valueOf((int) state.getHealth()));
+        map.put(ROLE_MAX_HEALTH, String.valueOf((int) state.getMaxHealth()));
         map.put(ROLE_CURRENT_MANA, String.valueOf((int) state.getMana()));
         map.put(ROLE_MAX_MANA, String.valueOf((int) state.getMaxMana()));
 

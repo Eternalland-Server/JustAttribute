@@ -4,7 +4,6 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.util.RoleSync;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotLoadedEvent;
-import net.sakuragame.eternal.dragoncore.api.event.YamlSendFinishedEvent;
 import net.sakuragame.eternal.justlevel.api.event.sub.JLPlayerInitFinishedEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -59,11 +58,11 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onDCFinished(YamlSendFinishedEvent e) {
         Player player = e.getPlayer();
         player.setHealthScaled(false);
-    }
+    }*/
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {

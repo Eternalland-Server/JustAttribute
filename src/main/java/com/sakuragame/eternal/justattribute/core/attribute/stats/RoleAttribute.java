@@ -1,6 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
-import com.sakuragame.eternal.justattribute.api.event.JAUpdateAttributeEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
@@ -132,7 +132,7 @@ public class RoleAttribute {
         this.totalAttribute = new AttributeData(ordinary, potency);
         this.combat = CombatCapacity.get(totalAttribute);
 
-        JAUpdateAttributeEvent event = new JAUpdateAttributeEvent(getPlayer(), this);
+        RoleAttributeUpdateEvent event = new RoleAttributeUpdateEvent(getPlayer(), this);
         event.call();
     }
 

@@ -1,8 +1,8 @@
 package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.api.event.JARoleAttributeLoadedEvent;
-import com.sakuragame.eternal.justattribute.api.event.JARoleStateLoadedEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeLoadedEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleStateLoadedEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
@@ -35,7 +35,7 @@ public class RoleManager {
 
         plugin.getLogger().info(" 初始化 " + player.getName() + " 属性成功！");
 
-        JARoleAttributeLoadedEvent event = new JARoleAttributeLoadedEvent(player, attribute);
+        RoleAttributeLoadedEvent event = new RoleAttributeLoadedEvent(player, attribute);
         event.call();
     }
 
@@ -48,7 +48,7 @@ public class RoleManager {
 
             plugin.getLogger().info(" 初始化 " + player.getName() + " 角色成功！");
 
-            JARoleStateLoadedEvent event = new JARoleStateLoadedEvent(player, state);
+            RoleStateLoadedEvent event = new RoleStateLoadedEvent(player, state);
             event.call();
         });
     }

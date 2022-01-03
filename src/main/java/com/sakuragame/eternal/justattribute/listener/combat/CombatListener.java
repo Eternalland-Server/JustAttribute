@@ -1,10 +1,12 @@
 package com.sakuragame.eternal.justattribute.listener.combat;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.api.event.JARoleAttackEvent;
+import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.MobAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
+import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.hook.DamageModify;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
@@ -48,7 +50,7 @@ public class CombatListener implements Listener {
     }*/
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onDamage(EntityDamageByEntityEvent e) {
+    public void onCombat(EntityDamageByEntityEvent e) {
         if (e.isCancelled()) return;
 
         LivingEntity attacker = getActualAttacker(e.getDamager());
@@ -71,7 +73,7 @@ public class CombatListener implements Listener {
             return;
         }
 
-        JARoleAttackEvent event;
+        RoleAttackEvent event;
 
         if (attacker instanceof Player) {
             RoleAttribute attackData = getTargetAttrData((Player) attacker);
@@ -103,6 +105,21 @@ public class CombatListener implements Listener {
         }
 
         e.setDamage(event.getDamage());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onDamage(EntityDamageEvent e) {
+        if (e.isCancelled()) return;
+
+        Entity entity = e.getEntity();
+        if (!(entity instanceof Player)) return;
+
+        Player player = (Player) entity;
+
+        RoleState state = JustAttributeAPI.getRoleState(player);
+        if (state == null) return;
+
+        state.updateHealth(player.getHealth() - e.getDamage());
     }
 
     private LivingEntity getActualAttacker(Entity target) {

@@ -1,6 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.special;
 
-import com.sakuragame.eternal.justattribute.api.event.JAEquipBoundEvent;
+import com.sakuragame.eternal.justattribute.api.event.EquipBoundEvent;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
@@ -90,7 +90,7 @@ public class SoulBound {
 
         ItemStack rebuild = itemStream.rebuildToItemStack(player);
 
-        JAEquipBoundEvent event = new JAEquipBoundEvent(player, rebuild);
+        EquipBoundEvent event = new EquipBoundEvent(player, rebuild);
         event.call();
 
         return rebuild;

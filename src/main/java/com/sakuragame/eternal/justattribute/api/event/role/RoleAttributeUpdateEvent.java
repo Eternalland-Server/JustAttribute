@@ -1,21 +1,22 @@
-package com.sakuragame.eternal.justattribute.api.event;
+package com.sakuragame.eternal.justattribute.api.event.role;
 
+import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.inventory.ItemStack;
 
 @Getter
-public class JAEquipBoundEvent extends PlayerEvent {
+public class RoleAttributeUpdateEvent extends PlayerEvent {
 
-    private final ItemStack item;
+    private final RoleAttribute attribute;
+
     private final static HandlerList handlerList = new HandlerList();
 
-    public JAEquipBoundEvent(Player who, ItemStack item) {
+    public RoleAttributeUpdateEvent(Player who, RoleAttribute attribute) {
         super(who);
-        this.item = item;
+        this.attribute = attribute;
     }
 
     @Override

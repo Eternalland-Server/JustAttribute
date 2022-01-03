@@ -1,22 +1,20 @@
 package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.api.event.JARoleAttackEvent;
-import com.sakuragame.eternal.justattribute.api.event.vampire.JARoleHealthStealEvent;
-import com.sakuragame.eternal.justattribute.api.event.vampire.JARoleHealthStoleEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleAttackEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStealEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStoleEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.MobAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.hook.DamageModify;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 
 public class CombatHandler {
 
-    public static JARoleAttackEvent calculate(RoleAttribute attacker, RoleAttribute sufferer) {
+    public static RoleAttackEvent calculate(RoleAttribute attacker, RoleAttribute sufferer) {
         boolean critical = false;
         double damage = getValue(attacker, Attribute.Damage);
         double dp = getValue(attacker, Attribute.Defence_Penetration);
@@ -35,10 +33,10 @@ public class CombatHandler {
         
         lastDamage = lastDamage * (1 - di);
 
-        return new JARoleAttackEvent(attacker.getPlayer(), sufferer.getPlayer(), lastDamage, critical);
+        return new RoleAttackEvent(attacker.getPlayer(), sufferer.getPlayer(), lastDamage, critical);
     }
 
-    public static JARoleAttackEvent calculate(RoleAttribute attacker, MobAttribute sufferer) {
+    public static RoleAttackEvent calculate(RoleAttribute attacker, MobAttribute sufferer) {
         boolean critical = false;
         double damage = getValue(attacker, Attribute.Damage);
         double cc = getValue(attacker, Attribute.Critical_Chance);
@@ -55,7 +53,7 @@ public class CombatHandler {
         double damageModify = sufferer.getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1.0);
         lastDamage = lastDamage * damageModify;
 
-        return new JARoleAttackEvent(attacker.getPlayer(), sufferer.getEntity(), lastDamage, critical);
+        return new RoleAttackEvent(attacker.getPlayer(), sufferer.getEntity(), lastDamage, critical);
     }
 
     public static double calculate(MobAttribute attacker, RoleAttribute sufferer) {
@@ -89,14 +87,14 @@ public class CombatHandler {
         double damageValue = damage * damageRate;
         double versatileValue = damage * versatileRate;
 
-        JARoleHealthStealEvent stealEvent = new JARoleHealthStealEvent(player, source, damageValue + versatileValue);
+        RoleHealthStealEvent stealEvent = new RoleHealthStealEvent(player, source, damageValue + versatileValue);
         if (stealEvent.call()) {
             return;
         }
 
         double vampire = stealEvent.getVampire();
 
-        JARoleHealthStoleEvent stoleEvent = new JARoleHealthStoleEvent(player, source, vampire);
+        RoleHealthStoleEvent stoleEvent = new RoleHealthStoleEvent(player, source, vampire);
         stoleEvent.call();
 
         JustAttribute.getRoleManager().getPlayerState(player.getUniqueId()).addHealth(vampire);
