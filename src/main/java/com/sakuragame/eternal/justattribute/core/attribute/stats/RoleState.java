@@ -60,8 +60,11 @@ public class RoleState {
     public void restore() {
         if (health == getMaxHealth() && mana == getMaxMana()) return;
 
-        this.addHealth(getRestoreHP());
-        this.addMana(getRestoreMP());
+        this.health += getRestoreHP();
+        this.mana += getRestoreMP();
+
+        RoleStateUpdateEvent event = new RoleStateUpdateEvent(player, this);
+        event.call();
     }
 
     public void save() {
