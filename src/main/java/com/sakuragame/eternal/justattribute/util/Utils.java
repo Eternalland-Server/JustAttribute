@@ -83,6 +83,6 @@ public class Utils {
     public static double getRealmDefencePromote(Player player) {
         PlayerLevelData data = JustLevelAPI.getData(player);
 
-        return ((data.getStage() - 1) * 0.1 + (data.getRealm() - 1) * 0.7) * 0.35 + 1;
+        return ((data.getStage() - 1) * 0.1 + (data.getRealm() - 1) * 0.7) * 0.38 + 1;
     }
 }

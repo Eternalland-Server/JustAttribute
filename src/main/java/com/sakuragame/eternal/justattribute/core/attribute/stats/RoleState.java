@@ -147,4 +147,12 @@ public class RoleState {
         RoleStateUpdateEvent event = new RoleStateUpdateEvent(player, this);
         event.call();
     }
+
+    public double getHealthPercentage() {
+        return getHealth() / getMaxHealth();
+    }
+
+    public double getManaPercentage() {
+        return getMana() / getMaxMana();
+    }
 }
