@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.listener.combat;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
+import com.sakuragame.eternal.justattribute.api.event.PlayerUnderAttackedEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.MobAttribute;
@@ -119,7 +120,11 @@ public class CombatListener implements Listener {
         RoleState state = JustAttributeAPI.getRoleState(player);
         if (state == null) return;
 
-        state.updateHealth(player.getHealth() - e.getDamage());
+        double damage =  e.getDamage();
+        state.updateHealth(player.getHealth() - damage);
+
+        PlayerUnderAttackedEvent event = new PlayerUnderAttackedEvent(player, damage);
+        event.call();
     }
 
     private LivingEntity getActualAttacker(Entity target) {
