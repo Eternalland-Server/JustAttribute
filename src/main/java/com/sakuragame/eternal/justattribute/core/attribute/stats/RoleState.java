@@ -64,6 +64,14 @@ public class RoleState {
         JustAttribute.getStorageManager().updatePlayerData(player, getHealth(), getMana());
     }
 
+    public void addHealth(double value) {
+        setHealth(getHealth() + value);
+    }
+
+    public void takeHealth(double value) {
+        setHealth(getHealth() - value);
+    }
+
     public void setHealth(double value) {
         value = Math.min(value, getMaxHealth());
         this.health = value;
@@ -75,18 +83,20 @@ public class RoleState {
         this.player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).setBaseValue(value);
     }
 
-    public void addHealth(double value) {
-        value = Math.min(value + getHealth(), getMaxHealth());
-        this.health = value;
-        this.player.setHealth(value);
-    }
-
     public double getHealth() {
         return this.player.getHealth();
     }
 
     public double getMaxHealth() {
         return this.maxHealth;
+    }
+
+    public void addMana(double value) {
+        setMana(getMana() + value);
+    }
+
+    public void takeMana(double value) {
+        setMana(getMana() - value);
     }
 
     public void setMana(double value) {
@@ -96,17 +106,6 @@ public class RoleState {
 
     public void setMaxMana(double value) {
         maxMana = value;
-    }
-
-    public void addMana(double value) {
-        setMana(getMana() + value);
-    }
-
-    public boolean takeMana(double value) {
-        if (mana < value) return false;
-
-        mana =- value;
-        return true;
     }
 
     public double getMana() {
