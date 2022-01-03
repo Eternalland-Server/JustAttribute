@@ -123,7 +123,7 @@ public class CombatListener implements Listener {
         double damage =  e.getDamage();
         state.updateHealth(player.getHealth() - damage);
 
-        PlayerUnderAttackedEvent event = new PlayerUnderAttackedEvent(player, damage);
+        PlayerUnderAttackedEvent event = new PlayerUnderAttackedEvent(player, e.getCause(), damage);
         event.call();
     }
 

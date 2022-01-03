@@ -4,17 +4,20 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerEvent;
 
 @Getter
 public class PlayerUnderAttackedEvent extends PlayerEvent {
 
+    private final EntityDamageEvent.DamageCause cause;
     private final double damage;
 
     private final static HandlerList handlerList = new HandlerList();
 
-    public PlayerUnderAttackedEvent(Player who, double damage) {
+    public PlayerUnderAttackedEvent(Player who, EntityDamageEvent.DamageCause cause, double damage) {
         super(who);
+        this.cause = cause;
         this.damage = damage;
     }
 
