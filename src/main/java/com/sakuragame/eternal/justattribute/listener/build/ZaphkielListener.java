@@ -4,6 +4,8 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.AttributeData;
+import com.sakuragame.eternal.justattribute.core.soulbound.Action;
+import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.*;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
@@ -67,41 +69,33 @@ public class ZaphkielListener implements Listener {
         if (data == null) return;
         int id = data.asInt();
 
-        SoulBound.Action action = SoulBound.Action.getAction(id);
-        if (action == null) return;
+        Action action = Action.match(id);
+        if (action == null || action == Action.USE) return;
 
         if (player != null) {
-            if (action == SoulBound.Action.AUTO) {
-                itemTag.removeDeep(SoulBound.NBT_ACTION_NODE);
-                itemTag.putDeep(SoulBound.NBT_UUID_NODE, player.getUniqueId().toString());
-                itemTag.putDeep(SoulBound.NBT_NAME_NODE, player.getName());
-                return;
-            }
-
-            if (action == SoulBound.Action.PROP) {
-                itemTag.removeDeep(SoulBound.NBT_ACTION_NODE);
-                itemTag.putDeep(SoulBound.NBT_UUID_NODE, player.getUniqueId().toString());
-                itemTag.putDeep(SoulBound.NBT_NAME_NODE, player.getName());
-
-                e.addLore(SoulBound.DISPLAY_NODE, action.formatting());
-                return;
-            }
+            action.getHandler().build(player, itemTag);
+            return;
         }
 
-        e.addLore(SoulBound.DISPLAY_NODE, action.formatting());
+        e.addLore(SoulBound.DISPLAY_NODE, action.getHandler().getUnboundDesc());
     }
 
     @EventHandler
     public void onSoulBound(ItemReleaseEvent.Display e) {
         Player player = e.getPlayer();
-        ItemTag itemTag = e.getItemStream().getZaphkielData();
-
-        ItemTagData data = itemTag.getDeep(SoulBound.NBT_NAME_NODE);
-
-        if (data == null) return;
         if (player == null) return;
 
-        e.addLore(SoulBound.DISPLAY_NODE, SoulBound.format(player.getName()));
+        ItemTag itemTag = e.getItemStream().getZaphkielData();
+
+        ItemTagData type = itemTag.getDeep(SoulBound.NBT_TYPE_NODE);
+        if (type == null) return;
+        Action action = Action.match(type.asInt());
+        if (action == null) return;
+
+        ItemTagData owner = itemTag.getDeep(SoulBound.NBT_NAME_NODE);
+        if (owner == null) return;
+
+        e.addLore(SoulBound.DISPLAY_NODE, action.getHandler().getBoundDesc(owner.asString()));
     }
 
     @EventHandler

@@ -82,7 +82,7 @@ public enum Attribute {
     }
 
     public String format(double value, boolean isPercent) {
-        return ConfigFile.attribute_format
+        return ConfigFile.format.attribute
                 .replace("<symbol>", getSymbol())
                 .replace("<identifier>", getDisplay())
                 .replace("<value>", Utils.formatValue(value, isPercent));

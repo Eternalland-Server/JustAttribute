@@ -27,7 +27,7 @@ public enum PotencyGrade {
     }
 
     public String formatting() {
-        return ConfigFile.potency_format
+        return ConfigFile.format.potency
                 .replace("<symbol>", getSymbol())
                 .replace("<desc>", POTENCY_DESC);
     }

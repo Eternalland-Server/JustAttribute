@@ -44,6 +44,7 @@ public class JustAttribute extends JavaPlugin {
         storageManager = new StorageManager(this);
         fileManager.init();
         storageManager.init();
+        attributeManager.init();
 
         new AttributePlaceholder().register();
 

@@ -15,7 +15,7 @@ public class CombatCapacity {
 
     public static List<String> format(int combat) {
         List<String> display = new ArrayList<>();
-        ConfigFile.combat_format.forEach(s -> display.add(s.replace("<combat>", Utils.getSource(combat))));
+        ConfigFile.format.combat.forEach(s -> display.add(s.replace("<combat>", Utils.getSource(combat))));
 
         return display;
     }

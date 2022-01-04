@@ -18,18 +18,25 @@ public class ConfigFile {
 
     public static double damage_immune_limit;
     public static String potency_empty;
-    public static String soulbound_auto;
-    public static String soulbound_use;
-    public static String soulbound_prop;
 
-    public static String attribute_format;
-    public static String bound_format;
-    public static String unbound_format;
-    public static String realm_format;
-    public static String classify_format;
-    public static String quality_format;
-    public static List<String> combat_format;
-    public static String potency_format;
+    public static class SoulBound {
+        public static String auto;
+        public static String use;
+        public static String prop;
+        public static String autoLock;
+        public static String useLock;
+        public static String propLock;
+    }
+    
+    public static class format {
+        public static String attribute;
+        public static String bound;
+        public static String boundLock;
+        public static String classify;
+        public static String quality;
+        public static List<String> combat;
+        public static String potency;
+    }
 
     public static HashMap<Attribute, Integer> combatCapability;
 
@@ -62,18 +69,17 @@ public class ConfigFile {
 
         damage_immune_limit = config.getDouble("base.damage-immune-limit");
         potency_empty = getString("base.potency.empty");
-        soulbound_auto = getString("base.soulbound.auto");
-        soulbound_use = getString("base.soulbound.use");
-        soulbound_prop = getString("base.soulbound.prop");
+        SoulBound.auto = getString("base.soulbound.auto");
+        SoulBound.use = getString("base.soulbound.use");
+        SoulBound.prop = getString("base.soulbound.prop");
 
-        attribute_format = getString("format.attribute");
-        bound_format = getString("format.bound");
-        unbound_format = getString("format.unbound");
-        realm_format = getString("format.realm");
-        classify_format = getString("format.classify");
-        quality_format = getString("format.quality");
-        combat_format = getStringList("format.combat");
-        potency_format = getString("format.potency");
+        format.attribute = getString("format.attribute");
+        format.bound = getString("format.bound");
+        format.boundLock = getString("format.bound_lock");
+        format.classify = getString("format.classify");
+        format.quality = getString("format.quality");
+        format.combat = getStringList("format.combat");
+        format.potency = getString("format.potency");
 
         RoleBase.health = config.getDouble("role-base.health");
         RoleBase.mana = config.getDouble("role-base.mana");

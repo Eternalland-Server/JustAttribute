@@ -30,7 +30,7 @@ public enum EquipQuality {
     }
 
     public String formatting() {
-        return ConfigFile.quality_format
+        return ConfigFile.format.quality
                 .replace("<name>", getName())
                 .replace("<desc>", getDesc());
     }

@@ -46,7 +46,7 @@ public enum EquipClassify {
     }
 
     public String formatting() {
-        return ConfigFile.classify_format.replace("<classify>", getName());
+        return ConfigFile.format.classify.replace("<classify>", getName());
     }
 
     public static EquipClassify getType(int id) {
@@ -59,13 +59,18 @@ public enum EquipClassify {
         return null;
     }
 
-    public static EquipClassify getItemType(ItemStack item) {
+    public static EquipClassify getClassify(ItemStack item) {
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
         if (itemStream.isVanilla()) return null;
 
         ItemTag itemTag = itemStream.getZaphkielData();
-        int id = itemTag.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
+        return getClassify(itemTag);
+    }
 
-        return getType(id);
+    public static EquipClassify getClassify(ItemTag tag) {
+        ItemTagData data = tag.getDeep(NBT_NODE);
+        if (data == null) return null;
+
+        return getType(data.asInt());
     }
 }

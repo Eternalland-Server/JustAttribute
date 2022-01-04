@@ -3,7 +3,6 @@ package com.sakuragame.eternal.justattribute.core;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.util.RoleSync;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -25,6 +24,9 @@ public class AttributeManager {
 
     public AttributeManager(JustAttribute plugin) {
         this.plugin = plugin;
+    }
+
+    public void init() {
         this.start();
     }
 

@@ -2,9 +2,12 @@ package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
+import com.sakuragame.eternal.justattribute.core.soulbound.Action;
+import com.sakuragame.eternal.justattribute.core.soulbound.Owner;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
-import com.sakuragame.eternal.justattribute.core.special.SoulBound;
+import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.sakuragame.eternal.justattribute.util.Scheduler;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
@@ -65,12 +68,15 @@ public class SlotListener implements Listener {
             }
         }
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        Scheduler.runLaterAsync(() -> {
             ItemStack item = player.getInventory().getItem(index);
 
             if (!MegumiUtil.isEmpty(item) && slot != VanillaSlot.MainHand) {
-                if (SoulBound.isUseBind(item)) {
-                    player.getInventory().setItem(index, SoulBound.binding(player, item));
+                Action action = SoulBound.getAction(item);
+                if (action == null) return;
+
+                if (action == Action.USE || action == Action.USE_LOCK) {
+                    player.getInventory().setItem(index, SoulBound.binding(player, item, action));
                 }
             }
 
@@ -122,13 +128,18 @@ public class SlotListener implements Listener {
             return;
         }
 
-        String owner = itemTag.getDeepOrElse(SoulBound.NBT_UUID_NODE, new ItemTagData("")).asString();
-        if (!owner.isEmpty() && !player.getUniqueId().toString().equals(owner)) {
+        Owner owner = SoulBound.getOwner(itemTag);
+        if (owner != null && !player.getUniqueId().equals(owner.getUUID())) {
             MessageAPI.sendActionTip(player, "§c§l这件装备绑定的是其他人");
             e.setCancelled(true);
         }
         else {
-            e.setHandItem(SoulBound.binding(player, item));
+            Action action = SoulBound.getAction(itemTag);
+            if (action == null) return;
+
+            if (action == Action.USE || action == Action.USE_LOCK) {
+                e.setHandItem(SoulBound.binding(player, item, action));
+            }
         }
     }
 
@@ -139,8 +150,11 @@ public class SlotListener implements Listener {
 
         if (MegumiUtil.isEmpty(item)) return;
 
-        if (SoulBound.isUseBind(item)) {
-            player.getInventory().setItemInMainHand(SoulBound.binding(player, item));
+        Action action = SoulBound.getAction(item);
+        if (action == null) return;
+
+        if (action == Action.USE || action == Action.USE_LOCK) {
+            player.getInventory().setItemInMainHand(SoulBound.binding(player, item, action));
             JustAttribute.getRoleManager().updateVanillaSlot(player, VanillaSlot.MainHand);
         }
     }
@@ -154,9 +168,12 @@ public class SlotListener implements Listener {
 
         if (MegumiUtil.isEmpty(item)) return;
 
-        if (SoulBound.isUseBind(item)) {
-            player.getInventory().setItemInOffHand(SoulBound.binding(player, item));
-            JustAttribute.getRoleManager().updateVanillaSlot(player, VanillaSlot.MainHand);
+        Action action = SoulBound.getAction(item);
+        if (action == null) return;
+
+        if (action == Action.USE || action == Action.USE_LOCK) {
+            player.getInventory().setItemInMainHand(SoulBound.binding(player, item, action));
+            JustAttribute.getRoleManager().updateVanillaSlot(player, VanillaSlot.OffHand);
         }
     }
 }
