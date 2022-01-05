@@ -1,7 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.soulbound;
 
 import com.sakuragame.eternal.justattribute.api.event.EquipBoundEvent;
-import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;

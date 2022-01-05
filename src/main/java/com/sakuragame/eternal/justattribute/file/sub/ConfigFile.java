@@ -72,6 +72,9 @@ public class ConfigFile {
         SoulBound.auto = getString("base.soulbound.auto");
         SoulBound.use = getString("base.soulbound.use");
         SoulBound.prop = getString("base.soulbound.prop");
+        SoulBound.autoLock = getString("base.soulbound.auto_lock");
+        SoulBound.useLock = getString("base.soulbound.use_lock");
+        SoulBound.propLock = getString("base.soulbound.prop_lock");
 
         format.attribute = getString("format.attribute");
         format.bound = getString("format.bound");
