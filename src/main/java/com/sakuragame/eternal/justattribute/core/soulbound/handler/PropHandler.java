@@ -31,13 +31,13 @@ public class PropHandler {
     public static class Lock extends BoundHandler {
 
         @Override
-        public String getBoundDesc(String owner) {
-            return ConfigFile.format.boundLock.replace("<owner>", owner);
+        public String getUnboundDesc() {
+            return ConfigFile.SoulBound.propLock;
         }
 
         @Override
-        public String getUnboundDesc() {
-            return ConfigFile.SoulBound.propLock;
+        public String getBoundDesc(String owner) {
+            return getUnboundDesc();
         }
 
         @Override
