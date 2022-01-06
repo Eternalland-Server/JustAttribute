@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 public enum Action {
 
-    AUTO(0, new AutoHandler.Normal()),
-    USE(1, new UseHandler.Normal()),
-    PROP(2, new PropHandler.Normal()),
-    AUTO_LOCK(10, new AutoHandler.Lock()),
-    USE_LOCK(11, new UseHandler.Lock()),
-    PROP_LOCK(12, new PropHandler.Lock());
+    AUTO_LOCK(0, new AutoHandler.Lock()),
+    USE_LOCK(1, new UseHandler.Lock()),
+    PROP_LOCK(2, new PropHandler.Lock()),
+    AUTO(10, new AutoHandler.Normal()),
+    USE(11, new UseHandler.Normal()),
+    PROP(22, new PropHandler.Normal());
 
     private final int id;
     private final BoundHandler handler;
