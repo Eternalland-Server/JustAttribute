@@ -8,6 +8,7 @@ import net.sakuragame.eternal.justlevel.api.event.sub.JLPlayerInitFinishedEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -21,6 +22,7 @@ public class PlayerListener implements Listener {
 
         player.setHealthScale(20);
         player.setHealthScaled(true);
+        player.setFoodLevel(20);
 
         RoleSync roleSync = new RoleSync();
         AttributeManager.sync.put(player.getUniqueId(), roleSync);
@@ -73,5 +75,10 @@ public class PlayerListener implements Listener {
         JustAttribute.getRoleManager().removeStateData(player);
         AttributeManager.sync.remove(uuid);
         AttributeManager.loading.remove(uuid);
+    }
+
+    @EventHandler
+    public void onFood(FoodLevelChangeEvent e) {
+        e.setCancelled(true);
     }
 }
