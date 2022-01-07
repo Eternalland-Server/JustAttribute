@@ -81,7 +81,7 @@ public class SlotListener implements Listener {
             }
 
             JustAttribute.getRoleManager().updateVanillaSlot(player, slot);
-        }, 1);
+        }, 3);
     }
 
     @EventHandler
