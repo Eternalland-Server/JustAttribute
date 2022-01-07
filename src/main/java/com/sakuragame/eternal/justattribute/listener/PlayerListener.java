@@ -8,6 +8,7 @@ import net.sakuragame.eternal.justlevel.api.event.sub.JLPlayerInitFinishedEvent;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
@@ -34,10 +35,11 @@ public class PlayerListener implements Listener {
         AttributeManager.loading.add(player.getUniqueId());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onGameModeChange(PlayerGameModeChangeEvent e) {
         Player player = e.getPlayer();
         if (player.isOp()) return;
+        if (e.getNewGameMode() == GameMode.ADVENTURE) return;
 
         e.setCancelled(true);
     }
