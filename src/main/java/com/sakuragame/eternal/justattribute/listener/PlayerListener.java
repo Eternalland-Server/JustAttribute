@@ -5,6 +5,7 @@ import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.util.RoleSync;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotLoadedEvent;
 import net.sakuragame.eternal.justlevel.api.event.sub.JLPlayerInitFinishedEvent;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +25,7 @@ public class PlayerListener implements Listener {
         player.setHealthScale(20);
         player.setHealthScaled(true);
         player.setFoodLevel(20);
+        if (!player.isOp()) player.setGameMode(GameMode.ADVENTURE);
 
         RoleSync roleSync = new RoleSync();
         AttributeManager.sync.put(player.getUniqueId(), roleSync);
