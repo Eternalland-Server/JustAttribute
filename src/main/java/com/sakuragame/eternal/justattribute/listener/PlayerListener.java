@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -31,6 +32,14 @@ public class PlayerListener implements Listener {
         AttributeManager.sync.put(player.getUniqueId(), roleSync);
 
         AttributeManager.loading.add(player.getUniqueId());
+    }
+
+    @EventHandler
+    public void onGameModeChange(PlayerGameModeChangeEvent e) {
+        Player player = e.getPlayer();
+        if (player.isOp()) return;
+
+        e.setCancelled(true);
     }
 
     @EventHandler
