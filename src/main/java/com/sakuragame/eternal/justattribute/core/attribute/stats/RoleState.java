@@ -28,6 +28,8 @@ public class RoleState {
         this.player = player;
         this.health = health;
         this.mana = mana;
+        Debug.info(Debug.Role, "storage hp: " + health);
+        Debug.info(Debug.Role, "storage mp: " + mana);
     }
 
     public void update() {
@@ -41,6 +43,7 @@ public class RoleState {
         Debug.info(Debug.Role, "max hp: " + maxHealth);
         Debug.info(Debug.Role, "max mp: " + maxMana);
         Debug.info(Debug.Role, "current hp: " + currentHP);
+        Debug.info(Debug.Role, "current max hp: " + player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getBaseValue());
         Debug.info(Debug.Role, "hp: " + health);
         Debug.info(Debug.Role, "mp: " + mana);
 
@@ -51,8 +54,8 @@ public class RoleState {
         this.setMaxHealth(maxHealth);
         this.setMaxMana(maxMana);
 
-        this.setHealth(health <= 20 ? maxHealth : health);
-        this.setMana(mana <= 20 ? maxMana : mana);
+        this.setHealth(health <= 20 ? maxHealth : Math.min(getMaxHealth(), health));
+        this.setMana(mana <= 20 ? maxMana : Math.min(getMaxMana(), mana));
         this.setRestoreHP((1 + Attribute.Restore_Health.calculate(role)) * role.getRestoreHP());
         this.setRestoreMP((1 + Attribute.Restore_Mana.calculate(role)) * role.getRestoreMP());
     }

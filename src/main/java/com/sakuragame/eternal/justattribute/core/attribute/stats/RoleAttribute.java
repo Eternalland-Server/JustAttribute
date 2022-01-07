@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
+import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
@@ -138,9 +139,12 @@ public class RoleAttribute {
 
     public void updateVanillaSlot(VanillaSlot slot) {
         Player player = getPlayer();
-
         ItemStack item = slot.getItem(player);
 
+        updateSlot(slot.getIdent(), slot.getType(), item);
+    }
+
+    public void updateVanillaSlot(VanillaSlot slot, ItemStack item) {
         updateSlot(slot.getIdent(), slot.getType(), item);
     }
 
@@ -161,8 +165,9 @@ public class RoleAttribute {
 
     private void updateSlot(String ident, EquipClassify type, ItemStack item) {
         Player player = getPlayer();
-
-        if (MegumiUtil.isEmpty(item)) item = new ItemStack(Material.AIR);
+        if (MegumiUtil.isEmpty(item)) {
+            item = new ItemStack(Material.AIR);
+        }
 
         this.source.put(ident, new AttributeData(player, item.clone(), type));
 

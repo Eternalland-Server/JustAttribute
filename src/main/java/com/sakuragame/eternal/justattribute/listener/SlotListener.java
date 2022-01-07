@@ -17,6 +17,7 @@ import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotHandleEvent;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotUpdateEvent;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,8 +33,9 @@ public class SlotListener implements Listener {
 
     private final JustAttribute plugin = JustAttribute.getInstance();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onVanilla(InventoryClickEvent e) {
+        if (e.isCancelled()) return;
         if (!(e.getWhoClicked() instanceof Player)) return;
 
         Player player = (Player) e.getWhoClicked();
@@ -68,6 +70,16 @@ public class SlotListener implements Listener {
             }
         }
 
+        ItemStack cursor = player.getItemOnCursor();
+        if (MegumiUtil.isEmpty(cursor)) {
+            JustAttribute.getRoleManager().updateVanillaSlot(player, slot, new ItemStack(Material.AIR));
+        }
+        else {
+            JustAttribute.getRoleManager().updateVanillaSlot(player, slot, cursor);
+        }
+
+        /*plugin.getLogger().info(MegumiUtil.isEmpty(cursor) ? "cursor item is empty" : player.getItemOnCursor().getItemMeta().getDisplayName());
+
         Scheduler.runLaterAsync(() -> {
             ItemStack item = player.getInventory().getItem(index);
 
@@ -80,7 +92,8 @@ public class SlotListener implements Listener {
             }
 
             JustAttribute.getRoleManager().updateVanillaSlot(player, slot);
-        }, 1);
+            plugin.getLogger().info("update vanilla slot: " + slot.getIdent());
+        }, 4);*/
     }
 
     @EventHandler

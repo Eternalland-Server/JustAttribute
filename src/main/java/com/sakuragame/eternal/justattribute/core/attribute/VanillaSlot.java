@@ -9,10 +9,10 @@ import org.bukkit.inventory.ItemStack;
 @Getter
 public enum VanillaSlot {
 
-    Helmet(5, EquipClassify.Armor, "helmet"),
-    Chestplate(6, EquipClassify.Armor, "chestplate"),
-    Leggings(7, EquipClassify.Armor, "leggings"),
-    Boots(8, EquipClassify.Armor, "boots"),
+    Helmet(5, EquipClassify.Helmet, "helmet"),
+    Chestplate(6, EquipClassify.Chestplate, "chestplate"),
+    Leggings(7, EquipClassify.Leggings, "leggings"),
+    Boots(8, EquipClassify.Boots, "boots"),
     MainHand(-1, EquipClassify.MainHand, "mainhand"),
     OffHand(45, EquipClassify.OffHand, "offhand");
 

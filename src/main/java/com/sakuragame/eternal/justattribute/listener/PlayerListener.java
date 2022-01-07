@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -60,11 +61,20 @@ public class PlayerListener implements Listener {
         }
     }
 
-    /*@EventHandler
-    public void onDCFinished(YamlSendFinishedEvent e) {
+    @EventHandler
+    public void onHeld(PlayerItemHeldEvent e) {
         Player player = e.getPlayer();
-        player.setHealthScaled(false);
-    }*/
+        UUID uuid = player.getUniqueId();
+
+        RoleSync initSync = AttributeManager.sync.get(uuid);
+        if (initSync == null) return;
+
+        initSync.setHeldEvent(true);
+        if (initSync.isFinished()) {
+            AttributeManager.sync.remove(uuid);
+            JustAttribute.getRoleManager().loadAttributeData(player);
+        }
+    }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {

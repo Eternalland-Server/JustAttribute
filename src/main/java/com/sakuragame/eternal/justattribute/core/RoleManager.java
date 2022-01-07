@@ -59,10 +59,10 @@ public class RoleManager {
 
     public void removeStateData(Player player) {
         RoleState state = this.playerState.remove(player.getUniqueId());
-        if (state != null) {
-            state.save();
-            plugin.getLogger().info(" 保存 " + player.getName() + " 角色数据成功！");
-        }
+        if (state == null) return;
+
+        state.save();
+        plugin.getLogger().info(" 保存 " + player.getName() + " 角色数据成功！");
     }
 
     public RoleAttribute getPlayerAttribute(UUID uuid) {
@@ -75,16 +75,22 @@ public class RoleManager {
 
     public void updateVanillaSlot(Player player, VanillaSlot slot) {
         UUID uuid = player.getUniqueId();
-
         RoleAttribute attribute = playerAttribute.get(uuid);
         if (attribute == null) return;
 
         attribute.updateVanillaSlot(slot);
     }
 
+    public void updateVanillaSlot(Player player, VanillaSlot slot, ItemStack item) {
+        UUID uuid = player.getUniqueId();
+        RoleAttribute attribute = playerAttribute.get(uuid);
+        if (attribute == null) return;
+
+        attribute.updateVanillaSlot(slot, item);
+    }
+
     public void updateMainHandSlot(Player player, int slot) {
         UUID uuid = player.getUniqueId();
-
         RoleAttribute attribute = playerAttribute.get(uuid);
         if (attribute == null) return;
 
@@ -93,7 +99,6 @@ public class RoleManager {
 
     public void updateCustomSlot(Player player, String ident, EquipClassify type, ItemStack item) {
         UUID uuid = player.getUniqueId();
-
         RoleAttribute attribute = playerAttribute.get(uuid);
         if (attribute == null) return;
 
