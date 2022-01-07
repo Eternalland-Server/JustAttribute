@@ -73,15 +73,14 @@ public class SlotListener implements Listener {
 
             if (!MegumiUtil.isEmpty(item) && slot != VanillaSlot.MainHand) {
                 Action action = SoulBound.getAction(item);
-                if (action == null) return;
 
-                if (action == Action.USE || action == Action.USE_LOCK) {
+                if ((action == Action.USE || action == Action.USE_LOCK)) {
                     player.getInventory().setItem(index, SoulBound.binding(player, item, action));
                 }
             }
 
             JustAttribute.getRoleManager().updateVanillaSlot(player, slot);
-        }, 3);
+        }, 1);
     }
 
     @EventHandler
