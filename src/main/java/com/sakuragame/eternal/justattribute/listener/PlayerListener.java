@@ -75,21 +75,6 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onHeld(PlayerItemHeldEvent e) {
-        Player player = e.getPlayer();
-        UUID uuid = player.getUniqueId();
-
-        RoleSync initSync = AttributeManager.sync.get(uuid);
-        if (initSync == null) return;
-
-        initSync.setHeldEvent(true);
-        if (initSync.isFinished()) {
-            AttributeManager.sync.remove(uuid);
-            JustAttribute.getRoleManager().loadAttributeData(player);
-        }
-    }
-
-    @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();

@@ -7,13 +7,11 @@ public class RoleSync {
     private boolean justLevel;
     private boolean dragonSlot;
     private boolean inventory;
-    private boolean heldEvent;
 
     public RoleSync() {
         this.justLevel = false;
         this.dragonSlot = false;
         this.inventory = false;
-        this.heldEvent = false;
     }
 
     public void setJustLevel(boolean justLevel) {
@@ -27,12 +25,7 @@ public class RoleSync {
     public void setInventory(boolean inventory) {
         this.inventory = inventory;
     }
-
-    public void setHeldEvent(boolean heldEvent) {
-        this.heldEvent = heldEvent;
-    }
-
     public boolean isFinished() {
-        return justLevel && dragonSlot && heldEvent && (!JustAttribute.playerSQL || inventory);
+        return justLevel && dragonSlot && (!JustAttribute.playerSQL || inventory);
     }
 }
