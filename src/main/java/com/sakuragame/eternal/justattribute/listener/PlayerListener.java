@@ -39,7 +39,7 @@ public class PlayerListener implements Listener {
     public void onGameModeChange(PlayerGameModeChangeEvent e) {
         Player player = e.getPlayer();
         if (player.isOp()) return;
-        if (e.getNewGameMode() == GameMode.ADVENTURE) return;
+        if (e.getNewGameMode() == GameMode.ADVENTURE || e.getNewGameMode() == GameMode.SPECTATOR) return;
 
         e.setCancelled(true);
     }
