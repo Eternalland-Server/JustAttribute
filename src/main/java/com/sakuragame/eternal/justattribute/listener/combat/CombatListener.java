@@ -85,8 +85,12 @@ public class CombatListener implements Listener {
             }
             else {
                 ActiveMob mob = getMob(sufferer.getUniqueId());
-                if (mob == null) return;
-                event = CombatHandler.calculate(attackData, new MobAttribute(mob));
+                if (mob == null) {
+                    event = CombatHandler.calculate(attackData, new MobAttribute(sufferer));
+                }
+                else {
+                    event = CombatHandler.calculate(attackData, new MobAttribute(mob));
+                }
             }
         }
         else {

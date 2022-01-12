@@ -7,6 +7,7 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import lombok.Getter;
 import org.bukkit.entity.LivingEntity;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
@@ -20,6 +21,17 @@ public class MobAttribute {
     private final double defencePenetration;
     private final double minimumDamage;
     private final Map<String, Double> damageModifiers;
+
+    public MobAttribute(LivingEntity entity) {
+        this.entity = entity;
+        this.damage = 10;
+        this.defence = 10;
+        this.criticalChance = 0;
+        this.criticalDamage = 0;
+        this.defencePenetration = 0;
+        this.minimumDamage = 2;
+        this.damageModifiers = new HashMap<>();
+    }
 
     public MobAttribute(ActiveMob mob) {
         this.entity = (LivingEntity) mob.getEntity().getBukkitEntity();
