@@ -132,8 +132,10 @@ public class RoleAttribute {
         this.totalAttribute = new AttributeData(ordinary, potency);
         this.combat = CombatCapacity.get(totalAttribute);
 
-        RoleAttributeUpdateEvent event = new RoleAttributeUpdateEvent(getPlayer(), this);
-        event.call();
+        Scheduler.run(() -> {
+            RoleAttributeUpdateEvent event = new RoleAttributeUpdateEvent(getPlayer(), this);
+            event.call();
+        });
     }
 
     public void updateVanillaSlot(VanillaSlot slot) {
