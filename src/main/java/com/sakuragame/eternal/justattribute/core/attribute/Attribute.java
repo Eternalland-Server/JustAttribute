@@ -67,6 +67,10 @@ public enum Attribute {
             value = Math.min(ConfigFile.damage_immune_limit, value);
         }
 
+        if (this == MovementSpeed) {
+            value += 1;
+        }
+
         return value;
     }
 

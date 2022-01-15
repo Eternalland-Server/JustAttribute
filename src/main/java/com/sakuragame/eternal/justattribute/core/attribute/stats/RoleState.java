@@ -59,7 +59,7 @@ public class RoleState {
         this.setRestoreHP((1 + Attribute.Restore_Health.calculate(role)) * role.getRestoreHP());
         this.setRestoreMP((1 + Attribute.Restore_Mana.calculate(role)) * role.getRestoreMP());
 
-        player.setWalkSpeed((float) role.getTotalValue(Attribute.MovementSpeed));
+        player.setWalkSpeed((float) (0.2 * role.getTotalValue(Attribute.MovementSpeed)));
     }
 
     public void restore() {
