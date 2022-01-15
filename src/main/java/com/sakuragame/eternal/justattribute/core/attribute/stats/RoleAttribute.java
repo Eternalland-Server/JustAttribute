@@ -183,6 +183,16 @@ public class RoleAttribute {
         this.source.put(key, source);
     }
 
+    public void addAttributeSource(String key, AttributeData source, int time) {
+        this.source.put(key, source);
+        this.updateRoleAttribute();
+
+        Scheduler.runLaterAsync(() -> {
+            this.source.remove(key);
+            this.updateRoleAttribute();
+        }, time * 20);
+    }
+
     public HashMap<Attribute, Double> getOrdinaryAttributes() {
         HashMap<Attribute, Double> ordinary = new HashMap<>(base.getOrdinary());
         source.keySet().forEach(s -> {
