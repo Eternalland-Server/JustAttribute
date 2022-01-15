@@ -36,7 +36,7 @@ public class CombatCapacity {
                 damage += value;
             }
 
-            int source = (int) value * ConfigFile.combatCapability.get(ident);
+            int source = (int) value * ConfigFile.combatCapability.getOrDefault(ident, 0);
 
             Debug.info(Debug.CombatCapacity, ident.getId() + ": " + value + " x " + ConfigFile.combatCapability.get(ident) + " = " + source);
 
