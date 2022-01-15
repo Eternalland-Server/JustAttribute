@@ -62,15 +62,17 @@ public class CombatListener implements Listener {
         if (e.getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
             double damage = e.getDamage();
 
-            if (!(attacker instanceof Player)) return;
+            if (attacker instanceof Player) {
+                ActiveMob mob = getMob(sufferer.getUniqueId());
+                if (mob == null) return;
 
-            ActiveMob mob = getMob(sufferer.getUniqueId());
-            if (mob == null) return;
+                double damageModify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ABILITY_ATTACK.name(), 1.0);
+                double lastDamage = damage * damageModify;
+                e.setDamage(lastDamage);
+                return;
+            }
 
-            double damageModify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ABILITY_ATTACK.name(), 1.0);
-            double lastDamage = damage * damageModify;
-
-            e.setDamage(lastDamage);
+            e.setDamage(damage);
             return;
         }
 
