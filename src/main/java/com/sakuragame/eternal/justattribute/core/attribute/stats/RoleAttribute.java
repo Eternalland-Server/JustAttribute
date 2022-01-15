@@ -1,6 +1,5 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
@@ -47,7 +46,7 @@ public class RoleAttribute {
     }
 
     private void initRole() {
-        this.base.initBaseAttribute();
+        this.base.initRoleDefaultAttribute();
 
         this.updateStageGrowth();
         this.loadVanillaSlot();

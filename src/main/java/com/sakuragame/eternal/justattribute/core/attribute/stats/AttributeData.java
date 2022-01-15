@@ -53,7 +53,17 @@ public class AttributeData {
         this.potency = potency;
     }
 
-    public void initBaseAttribute() {
+    public AttributeData addOrdinary(Attribute attribute, double value) {
+        ordinary.put(attribute, value);
+        return this;
+    }
+
+    public AttributeData addPotency(Attribute attribute, double value) {
+        potency.put(attribute, value);
+        return this;
+    }
+
+    public void initRoleDefaultAttribute() {
         for (Attribute attr : Attribute.values()) {
             ordinary.put(attr, attr.isOnlyPercent() ? 0 : attr.getBase());
             potency.put(attr, attr.isOnlyPercent() ? attr.getBase() : 0);
