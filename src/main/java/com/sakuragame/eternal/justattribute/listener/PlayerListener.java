@@ -1,6 +1,5 @@
 package com.sakuragame.eternal.justattribute.listener;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.util.RoleSync;
