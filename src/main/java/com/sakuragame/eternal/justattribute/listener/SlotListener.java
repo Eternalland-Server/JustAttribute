@@ -1,6 +1,7 @@
 package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.Owner;
@@ -40,11 +41,9 @@ public class SlotListener implements Listener {
 
         Player player = (Player) e.getWhoClicked();
         Inventory gui = e.getInventory();
-
         if (!(gui.getType() == InventoryType.PLAYER || gui.getType() == InventoryType.CRAFTING)) return;
 
         int index = e.getRawSlot();
-
         if (index == -1) return;
 
         VanillaSlot slot = player.getInventory().getHeldItemSlot() == e.getSlot() ? VanillaSlot.MainHand : VanillaSlot.getSlot(index);
@@ -72,28 +71,11 @@ public class SlotListener implements Listener {
 
         ItemStack cursor = player.getItemOnCursor();
         if (MegumiUtil.isEmpty(cursor)) {
-            JustAttribute.getRoleManager().updateVanillaSlot(player, slot, new ItemStack(Material.AIR));
+            RoleManager.updateVanillaSlot(player, slot, new ItemStack(Material.AIR));
         }
         else {
-            JustAttribute.getRoleManager().updateVanillaSlot(player, slot, cursor);
+            RoleManager.updateVanillaSlot(player, slot, cursor);
         }
-
-        /*plugin.getLogger().info(MegumiUtil.isEmpty(cursor) ? "cursor item is empty" : player.getItemOnCursor().getItemMeta().getDisplayName());
-
-        Scheduler.runLaterAsync(() -> {
-            ItemStack item = player.getInventory().getItem(index);
-
-            if (!MegumiUtil.isEmpty(item) && slot != VanillaSlot.MainHand) {
-                Action action = SoulBound.getAction(item);
-
-                if ((action == Action.USE || action == Action.USE_LOCK)) {
-                    player.getInventory().setItem(index, SoulBound.binding(player, item, action));
-                }
-            }
-
-            JustAttribute.getRoleManager().updateVanillaSlot(player, slot);
-            plugin.getLogger().info("update vanilla slot: " + slot.getIdent());
-        }, 4);*/
     }
 
     @EventHandler
@@ -108,7 +90,7 @@ public class SlotListener implements Listener {
         EquipClassify type = EquipClassify.getType(id);
         if (type == null) return;
 
-        JustAttribute.getRoleManager().updateCustomSlot(player, ident, type, item);
+        RoleManager.updateCustomSlot(player, ident, type, item);
     }
 
     @EventHandler
@@ -167,7 +149,7 @@ public class SlotListener implements Listener {
 
         if (action == Action.USE || action == Action.USE_LOCK) {
             player.getInventory().setItemInMainHand(SoulBound.binding(player, item, action));
-            JustAttribute.getRoleManager().updateVanillaSlot(player, VanillaSlot.MainHand);
+            RoleManager.updateVanillaSlot(player, VanillaSlot.MainHand);
         }
     }
 
@@ -185,7 +167,7 @@ public class SlotListener implements Listener {
 
         if (action == Action.USE || action == Action.USE_LOCK) {
             player.getInventory().setItemInMainHand(SoulBound.binding(player, item, action));
-            JustAttribute.getRoleManager().updateVanillaSlot(player, VanillaSlot.OffHand);
+            RoleManager.updateVanillaSlot(player, VanillaSlot.OffHand);
         }
     }
 }

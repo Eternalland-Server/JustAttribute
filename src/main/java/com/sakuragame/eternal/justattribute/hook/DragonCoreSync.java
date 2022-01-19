@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.hook;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
+import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
@@ -31,8 +32,8 @@ public class DragonCoreSync {
     public static void sendAttribute(Player player) {
         HashMap<String, String> map = new HashMap<>();
 
-        RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
-        RoleState state = JustAttribute.getRoleManager().getPlayerState(player.getUniqueId());
+        RoleAttribute role = RoleManager.getPlayerAttribute(player.getUniqueId());
+        RoleState state = RoleManager.getPlayerState(player.getUniqueId());
 
         for (Attribute ident : Attribute.values()) {
             double value = role.getTotalValue(ident);

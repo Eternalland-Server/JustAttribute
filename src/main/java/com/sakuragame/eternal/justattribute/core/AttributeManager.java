@@ -40,7 +40,7 @@ public class AttributeManager {
                     if (player.isDead()) continue;
 
                     UUID uuid = player.getUniqueId();
-                    RoleState state = JustAttribute.getRoleManager().getPlayerState(uuid);
+                    RoleState state = RoleManager.getPlayerState(uuid);
 
                     if (state == null) continue;
 

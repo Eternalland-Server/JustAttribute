@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;
+import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
 import com.sakuragame.eternal.justattribute.util.Debug;
@@ -33,7 +34,7 @@ public class RoleState {
     }
 
     public void update() {
-        RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
+        RoleAttribute role = RoleManager.getPlayerAttribute(player.getUniqueId());
 
         double maxHealth = role.getTotalHealth();
         double maxMana = role.getTotalMana();

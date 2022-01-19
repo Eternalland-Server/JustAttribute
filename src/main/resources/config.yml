@@ -23,14 +23,14 @@ format:
     - '<combat>'
   potency: ' <symbol> <desc>'
 combat-capability:
-  energy: 40
-  stamina: 20
-  wisdom: 20
-  technique: 30
-  damage: 40
-  defence: 30
-  health: 20
-  mana: 20
+  energy: 20
+  stamina: 10
+  wisdom: 10
+  technique: 15
+  damage: 20
+  defence: 15
+  health: 10
+  mana: 10
   restore_health: 2000
   restore_mana: 2000
   vampire_damage: 20000
@@ -54,8 +54,8 @@ role-base:
 #基于阶段，每阶段增加下面属性值
 role-promote:
   health: 40
-  mana: 100
-  damage: 3
+  mana: 40
+  damage: 2
   defence: 2
   restore-hp: 1.5
   restore-mp: 1.5
@@ -72,9 +72,9 @@ slot-setting:
   potion_slot: 9
   pet_egg_slot: 21
   pet_saddle_slot: 22
-  pet_equip1_slot: 23
-  pet_equip2_slot: 23
-  pet_equip3_slot: 23
+  pet_hat_slot: 23
+  pet_clothes_slot: 24
+  pet_adorn_slot: 25
   suit_skin: 100
   mainhand_skin: 101
   offhand_skin: 102

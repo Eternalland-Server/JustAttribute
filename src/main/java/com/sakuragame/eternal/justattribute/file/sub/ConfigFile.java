@@ -61,7 +61,7 @@ public class ConfigFile {
     public static HashMap<String, Integer> slotSetting;
 
     public static void init() {
-        config = JustAttribute.getInstance().getFileManager().getConfig();
+        config = JustAttribute.getFileManager().getConfig();
 
         prefix = getString("prefix");
 

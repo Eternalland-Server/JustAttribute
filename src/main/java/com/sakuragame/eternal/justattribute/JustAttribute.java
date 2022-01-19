@@ -9,6 +9,7 @@ import com.sakuragame.eternal.justattribute.listener.PlayerListener;
 import com.sakuragame.eternal.justattribute.listener.RoleListener;
 import com.sakuragame.eternal.justattribute.listener.SlotListener;
 import com.sakuragame.eternal.justattribute.listener.SoulBoundListener;
+import com.sakuragame.eternal.justattribute.listener.build.AttributeListener;
 import com.sakuragame.eternal.justattribute.listener.build.SkinListener;
 import com.sakuragame.eternal.justattribute.listener.build.ZaphkielListener;
 import com.sakuragame.eternal.justattribute.listener.combat.CombatListener;
@@ -24,13 +25,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class JustAttribute extends JavaPlugin {
     @Getter private static JustAttribute instance;
 
-    @Getter private FileManager fileManager;
+    @Getter private static FileManager fileManager;
+    @Getter private static AttributeManager attributeManager;
+    @Getter private static StorageManager storageManager;
 
-    private AttributeManager attributeManager;
-    private RoleManager roleManager;
-    private StorageManager storageManager;
-
-    public static boolean playerSQL = false;
+    public static boolean PLAYER_SQL = false;
 
     @Override
     public void onEnable() {
@@ -39,17 +38,20 @@ public class JustAttribute extends JavaPlugin {
         instance = this;
 
         fileManager = new FileManager(this);
-        attributeManager = new AttributeManager(this);
-        roleManager = new RoleManager(this);
-        storageManager = new StorageManager(this);
         fileManager.init();
+
+        storageManager = new StorageManager(this);
         storageManager.init();
+
+        attributeManager = new AttributeManager(this);
         attributeManager.init();
 
         new AttributePlaceholder().register();
 
         registerListener(new ZaphkielListener());
         registerListener(new SkinListener());
+        registerListener(new AttributeListener());
+
         registerListener(new PlayerListener());
         registerListener(new RoleListener());
         registerListener(new SlotListener());
@@ -59,12 +61,12 @@ public class JustAttribute extends JavaPlugin {
         registerListener(new LevelListener());
 
         if (Bukkit.getPluginManager().getPlugin("PlayerSQL") != null) {
-            playerSQL = true;
+            PLAYER_SQL = true;
             registerListener(new StorageListener());
             getLogger().info("Hook: 已关联 PlayerSQL");
         }
         else {
-            playerSQL = false;
+            PLAYER_SQL = false;
             getLogger().info("Hook: 未关联 PlayerSQL");
         }
 
@@ -77,7 +79,7 @@ public class JustAttribute extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        roleManager.saveAllRole();
+        RoleManager.saveAllRole();
         Bukkit.getScheduler().cancelTasks(this);
         getLogger().info("卸载成功!");
     }
@@ -93,17 +95,5 @@ public class JustAttribute extends JavaPlugin {
 
     public void registerListener(Listener listener) {
         Bukkit.getPluginManager().registerEvents(listener, this);
-    }
-
-    public static AttributeManager getAttributeManager() {
-        return instance.attributeManager;
-    }
-
-    public static RoleManager getRoleManager() {
-        return instance.roleManager;
-    }
-
-    public static StorageManager getStorageManager() {
-        return instance.storageManager;
     }
 }

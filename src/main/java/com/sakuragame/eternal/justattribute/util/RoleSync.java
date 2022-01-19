@@ -26,6 +26,6 @@ public class RoleSync {
         this.inventory = inventory;
     }
     public boolean isFinished() {
-        return justLevel && dragonSlot && (!JustAttribute.playerSQL || inventory);
+        return justLevel && dragonSlot && (!JustAttribute.PLAYER_SQL || inventory);
     }
 }

@@ -12,22 +12,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class RoleManager {
 
-    private final JustAttribute plugin;
+    private static final JustAttribute plugin = JustAttribute.getInstance();
 
-    private final HashMap<UUID, RoleAttribute> playerAttribute;
-    private final HashMap<UUID, RoleState> playerState;
+    private final static Map<UUID, RoleAttribute> playerAttribute = new HashMap<>();
+    private final static Map<UUID, RoleState> playerState = new HashMap<>();
 
-    public RoleManager(JustAttribute plugin) {
-        this.plugin = plugin;
-        this.playerAttribute = new HashMap<>();
-        this.playerState = new HashMap<>();
-    }
-
-    public void loadAttributeData(Player player) {
+    public static void loadAttributeData(Player player) {
         if (player == null) return;
 
         RoleAttribute attribute = new RoleAttribute(player);
@@ -39,7 +34,7 @@ public class RoleManager {
         event.call();
     }
 
-    public void loadStateData(Player player) {
+    public static void loadStateData(Player player) {
         if (player == null) return;
 
         Scheduler.runAsync(() -> {
@@ -53,27 +48,35 @@ public class RoleManager {
         });
     }
 
-    public void removeAttributeData(Player player) {
-        this.playerAttribute.remove(player.getUniqueId());
+    public static void removeAttributeData(Player player) {
+        playerAttribute.remove(player.getUniqueId());
     }
 
-    public void removeStateData(Player player) {
-        RoleState state = this.playerState.remove(player.getUniqueId());
+    public static void removeStateData(Player player) {
+        RoleState state = playerState.remove(player.getUniqueId());
         if (state == null) return;
 
         state.save();
         plugin.getLogger().info(" 保存 " + player.getName() + " 角色数据成功！");
     }
 
-    public RoleAttribute getPlayerAttribute(UUID uuid) {
+    public static RoleAttribute getPlayerAttribute(Player player) {
+        return getPlayerAttribute(player.getUniqueId());
+    }
+
+    public static RoleAttribute getPlayerAttribute(UUID uuid) {
         return playerAttribute.get(uuid);
     }
 
-    public RoleState getPlayerState(UUID uuid) {
+    public static RoleState getPlayerState(Player player) {
+        return getPlayerState(player.getUniqueId());
+    }
+
+    public static RoleState getPlayerState(UUID uuid) {
         return playerState.get(uuid);
     }
 
-    public void updateVanillaSlot(Player player, VanillaSlot slot) {
+    public static void updateVanillaSlot(Player player, VanillaSlot slot) {
         UUID uuid = player.getUniqueId();
         RoleAttribute attribute = playerAttribute.get(uuid);
         if (attribute == null) return;
@@ -81,7 +84,7 @@ public class RoleManager {
         attribute.updateVanillaSlot(slot);
     }
 
-    public void updateVanillaSlot(Player player, VanillaSlot slot, ItemStack item) {
+    public static void updateVanillaSlot(Player player, VanillaSlot slot, ItemStack item) {
         UUID uuid = player.getUniqueId();
         RoleAttribute attribute = playerAttribute.get(uuid);
         if (attribute == null) return;
@@ -89,7 +92,7 @@ public class RoleManager {
         attribute.updateVanillaSlot(slot, item);
     }
 
-    public void updateMainHandSlot(Player player, int slot) {
+    public static void updateMainHandSlot(Player player, int slot) {
         UUID uuid = player.getUniqueId();
         RoleAttribute attribute = playerAttribute.get(uuid);
         if (attribute == null) return;
@@ -97,7 +100,7 @@ public class RoleManager {
         attribute.updateMainHandSlot(slot);
     }
 
-    public void updateCustomSlot(Player player, String ident, EquipClassify type, ItemStack item) {
+    public static void updateCustomSlot(Player player, String ident, EquipClassify type, ItemStack item) {
         UUID uuid = player.getUniqueId();
         RoleAttribute attribute = playerAttribute.get(uuid);
         if (attribute == null) return;
@@ -105,7 +108,7 @@ public class RoleManager {
         attribute.updateCustomSlot(ident, type, item);
     }
 
-    public void saveAllRole() {
+    public static void saveAllRole() {
         for (RoleState state : playerState.values()) {
             state.save();
         }

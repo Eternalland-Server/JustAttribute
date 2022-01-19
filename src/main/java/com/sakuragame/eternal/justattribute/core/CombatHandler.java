@@ -1,6 +1,5 @@
 package com.sakuragame.eternal.justattribute.core;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttackEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStealEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStoleEvent;
@@ -77,7 +76,7 @@ public class CombatHandler {
     }
 
     public static void physicalVampire(Player player, LivingEntity source, double damage) {
-        RoleAttribute attribute = JustAttribute.getRoleManager().getPlayerAttribute(player.getUniqueId());
+        RoleAttribute attribute = RoleManager.getPlayerAttribute(player);
 
         double damageRate = attribute.getTotalValue(Attribute.Vampire_Damage);
         double versatileRate = attribute.getTotalValue(Attribute.Vampire_Versatile);
@@ -97,7 +96,7 @@ public class CombatHandler {
         RoleHealthStoleEvent stoleEvent = new RoleHealthStoleEvent(player, source, vampire);
         stoleEvent.call();
 
-        JustAttribute.getRoleManager().getPlayerState(player.getUniqueId()).addHealth(vampire);
+        RoleManager.getPlayerState(player).addHealth(vampire);
     }
 
     private static double getValue(RoleAttribute role, Attribute ident) {

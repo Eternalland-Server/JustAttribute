@@ -6,6 +6,7 @@ import com.sakuragame.eternal.justattribute.api.event.role.RoleStateLoadedEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeUpdateEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
+import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
 import com.sakuragame.eternal.justattribute.util.Scheduler;
@@ -33,7 +34,7 @@ public class RoleListener implements Listener {
     @EventHandler
     public void onAttributeLoaded(RoleAttributeLoadedEvent e) {
         Player player = e.getPlayer();
-        JustAttribute.getRoleManager().loadStateData(player);
+        RoleManager.loadStateData(player);
     }
 
     @EventHandler
@@ -43,7 +44,7 @@ public class RoleListener implements Listener {
 
         AttributeManager.loading.remove(uuid);
 
-        Scheduler.runAsync(() -> JustAttribute.getRoleManager().getPlayerAttribute(uuid).updateRoleAttribute());
+        Scheduler.runAsync(() -> RoleManager.getPlayerAttribute(uuid).updateRoleAttribute());
     }
 
     @EventHandler
@@ -52,7 +53,7 @@ public class RoleListener implements Listener {
         UUID uuid = player.getUniqueId();
         if (AttributeManager.loading.contains(uuid)) return;
 
-        JustAttribute.getRoleManager().getPlayerState(uuid).update();
+        RoleManager.getPlayerState(uuid).update();
         DragonCoreSync.sendAttribute(player);
     }
 
@@ -75,7 +76,7 @@ public class RoleListener implements Listener {
         Player player = e.getPlayer();
         if (AttributeManager.loading.contains(player.getUniqueId())) return;
 
-        JustAttribute.getRoleManager().updateMainHandSlot(player, e.getNewSlot());
+        RoleManager.updateMainHandSlot(player, e.getNewSlot());
     }
 
     @EventHandler
@@ -89,7 +90,7 @@ public class RoleListener implements Listener {
 
         Player player = (Player) e.getEntity();
 
-        JustAttribute.getRoleManager().updateVanillaSlot(player, VanillaSlot.MainHand);
+        RoleManager.updateVanillaSlot(player, VanillaSlot.MainHand);
     }
 
     @EventHandler
@@ -101,7 +102,7 @@ public class RoleListener implements Listener {
         if (MegumiUtil.isEmpty(item)) return;
         if (!Utils.isArmor(item.getType())) return;
 
-        JustAttribute.getRoleManager().updateVanillaSlot(player, VanillaSlot.getSlot(item.getType()));
+        RoleManager.updateVanillaSlot(player, VanillaSlot.getSlot(item.getType()));
     }
 
     @EventHandler

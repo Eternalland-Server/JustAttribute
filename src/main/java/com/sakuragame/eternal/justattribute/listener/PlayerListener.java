@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
+import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.util.RoleSync;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotLoadedEvent;
 import net.sakuragame.eternal.justlevel.api.event.sub.JLPlayerInitFinishedEvent;
@@ -54,7 +55,7 @@ public class PlayerListener implements Listener {
         initSync.setJustLevel(true);
         if (initSync.isFinished()) {
             AttributeManager.sync.remove(uuid);
-            JustAttribute.getRoleManager().loadAttributeData(player);
+            RoleManager.loadAttributeData(player);
         }
     }
 
@@ -69,7 +70,7 @@ public class PlayerListener implements Listener {
         initSync.setDragonSlot(true);
         if (initSync.isFinished()) {
             AttributeManager.sync.remove(uuid);
-            JustAttribute.getRoleManager().loadAttributeData(player);
+            RoleManager.loadAttributeData(player);
         }
     }
 
@@ -78,8 +79,8 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        JustAttribute.getRoleManager().removeAttributeData(player);
-        JustAttribute.getRoleManager().removeStateData(player);
+        RoleManager.removeAttributeData(player);
+        RoleManager.removeStateData(player);
         AttributeManager.sync.remove(uuid);
         AttributeManager.loading.remove(uuid);
     }

@@ -23,44 +23,9 @@ public class ZaphkielListener implements Listener {
     private final JustAttribute plugin = JustAttribute.getInstance();
 
     @EventHandler
-    public void onAttribute(ItemReleaseEvent.Display e) {
-        ItemTag tags = e.getItemStream().getZaphkielData();
-
-        LinkedList<String> ordinaryDisplay = new LinkedList<>();
-        LinkedList<String> potencyDisplay = new LinkedList<>();
-
-        PotencyGrade grade = PotencyGrade.getGrade(tags.getDeepOrElse(PotencyGrade.NBT_TAG, new ItemTagData(-1)).asInt());
-        potencyDisplay.add(grade == null ? PotencyGrade.NONE.formatting() : grade.formatting());
-        potencyDisplay.add("");
-
-        for (Attribute attr : Attribute.values()) {
-            ItemTagData ordinary = tags.getDeep(attr.getOrdinaryNode());
-            ItemTagData potency = tags.getDeep(attr.getPotencyNode());
-
-            if (ordinary != null) {
-                ordinaryDisplay.add(attr.format(ordinary.asDouble()));
-            }
-            if (potency != null) {
-                potencyDisplay.add(attr.format(potency.asDouble(), true));
-            }
-        }
-
-        e.addLore(AttributeManager.ORDINARY_DISPLAY_NODE, ordinaryDisplay);
-
-        ItemTagData data = tags.getDeep(EquipClassify.NBT_NODE);
-        if (data == null) return;
-        int id = data.asInt();
-
-        if (id >= 100) return;
-
-        if (potencyDisplay.size() == 2) {
-            potencyDisplay.add(ConfigFile.potency_empty);
-        }
-        e.addLore(AttributeManager.POTENCY_DISPLAY_NODE, potencyDisplay);
-    }
-
-    @EventHandler
     public void onSoulBound(ItemBuildEvent.Pre e) {
+        if (e.isCancelled()) return;
+
         Player player = e.getPlayer();
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 

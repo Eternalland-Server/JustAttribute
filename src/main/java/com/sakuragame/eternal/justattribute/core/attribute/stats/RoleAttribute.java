@@ -66,7 +66,7 @@ public class RoleAttribute {
 
     public void loadVanillaSlot() {
         this.updateVanillaSlot(VanillaSlot.Helmet);
-        this.updateVanillaSlot(VanillaSlot.Chestplate);
+        this.updateVanillaSlot(VanillaSlot.ChestPlate);
         this.updateVanillaSlot(VanillaSlot.Leggings);
         this.updateVanillaSlot(VanillaSlot.Boots);
         this.updateVanillaSlot(VanillaSlot.OffHand);

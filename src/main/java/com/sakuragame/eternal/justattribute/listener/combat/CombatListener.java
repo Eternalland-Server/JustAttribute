@@ -5,6 +5,7 @@ import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
 import com.sakuragame.eternal.justattribute.api.event.PlayerUnderAttackedEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
+import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.MobAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
@@ -159,7 +160,7 @@ public class CombatListener implements Listener {
     }
 
     private RoleAttribute getTargetAttrData(Player target) {
-        RoleAttribute role = JustAttribute.getRoleManager().getPlayerAttribute(target.getUniqueId());
+        RoleAttribute role = RoleManager.getPlayerAttribute(target.getUniqueId());
         if (role == null) {
             role = new RoleAttribute(target);
         }

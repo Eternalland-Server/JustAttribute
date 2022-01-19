@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 public enum VanillaSlot {
 
     Helmet(5, EquipClassify.Helmet, "helmet"),
-    Chestplate(6, EquipClassify.Chestplate, "chestplate"),
+    ChestPlate(6, EquipClassify.ChestPlate, "chestplate"),
     Leggings(7, EquipClassify.Leggings, "leggings"),
     Boots(8, EquipClassify.Boots, "boots"),
     MainHand(-1, EquipClassify.MainHand, "mainhand"),
@@ -50,7 +50,7 @@ public enum VanillaSlot {
         switch (this) {
             case Helmet:
                 return player.getInventory().getHelmet();
-            case Chestplate:
+            case ChestPlate:
                 return player.getInventory().getChestplate();
             case Leggings:
                 return player.getInventory().getLeggings();
