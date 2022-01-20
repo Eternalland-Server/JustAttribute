@@ -10,6 +10,7 @@ import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.LinkedList;
@@ -19,7 +20,7 @@ public class AttributeListener implements Listener {
 
     private final Random random = new Random();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBuild(ItemBuildEvent.Pre e) {
         if (e.isCancelled()) return;
 
@@ -46,8 +47,10 @@ public class AttributeListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDisplay(ItemReleaseEvent.Display e) {
+        if (e.isCancelled()) return;
+
         ItemTag tag = e.getItemStream().getZaphkielData();
 
         LinkedList<String> ordinaryDisplay = new LinkedList<>();

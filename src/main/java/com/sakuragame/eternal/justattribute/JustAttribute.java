@@ -10,6 +10,7 @@ import com.sakuragame.eternal.justattribute.listener.RoleListener;
 import com.sakuragame.eternal.justattribute.listener.SlotListener;
 import com.sakuragame.eternal.justattribute.listener.SoulBoundListener;
 import com.sakuragame.eternal.justattribute.listener.build.AttributeListener;
+import com.sakuragame.eternal.justattribute.listener.build.ExpireListener;
 import com.sakuragame.eternal.justattribute.listener.build.SkinListener;
 import com.sakuragame.eternal.justattribute.listener.build.ZaphkielListener;
 import com.sakuragame.eternal.justattribute.listener.combat.CombatListener;
@@ -37,20 +38,26 @@ public class JustAttribute extends JavaPlugin {
 
         instance = this;
 
+        getLogger().info("初始化配置文件...");
         fileManager = new FileManager(this);
         fileManager.init();
 
+        getLogger().info("初始化数据库...");
         storageManager = new StorageManager(this);
         storageManager.init();
 
+        getLogger().info("初始化属性...");
         attributeManager = new AttributeManager(this);
         attributeManager.init();
 
+        getLogger().info("注册PAPI变量...");
         new AttributePlaceholder().register();
 
+        getLogger().info("注册事件...");
         registerListener(new ZaphkielListener());
         registerListener(new SkinListener());
         registerListener(new AttributeListener());
+        registerListener(new ExpireListener());
 
         registerListener(new PlayerListener());
         registerListener(new RoleListener());
@@ -63,18 +70,19 @@ public class JustAttribute extends JavaPlugin {
         if (Bukkit.getPluginManager().getPlugin("PlayerSQL") != null) {
             PLAYER_SQL = true;
             registerListener(new StorageListener());
-            getLogger().info("Hook: 已关联 PlayerSQL");
+            getLogger().info("已兼容PlayerSQL...");
         }
         else {
             PLAYER_SQL = false;
-            getLogger().info("Hook: 未关联 PlayerSQL");
+            getLogger().info("未兼容PlayerSQL...");
         }
 
+        getLogger().info("注册命令...");
         getCommand("jattribute").setExecutor(new MainCommand());
 
         long end = System.currentTimeMillis();
 
-        getLogger().info("加载成功! 用时 %time% ms".replace("%time%", String.valueOf(end - start)));
+        getLogger().info("加载成功! 用时 " + (end - start) + " ms");
     }
 
     @Override

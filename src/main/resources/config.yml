@@ -22,6 +22,7 @@ format:
     - '  &7装备评分'
     - '<combat>'
   potency: ' <symbol> <desc>'
+  expire: '&c将在 <expire> 前过期'
 combat-capability:
   energy: 20
   stamina: 10

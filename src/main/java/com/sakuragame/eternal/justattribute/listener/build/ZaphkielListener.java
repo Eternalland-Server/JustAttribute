@@ -14,6 +14,7 @@ import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.LinkedList;
@@ -22,7 +23,7 @@ public class ZaphkielListener implements Listener {
 
     private final JustAttribute plugin = JustAttribute.getInstance();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onSoulBound(ItemBuildEvent.Pre e) {
         if (e.isCancelled()) return;
 
@@ -45,8 +46,10 @@ public class ZaphkielListener implements Listener {
         e.addLore(SoulBound.DISPLAY_NODE, action.getHandler().getUnboundDesc());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onSoulBound(ItemReleaseEvent.Display e) {
+        if (e.isCancelled()) return;
+
         Player player = e.getPlayer();
         if (player == null) return;
 
@@ -63,10 +66,11 @@ public class ZaphkielListener implements Listener {
         e.addLore(SoulBound.DISPLAY_NODE, action.getHandler().getBoundDesc(owner.asString()));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onClassify(ItemReleaseEvent.Display e) {
-        ItemTag itemTag = e.getItemStream().getZaphkielData();
+        if (e.isCancelled()) return;
 
+        ItemTag itemTag = e.getItemStream().getZaphkielData();
         ItemTagData data = itemTag.getDeep(EquipClassify.NBT_NODE);
 
         if (data == null) return;
@@ -77,10 +81,11 @@ public class ZaphkielListener implements Listener {
         e.addLore(EquipClassify.DISPLAY_NODE, equipClassify.formatting());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onQuality(ItemReleaseEvent.Display e) {
-        ItemTag itemTag = e.getItemStream().getZaphkielData();
+        if (e.isCancelled()) return;
 
+        ItemTag itemTag = e.getItemStream().getZaphkielData();
         ItemTagData data = itemTag.getDeep(EquipQuality.NBT_NODE);
 
         if (data == null) return;
@@ -91,12 +96,11 @@ public class ZaphkielListener implements Listener {
         e.addLore(EquipQuality.DISPLAY_NODE, equipQuality.formatting());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onCombat(ItemReleaseEvent.Display e) {
-        AttributeData data = new AttributeData(e.getItemStream());
+        if (e.isCancelled()) return;
 
-        int combat = CombatCapacity.get(data);
-
+        int combat = CombatCapacity.get(new AttributeData(e.getItemStream()));
         e.addLore(CombatCapacity.DISPLAY_NODE, CombatCapacity.format(combat));
     }
 }

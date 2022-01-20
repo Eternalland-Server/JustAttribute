@@ -1,17 +1,20 @@
 package com.sakuragame.eternal.justattribute.listener.build;
 
-import com.taylorswiftcn.justwei.nbt.NBTItem;
+import de.tr7zw.nbtapi.NBTItem;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 public class SkinListener implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onSkin(ItemReleaseEvent.Final e) {
+        if (e.isCancelled()) return;
+
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 
         ItemTagData data = itemTag.getDeep("justattribute.skin");

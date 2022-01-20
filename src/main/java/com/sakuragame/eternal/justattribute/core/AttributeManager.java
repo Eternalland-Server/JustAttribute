@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
+import com.sakuragame.eternal.justattribute.core.special.ItemExpire;
 import com.sakuragame.eternal.justattribute.util.RoleSync;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

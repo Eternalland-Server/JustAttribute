@@ -4,8 +4,6 @@ import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import net.sakuragame.eternal.justlevel.level.PlayerLevelData;
 import org.bukkit.Material;
@@ -13,20 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.UUID;
 
 public class Utils {
 
-    @Getter
-    @AllArgsConstructor
-    public static class NoticeHistory {
-        private String content;
-        private long time;
-    }
-
     public final static DecimalFormat a = new DecimalFormat("0");
-    private final static HashMap<UUID, NoticeHistory> history = new HashMap<>();
 
     public static String formatValue(double value, boolean isPercent) {
         value = isPercent ? value * 100 : value;

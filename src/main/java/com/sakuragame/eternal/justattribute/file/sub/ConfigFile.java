@@ -36,6 +36,7 @@ public class ConfigFile {
         public static String quality;
         public static List<String> combat;
         public static String potency;
+        public static String expire;
     }
 
     public static HashMap<Attribute, Integer> combatCapability;
@@ -83,6 +84,7 @@ public class ConfigFile {
         format.quality = getString("format.quality");
         format.combat = getStringList("format.combat");
         format.potency = getString("format.potency");
+        format.expire = getString("format.expire");
 
         RoleBase.health = config.getDouble("role-base.health");
         RoleBase.mana = config.getDouble("role-base.mana");
