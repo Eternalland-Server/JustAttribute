@@ -2,13 +2,13 @@ package com.sakuragame.eternal.justattribute.util;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 
-public class RoleSync {
+public class Load {
 
     private boolean justLevel;
     private boolean dragonSlot;
     private boolean inventory;
 
-    public RoleSync() {
+    public Load() {
         this.justLevel = false;
         this.dragonSlot = false;
         this.inventory = false;

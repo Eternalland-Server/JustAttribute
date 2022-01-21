@@ -1,6 +1,7 @@
 package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
@@ -69,10 +70,10 @@ public class SlotListener implements Listener {
 
         ItemStack cursor = player.getItemOnCursor();
         if (MegumiUtil.isEmpty(cursor)) {
-            RoleManager.updateVanillaSlot(player, slot, new ItemStack(Material.AIR));
+            AttributeHandler.updateVanillaSlot(player, slot, new ItemStack(Material.AIR));
         }
         else {
-            RoleManager.updateVanillaSlot(player, slot, cursor);
+            AttributeHandler.updateVanillaSlot(player, slot, cursor);
         }
     }
 
@@ -82,13 +83,9 @@ public class SlotListener implements Listener {
         String ident = e.getIdentifier();
         ItemStack item = e.getItemStack();
 
-        Integer id = ConfigFile.slotSetting.get(ident);
-        if (id == null) return;
+        if (!ConfigFile.slotSetting.containsKey(ident)) return;
 
-        EquipClassify type = EquipClassify.getType(id);
-        if (type == null) return;
-
-        RoleManager.updateCustomSlot(player, ident, type, item);
+        AttributeHandler.updateCustomSlot(player, ident, item);
     }
 
     @EventHandler
@@ -147,7 +144,7 @@ public class SlotListener implements Listener {
 
         if (action == Action.USE || action == Action.USE_LOCK) {
             player.getInventory().setItemInMainHand(SoulBound.binding(player, item, action));
-            RoleManager.updateVanillaSlot(player, VanillaSlot.MainHand);
+            AttributeHandler.updateVanillaSlot(player, VanillaSlot.MainHand);
         }
     }
 
@@ -165,7 +162,7 @@ public class SlotListener implements Listener {
 
         if (action == Action.USE || action == Action.USE_LOCK) {
             player.getInventory().setItemInMainHand(SoulBound.binding(player, item, action));
-            RoleManager.updateVanillaSlot(player, VanillaSlot.OffHand);
+            AttributeHandler.updateVanillaSlot(player, VanillaSlot.OffHand);
         }
     }
 }

@@ -1,14 +1,12 @@
 package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeLoadedEvent;
-import com.sakuragame.eternal.justattribute.api.event.role.RoleStateLoadedEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
-import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
-import com.sakuragame.eternal.justattribute.util.Scheduler;
+import com.sakuragame.eternal.justattribute.util.Load;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,100 +14,127 @@ import java.util.UUID;
 
 public class RoleManager {
 
-    private static final JustAttribute plugin = JustAttribute.getInstance();
+    private final JustAttribute plugin;
 
-    private final static Map<UUID, RoleAttribute> playerAttribute = new HashMap<>();
-    private final static Map<UUID, RoleState> playerState = new HashMap<>();
+    private final Map<UUID, RoleAttribute> playerAttribute;
+    private final Map<UUID, RoleState> playerState;
 
-    public static void loadAttributeData(Player player) {
-        if (player == null) return;
+    private final static Map<UUID, Load> LOAD_MAP = new HashMap<>();
 
-        RoleAttribute attribute = new RoleAttribute(player);
-        playerAttribute.put(player.getUniqueId(), attribute);
-
-        plugin.getLogger().info(" 初始化 " + player.getName() + " 属性成功！");
-
-        RoleAttributeLoadedEvent event = new RoleAttributeLoadedEvent(player, attribute);
-        event.call();
+    public RoleManager(JustAttribute plugin) {
+        this.plugin = plugin;
+        this.playerAttribute = new HashMap<>();
+        this.playerState = new HashMap<>();
+        this.start();
     }
 
-    public static void loadStateData(Player player) {
-        if (player == null) return;
+    public void loadAttributeData(Player player) {
+        UUID uuid = player.getUniqueId();
+        RoleAttribute role = new RoleAttribute(uuid);
+        this.playerAttribute.put(uuid, role);
 
-        Scheduler.runAsync(() -> {
-            RoleState state = JustAttribute.getStorageManager().getPlayerDate(player);
-            playerState.put(player.getUniqueId(), state);
+        AttributeHandler.loadVanillaSlot(player);
+        AttributeHandler.loadCustomSlot(player);
 
-            plugin.getLogger().info(" 初始化 " + player.getName() + " 角色成功！");
+        delLoad(uuid);
 
-            RoleStateLoadedEvent event = new RoleStateLoadedEvent(player, state);
-            event.call();
-        });
+        role.updateRoleAttribute();
+        getPlayerState(uuid).update();
+
+        plugin.getLogger().info(" 加载 " + player.getName() + " 角色数据成功！");
     }
 
-    public static void removeAttributeData(Player player) {
-        playerAttribute.remove(player.getUniqueId());
+    public void loadStateData(UUID uuid) {
+        RoleState state = JustAttribute.getStorageManager().loadData(uuid);
+        this.playerState.put(uuid, state);
     }
 
-    public static void removeStateData(Player player) {
-        RoleState state = playerState.remove(player.getUniqueId());
+    public void removeAttributeData(Player player) {
+        this. playerAttribute.remove(player.getUniqueId());
+    }
+
+    public void removeStateData(Player player) {
+        RoleState state = this.playerState.remove(player.getUniqueId());
         if (state == null) return;
 
         state.save();
         plugin.getLogger().info(" 保存 " + player.getName() + " 角色数据成功！");
     }
 
-    public static RoleAttribute getPlayerAttribute(Player player) {
+    public RoleAttribute getPlayerAttribute(Player player) {
         return getPlayerAttribute(player.getUniqueId());
     }
 
-    public static RoleAttribute getPlayerAttribute(UUID uuid) {
-        return playerAttribute.get(uuid);
+    public RoleAttribute getPlayerAttribute(UUID uuid) {
+        return this.playerAttribute.get(uuid);
     }
 
-    public static RoleState getPlayerState(Player player) {
+    public RoleState getPlayerState(Player player) {
         return getPlayerState(player.getUniqueId());
     }
 
-    public static RoleState getPlayerState(UUID uuid) {
-        return playerState.get(uuid);
+    public RoleState getPlayerState(UUID uuid) {
+        return this.playerState.get(uuid);
     }
 
-    public static void updateVanillaSlot(Player player, VanillaSlot slot) {
-        UUID uuid = player.getUniqueId();
-        RoleAttribute attribute = playerAttribute.get(uuid);
-        if (attribute == null) return;
-
-        attribute.updateVanillaSlot(slot);
+    public void clearData(UUID uuid) {
+        this.playerAttribute.remove(uuid);
+        this.playerState.remove(uuid);
+        delLoad(uuid);
     }
 
-    public static void updateVanillaSlot(Player player, VanillaSlot slot, ItemStack item) {
-        UUID uuid = player.getUniqueId();
-        RoleAttribute attribute = playerAttribute.get(uuid);
-        if (attribute == null) return;
-
-        attribute.updateVanillaSlot(slot, item);
-    }
-
-    public static void updateMainHandSlot(Player player, int slot) {
-        UUID uuid = player.getUniqueId();
-        RoleAttribute attribute = playerAttribute.get(uuid);
-        if (attribute == null) return;
-
-        attribute.updateMainHandSlot(slot);
-    }
-
-    public static void updateCustomSlot(Player player, String ident, EquipClassify type, ItemStack item) {
-        UUID uuid = player.getUniqueId();
-        RoleAttribute attribute = playerAttribute.get(uuid);
-        if (attribute == null) return;
-
-        attribute.updateCustomSlot(ident, type, item);
-    }
-
-    public static void saveAllRole() {
-        for (RoleState state : playerState.values()) {
+    public void saveAllRole() {
+        for (RoleState state : this.playerState.values()) {
             state.save();
         }
+    }
+
+    public RoleAttribute initRoleAttribute(Player player) {
+        UUID uuid = player.getUniqueId();
+
+        RoleAttribute role = new RoleAttribute(uuid);
+        this.playerAttribute.put(uuid, role);
+
+        AttributeHandler.loadVanillaSlot(player);
+        AttributeHandler.loadCustomSlot(player);
+        role.updateRoleAttribute();
+
+        return role;
+    }
+
+    public static void addLoad(UUID uuid) {
+        LOAD_MAP.put(uuid, new Load());
+    }
+
+    public static Load getLoad(UUID uuid) {
+        return LOAD_MAP.get(uuid);
+    }
+
+    public static void delLoad(UUID uuid) {
+        LOAD_MAP.remove(uuid);
+    }
+
+    public static boolean isLoading(UUID uuid) {
+        return LOAD_MAP.containsKey(uuid);
+    }
+
+    private void start() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (!player.isOnline()) continue;
+
+                    if (player.isDead()) continue;
+
+                    UUID uuid = player.getUniqueId();
+                    RoleState state = playerState.get(uuid);
+
+                    if (state == null) continue;
+
+                    state.restore();
+                }
+            }
+        }.runTaskTimer(plugin, 20, 20);
     }
 }

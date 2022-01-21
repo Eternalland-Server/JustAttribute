@@ -34,6 +34,9 @@ public enum Attribute {
     private final double base;
     private final boolean onlyPercent;
 
+    public final static String ORDINARY_DISPLAY_NODE = "display.ordinary";
+    public final static String POTENCY_DISPLAY_NODE = "display.potency";
+
     Attribute(String id, String symbol, String display, double base, boolean onlyPercent) {
         this.id = id;
         this.symbol = symbol;

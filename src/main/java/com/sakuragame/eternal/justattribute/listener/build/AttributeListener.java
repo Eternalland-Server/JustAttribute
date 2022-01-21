@@ -1,6 +1,6 @@
 package com.sakuragame.eternal.justattribute.listener.build;
 
-import com.sakuragame.eternal.justattribute.core.AttributeManager;
+import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
@@ -72,7 +72,7 @@ public class AttributeListener implements Listener {
             }
         }
 
-        e.addLore(AttributeManager.ORDINARY_DISPLAY_NODE, ordinaryDisplay);
+        e.addLore(Attribute.ORDINARY_DISPLAY_NODE, ordinaryDisplay);
 
         ItemTagData data = tag.getDeep(EquipClassify.NBT_NODE);
         if (data == null) return;
@@ -83,7 +83,7 @@ public class AttributeListener implements Listener {
         if (potencyDisplay.size() == 2) {
             potencyDisplay.add(ConfigFile.potency_empty);
         }
-        e.addLore(AttributeManager.POTENCY_DISPLAY_NODE, potencyDisplay);
+        e.addLore(Attribute.POTENCY_DISPLAY_NODE, potencyDisplay);
     }
 
     private int getRangeValue(String s) {

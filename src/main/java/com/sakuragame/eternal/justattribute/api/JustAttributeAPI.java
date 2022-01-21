@@ -1,6 +1,6 @@
 package com.sakuragame.eternal.justattribute.api;
 
-import com.sakuragame.eternal.justattribute.core.RoleManager;
+import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import org.bukkit.entity.Player;
@@ -18,11 +18,11 @@ public class JustAttributeAPI {
     }
 
     public static RoleAttribute getRoleAttribute(UUID uuid) {
-        return RoleManager.getPlayerAttribute(uuid);
+        return JustAttribute.getRoleManager().getPlayerAttribute(uuid);
     }
 
     public static RoleState getRoleState(UUID uuid) {
-        return RoleManager.getPlayerState(uuid);
+        return JustAttribute.getRoleManager().getPlayerState(uuid);
     }
 
     public static void addHP(Player player, double value) {

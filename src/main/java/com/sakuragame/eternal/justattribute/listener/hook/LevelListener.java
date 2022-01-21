@@ -1,8 +1,7 @@
 package com.sakuragame.eternal.justattribute.listener.hook;
 
-import com.sakuragame.eternal.justattribute.core.RoleManager;
+import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
-import com.sakuragame.eternal.justattribute.util.Scheduler;
 import net.sakuragame.eternal.justlevel.api.event.PlayerRealmChangeEvent;
 import net.sakuragame.eternal.justlevel.api.event.PlayerStageChangeEvent;
 import org.bukkit.entity.Player;
@@ -24,10 +23,8 @@ public class LevelListener implements Listener {
     }
 
     private void updateChange(Player player) {
-        Scheduler.runAsync(() -> {
-            RoleAttribute role = RoleManager.getPlayerAttribute(player.getUniqueId());
-            role.updateStageGrowth();
-            role.updateRoleAttribute();
-        });
+        RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
+        role.updateStageGrowth();
+        role.updateRoleAttribute();
     }
 }

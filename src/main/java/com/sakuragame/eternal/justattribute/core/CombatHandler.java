@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.core;
 
+import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttackEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStealEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStoleEvent;
@@ -32,7 +33,7 @@ public class CombatHandler {
         
         lastDamage = lastDamage * (1 - di);
 
-        return new RoleAttackEvent(attacker.getPlayer(), sufferer.getPlayer(), lastDamage, critical);
+        return new RoleAttackEvent(attacker.getBukkitPlayer(), sufferer.getBukkitPlayer(), lastDamage, critical);
     }
 
     public static RoleAttackEvent calculate(RoleAttribute attacker, MobAttribute sufferer) {
@@ -52,7 +53,7 @@ public class CombatHandler {
         double damageModify = sufferer.getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1.0);
         lastDamage = lastDamage * damageModify;
 
-        return new RoleAttackEvent(attacker.getPlayer(), sufferer.getEntity(), lastDamage, critical);
+        return new RoleAttackEvent(attacker.getBukkitPlayer(), sufferer.getEntity(), lastDamage, critical);
     }
 
     public static double calculate(MobAttribute attacker, RoleAttribute sufferer) {
@@ -76,7 +77,7 @@ public class CombatHandler {
     }
 
     public static void physicalVampire(Player player, LivingEntity source, double damage) {
-        RoleAttribute attribute = RoleManager.getPlayerAttribute(player);
+        RoleAttribute attribute = JustAttributeAPI.getRoleAttribute(player);
 
         double damageRate = attribute.getTotalValue(Attribute.Vampire_Damage);
         double versatileRate = attribute.getTotalValue(Attribute.Vampire_Versatile);
@@ -96,7 +97,7 @@ public class CombatHandler {
         RoleHealthStoleEvent stoleEvent = new RoleHealthStoleEvent(player, source, vampire);
         stoleEvent.call();
 
-        RoleManager.getPlayerState(player).addHealth(vampire);
+        JustAttributeAPI.getRoleState(player).addHealth(vampire);
     }
 
     private static double getValue(RoleAttribute role, Attribute ident) {

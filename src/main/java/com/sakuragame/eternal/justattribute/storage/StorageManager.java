@@ -5,9 +5,9 @@ import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import net.sakuragame.serversystems.manage.api.database.DataManager;
 import net.sakuragame.serversystems.manage.api.database.DatabaseQuery;
 import net.sakuragame.serversystems.manage.client.api.ClientManagerAPI;
-import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
+import java.util.UUID;
 
 public class StorageManager {
 
@@ -23,8 +23,9 @@ public class StorageManager {
         AccountTable.JUST_ATTRIBUTE_ROLE.createTable();
     }
 
-    public RoleState getPlayerDate(Player player) {
-        int uid = ClientManagerAPI.getUserID(player.getUniqueId());
+    public RoleState loadData(UUID uuid) {
+        int uid = ClientManagerAPI.getUserID(uuid);
+        if (uid == -1) return null;
 
         try (DatabaseQuery query = dataManager.createQuery(
                 AccountTable.JUST_ATTRIBUTE_ROLE.getTableName(),
@@ -36,27 +37,18 @@ public class StorageManager {
                 double health = result.getDouble("health");
                 double mana = result.getDouble("mana");
 
-                return new RoleState(player, health, mana);
+                return new RoleState(uuid, health, mana);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        insertPlayerData(uid);
-
-        return new RoleState(player);
+        return new RoleState(uuid);
     }
 
-    private void insertPlayerData(int uid) {
-        dataManager.executeInsert(
-                AccountTable.JUST_ATTRIBUTE_ROLE.getTableName(),
-                new String[]{"uid"},
-                new Object[]{uid}
-        );
-    }
-
-    public void updatePlayerData(Player player, double health, double mana) {
-        int uid = ClientManagerAPI.getUserID(player.getUniqueId());
+    public void saveData(UUID uuid, double health, double mana) {
+        int uid = ClientManagerAPI.getUserID(uuid);
+        if (uid == -1) return;
 
         dataManager.executeReplace(
                 AccountTable.JUST_ATTRIBUTE_ROLE.getTableName(),

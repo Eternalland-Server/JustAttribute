@@ -1,17 +1,19 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
-import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
 import com.sakuragame.eternal.justattribute.util.Debug;
-import com.sakuragame.eternal.justattribute.util.Scheduler;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class RoleState {
 
-    private final Player player;
+    private final UUID uuid;
     private double health;
     private double maxHealth;
     private double mana;
@@ -19,14 +21,14 @@ public class RoleState {
     private double restoreHP;
     private double restoreMP;
 
-    public RoleState(Player player) {
-        this.player = player;
+    public RoleState(UUID uuid) {
+        this.uuid = uuid;
         this.health = 20;
         this.mana = 20;
     }
 
-    public RoleState(Player player, double health, double mana) {
-        this.player = player;
+    public RoleState(UUID uuid, double health, double mana) {
+        this.uuid = uuid;
         this.health = health;
         this.mana = mana;
         Debug.info(Debug.Role, "storage hp: " + health);
@@ -34,12 +36,13 @@ public class RoleState {
     }
 
     public void update() {
-        RoleAttribute role = RoleManager.getPlayerAttribute(player.getUniqueId());
+        Player player = this.getBukkitPlayer();
+        RoleAttribute role = JustAttributeAPI.getRoleAttribute(uuid);
 
         double maxHealth = role.getTotalHealth();
         double maxMana = role.getTotalMana();
 
-        double currentHP = player.getHealth();
+        double currentHP = this.getBukkitPlayer().getHealth();
 
         Debug.info(Debug.Role, "max hp: " + maxHealth);
         Debug.info(Debug.Role, "max mp: " + maxMana);
@@ -69,12 +72,12 @@ public class RoleState {
         this.health = Math.min(getMaxHealth(), getHealth() + getRestoreHP());
         this.mana = Math.min(getMaxMana(), getMana() + getRestoreMP());
 
-        RoleStateUpdateEvent event = new RoleStateUpdateEvent(player, this);
+        RoleStateUpdateEvent event = new RoleStateUpdateEvent(this.getBukkitPlayer());
         event.call();
     }
 
     public void save() {
-        JustAttribute.getStorageManager().updatePlayerData(player, getHealth(), getMana());
+        JustAttribute.getStorageManager().saveData(uuid, getHealth(), getMana());
     }
 
     public void addHealth(double value) {
@@ -86,17 +89,19 @@ public class RoleState {
     }
 
     public void setHealth(double value) {
+        Player player = this.getBukkitPlayer();
+
         value = Math.min(value, getMaxHealth());
         this.health = value;
-        this.player.setHealth(value);
+        player.setHealth(value);
 
-        RoleStateUpdateEvent event = new RoleStateUpdateEvent(player, this);
+        RoleStateUpdateEvent event = new RoleStateUpdateEvent(player);
         event.call();
     }
 
     public void setMaxHealth(double value) {
         this.maxHealth = value;
-        this.player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).setBaseValue(value);
+        this.getBukkitPlayer().getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).setBaseValue(value);
     }
 
     public double getHealth() {
@@ -118,7 +123,7 @@ public class RoleState {
     public void setMana(double value) {
         mana = Math.max(0, Math.min(value, this.maxMana));
 
-        RoleStateUpdateEvent event = new RoleStateUpdateEvent(player, this);
+        RoleStateUpdateEvent event = new RoleStateUpdateEvent(this.getBukkitPlayer());
         event.call();
     }
 
@@ -153,7 +158,7 @@ public class RoleState {
     public void updateHealth(double health) {
         this.health = Math.max(0, Math.min(health, getMaxHealth()));
 
-        RoleStateUpdateEvent event = new RoleStateUpdateEvent(player, this);
+        RoleStateUpdateEvent event = new RoleStateUpdateEvent(this.getBukkitPlayer());
         event.call();
     }
 
@@ -163,5 +168,9 @@ public class RoleState {
 
     public double getManaPercentage() {
         return getMana() / getMaxMana();
+    }
+
+    public Player getBukkitPlayer() {
+        return Bukkit.getPlayer(this.uuid);
     }
 }

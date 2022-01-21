@@ -1,15 +1,12 @@
 package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeLoadedEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeUpdateEvent;
-import com.sakuragame.eternal.justattribute.api.event.role.RoleStateLoadedEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;
-import com.sakuragame.eternal.justattribute.core.AttributeManager;
+import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.VanillaSlot;
 import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
-import com.sakuragame.eternal.justattribute.util.Scheduler;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import org.bukkit.entity.Entity;
@@ -32,28 +29,11 @@ public class RoleListener implements Listener {
     private final JustAttribute plugin = JustAttribute.getInstance();
 
     @EventHandler
-    public void onAttributeLoaded(RoleAttributeLoadedEvent e) {
-        Player player = e.getPlayer();
-        RoleManager.loadStateData(player);
-    }
-
-    @EventHandler
-    public void onStateLoaded(RoleStateLoadedEvent e) {
-        Player player = e.getPlayer();
-        UUID uuid = player.getUniqueId();
-
-        AttributeManager.loading.remove(uuid);
-
-        Scheduler.runAsync(() -> RoleManager.getPlayerAttribute(uuid).updateRoleAttribute());
-    }
-
-    @EventHandler
     public void onAttributeUpdate(RoleAttributeUpdateEvent e) {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
-        if (AttributeManager.loading.contains(uuid)) return;
 
-        RoleManager.getPlayerState(uuid).update();
+        JustAttribute.getRoleManager().getPlayerState(uuid).update();
         DragonCoreSync.sendAttribute(player);
     }
 
@@ -61,7 +41,7 @@ public class RoleListener implements Listener {
     public void onStateUpdate(RoleStateUpdateEvent e) {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
-        if (AttributeManager.loading.contains(uuid)) return;
+        if (RoleManager.isLoading(uuid)) return;
 
         DragonCoreSync.sendState(player);
     }
@@ -74,9 +54,9 @@ public class RoleListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onHold(PlayerItemHeldEvent e) {
         Player player = e.getPlayer();
-        if (AttributeManager.loading.contains(player.getUniqueId())) return;
+        if (RoleManager.isLoading(player.getUniqueId())) return;
 
-        RoleManager.updateMainHandSlot(player, e.getNewSlot());
+        AttributeHandler.updateMainHandSlot(player, e.getNewSlot());
     }
 
     @EventHandler
@@ -90,7 +70,7 @@ public class RoleListener implements Listener {
 
         Player player = (Player) e.getEntity();
 
-        RoleManager.updateVanillaSlot(player, VanillaSlot.MainHand);
+        AttributeHandler.updateVanillaSlot(player, VanillaSlot.MainHand);
     }
 
     @EventHandler
@@ -102,7 +82,10 @@ public class RoleListener implements Listener {
         if (MegumiUtil.isEmpty(item)) return;
         if (!Utils.isArmor(item.getType())) return;
 
-        RoleManager.updateVanillaSlot(player, VanillaSlot.getSlot(item.getType()));
+        VanillaSlot slot = VanillaSlot.getSlot(item.getType());
+        if (slot == null) return;
+
+        AttributeHandler.updateVanillaSlot(player, slot);
     }
 
     @EventHandler

@@ -1,7 +1,7 @@
 package com.sakuragame.eternal.justattribute;
 
 import com.sakuragame.eternal.justattribute.commands.MainCommand;
-import com.sakuragame.eternal.justattribute.core.AttributeManager;
+import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.file.FileManager;
 import com.sakuragame.eternal.justattribute.hook.AttributePlaceholder;
@@ -27,8 +27,8 @@ public class JustAttribute extends JavaPlugin {
     @Getter private static JustAttribute instance;
 
     @Getter private static FileManager fileManager;
-    @Getter private static AttributeManager attributeManager;
     @Getter private static StorageManager storageManager;
+    @Getter private static RoleManager roleManager;
 
     public static boolean PLAYER_SQL = false;
 
@@ -46,9 +46,8 @@ public class JustAttribute extends JavaPlugin {
         storageManager = new StorageManager(this);
         storageManager.init();
 
-        getLogger().info("初始化属性...");
-        attributeManager = new AttributeManager(this);
-        attributeManager.init();
+        getLogger().info("初始化角色管理...");
+        roleManager = new RoleManager(this);
 
         getLogger().info("注册PAPI变量...");
         new AttributePlaceholder().register();
@@ -87,7 +86,7 @@ public class JustAttribute extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        RoleManager.saveAllRole();
+        roleManager.saveAllRole();
         Bukkit.getScheduler().cancelTasks(this);
         getLogger().info("卸载成功!");
     }

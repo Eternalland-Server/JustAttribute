@@ -1,8 +1,10 @@
 package com.sakuragame.eternal.justattribute.listener;
 
-import com.sakuragame.eternal.justattribute.core.AttributeManager;
+import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
-import com.sakuragame.eternal.justattribute.util.RoleSync;
+import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
+import com.sakuragame.eternal.justattribute.util.Load;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotLoadedEvent;
 import net.sakuragame.eternal.justlevel.api.event.PlayerDataLoadEvent;
 import org.bukkit.GameMode;
@@ -11,13 +13,46 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
+
+    private final JustAttribute plugin = JustAttribute.getInstance();
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPreLogin(AsyncPlayerPreLoginEvent e) {
+        if (e.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
+            return;
+        }
+        UUID uuid = e.getUniqueId();
+        JustAttribute.getRoleManager().loadStateData(uuid);
+        RoleManager.addLoad(uuid);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPreLoginMonitor(AsyncPlayerPreLoginEvent e) {
+        if (e.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
+            JustAttribute.getRoleManager().clearData(e.getUniqueId());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerLogin(PlayerLoginEvent e) {
+        Player player = e.getPlayer();
+        RoleState state = JustAttribute.getRoleManager().getPlayerState(player);
+
+        if (state == null) {
+            e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+            e.setKickMessage("账户未被正确加载，请重新进入。");
+            plugin.getLogger().info("玩家 " + player.getName() + " 账户数据载入失败!");
+            return;
+        }
+
+        PlayerDataLoadEvent event = new PlayerDataLoadEvent(player);
+        event.call();
+    }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -26,12 +61,9 @@ public class PlayerListener implements Listener {
         player.setHealthScale(20);
         player.setHealthScaled(true);
         player.setFoodLevel(20);
-        if (!player.isOp()) player.setGameMode(GameMode.ADVENTURE);
 
-        RoleSync roleSync = new RoleSync();
-        AttributeManager.sync.put(player.getUniqueId(), roleSync);
-
-        AttributeManager.loading.add(player.getUniqueId());
+        if (!player.isOp()) return;
+        player.setGameMode(GameMode.ADVENTURE);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -48,13 +80,12 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        RoleSync initSync = AttributeManager.sync.get(uuid);
-        if (initSync == null) return;
+        Load load = RoleManager.getLoad(uuid);
+        if (load == null) return;
 
-        initSync.setJustLevel(true);
-        if (initSync.isFinished()) {
-            AttributeManager.sync.remove(uuid);
-            RoleManager.loadAttributeData(player);
+        load.setJustLevel(true);
+        if (load.isFinished()) {
+            JustAttribute.getRoleManager().loadAttributeData(player);
         }
     }
 
@@ -63,13 +94,12 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        RoleSync initSync = AttributeManager.sync.get(uuid);
-        if (initSync == null) return;
+        Load load = RoleManager.getLoad(uuid);
+        if (load == null) return;
 
-        initSync.setDragonSlot(true);
-        if (initSync.isFinished()) {
-            AttributeManager.sync.remove(uuid);
-            RoleManager.loadAttributeData(player);
+        load.setDragonSlot(true);
+        if (load.isFinished()) {
+            JustAttribute.getRoleManager().loadAttributeData(player);
         }
     }
 
@@ -78,10 +108,7 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        RoleManager.removeAttributeData(player);
-        RoleManager.removeStateData(player);
-        AttributeManager.sync.remove(uuid);
-        AttributeManager.loading.remove(uuid);
+        JustAttribute.getRoleManager().clearData(uuid);
     }
 
     @EventHandler

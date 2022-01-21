@@ -1,30 +1,28 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeUpdateEvent;
-import com.sakuragame.eternal.justattribute.core.AttributeManager;
+import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
-import com.sakuragame.eternal.justattribute.core.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
-import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Debug;
 import com.sakuragame.eternal.justattribute.util.Scheduler;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import lombok.Getter;
-import net.sakuragame.eternal.dragoncore.api.SlotAPI;
-import net.sakuragame.eternal.dragoncore.config.FileManager;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class RoleAttribute {
 
-    @Getter private final Player player;
+    @Getter private final UUID uuid;
 
     private double health;
     private double mana;
@@ -39,23 +37,15 @@ public class RoleAttribute {
 
     @Getter private int combat;
 
-    public RoleAttribute(Player player) {
-        this.player = player;
-        this.base = new AttributeSource();
+    public RoleAttribute(UUID uuid) {
+        this.uuid = uuid;
+        this.base = AttributeSource.getRoleDefault();
         this.source = new HashMap<>();
-        this.initRole();
-    }
-
-    private void initRole() {
-        this.base.initRoleDefaultAttribute();
-
         this.updateStageGrowth();
-        this.loadVanillaSlot();
-        this.loadDragonSlot();
     }
 
     public void updateStageGrowth() {
-        int stage = JustLevelAPI.getTotalStage(player);
+        int stage = JustLevelAPI.getTotalStage(uuid);
 
         this.health = ConfigFile.RoleBase.health + ConfigFile.RolePromote.health * stage;
         this.mana = ConfigFile.RoleBase.mana + ConfigFile.RolePromote.mana * stage;
@@ -65,33 +55,8 @@ public class RoleAttribute {
         this.restoreMP = ConfigFile.RoleBase.restoreMP + ConfigFile.RolePromote.restoreMP * stage;
     }
 
-    public void loadVanillaSlot() {
-        this.updateVanillaSlot(VanillaSlot.Helmet);
-        this.updateVanillaSlot(VanillaSlot.ChestPlate);
-        this.updateVanillaSlot(VanillaSlot.Leggings);
-        this.updateVanillaSlot(VanillaSlot.Boots);
-        this.updateVanillaSlot(VanillaSlot.OffHand);
-        this.updateVanillaSlot(VanillaSlot.MainHand);
-    }
-
-    public void loadDragonSlot() {
-        Player player = getPlayer();
-
-        for (String key : ConfigFile.slotSetting.keySet()) {
-            if (!FileManager.getSlotSettings().containsKey(key)) continue;
-
-            int id = ConfigFile.slotSetting.get(key);
-            EquipClassify classify = EquipClassify.getType(id);
-            if (classify == null) continue;
-
-            ItemStack item = SlotAPI.getCacheSlotItem(player, key);
-
-            updateCustomSlot(key, classify, item);
-        }
-    }
-
     public void updateRoleAttribute() {
-        if (AttributeManager.loading.contains(player.getUniqueId())) return;
+        if (RoleManager.isLoading(this.uuid)) return;
 
         HashMap<Attribute, Double> ordinary = new HashMap<>(base.getOrdinary());
         HashMap<Attribute, Double> potency = new HashMap<>(base.getPotency());
@@ -133,47 +98,8 @@ public class RoleAttribute {
         this.totalAttribute = new AttributeSource(ordinary, potency);
         this.combat = CombatCapacity.get(totalAttribute);
 
-        Scheduler.run(() -> {
-            RoleAttributeUpdateEvent event = new RoleAttributeUpdateEvent(getPlayer(), this);
-            event.call();
-        });
-    }
-
-    public void updateVanillaSlot(VanillaSlot slot) {
-        Player player = getPlayer();
-        ItemStack item = slot.getItem(player);
-
-        updateSlot(slot.getIdent(), slot.getType(), item);
-    }
-
-    public void updateVanillaSlot(VanillaSlot slot, ItemStack item) {
-        updateSlot(slot.getIdent(), slot.getType(), item);
-    }
-
-    public void updateMainHandSlot(int slot) {
-        Player player = getPlayer();
-
-        ItemStack item = player.getInventory().getItem(slot);
-        if (MegumiUtil.isEmpty(item)) item = new ItemStack(Material.AIR);
-
-        this.source.put(VanillaSlot.MainHand.getIdent(), new AttributeSource(player, item, VanillaSlot.MainHand.getType()));
-
-        Scheduler.runAsync(this::updateRoleAttribute);
-    }
-
-    public void updateCustomSlot(String ident, EquipClassify type, ItemStack item) {
-        updateSlot(ident, type, item);
-    }
-
-    private void updateSlot(String ident, EquipClassify type, ItemStack item) {
-        Player player = getPlayer();
-        if (MegumiUtil.isEmpty(item)) {
-            item = new ItemStack(Material.AIR);
-        }
-
-        this.source.put(ident, new AttributeSource(player, item.clone(), type));
-
-        Scheduler.runAsync(this::updateRoleAttribute);
+        RoleAttributeUpdateEvent event = new RoleAttributeUpdateEvent(this.getBukkitPlayer(), this);
+        event.call();
     }
 
     public void addAttributeSource(String key, ItemStack item) {
@@ -237,14 +163,14 @@ public class RoleAttribute {
     }
 
     public double getActualDamage() {
-        Player player = getPlayer();
+        Player player = this.getBukkitPlayer();
         double damage = getTotalDamage();
 
         return damage * Utils.getRealmDamagePromote(player);
     }
 
     public double getActualDefence() {
-        Player player = getPlayer();
+        Player player = this.getBukkitPlayer();
         double defence = getTotalDefence();
 
         return defence * Utils.getRealmDefencePromote(player);
@@ -256,5 +182,9 @@ public class RoleAttribute {
 
     public double getPotencyTotalValue(Attribute ident) {
         return totalAttribute.getPotency().get(ident);
+    }
+    
+    public Player getBukkitPlayer() {
+        return Bukkit.getPlayer(this.uuid);
     }
 }
