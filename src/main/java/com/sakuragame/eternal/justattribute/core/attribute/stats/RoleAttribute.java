@@ -3,7 +3,8 @@ package com.sakuragame.eternal.justattribute.core.attribute.stats;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
-import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
+import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
+import com.sakuragame.eternal.justattribute.core.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
@@ -32,15 +33,15 @@ public class RoleAttribute {
     @Getter private double restoreHP;
     @Getter private double restoreMP;
 
-    private final AttributeData base;
-    private final HashMap<String, AttributeData> source;
-    @Getter private AttributeData totalAttribute;
+    private final AttributeSource base;
+    private final HashMap<String, AttributeSource> source;
+    @Getter private AttributeSource totalAttribute;
 
     @Getter private int combat;
 
     public RoleAttribute(Player player) {
         this.player = player;
-        this.base = new AttributeData();
+        this.base = new AttributeSource();
         this.source = new HashMap<>();
         this.initRole();
     }
@@ -118,7 +119,7 @@ public class RoleAttribute {
 
         Debug.info(Debug.Attribute, "Source: ");
         source.keySet().forEach(s -> {
-            AttributeData data = source.get(s);
+            AttributeSource data = source.get(s);
             data.getOrdinary().forEach((key, value) -> {
                 ordinary.merge(key, value, Double::sum);
                 Debug.info(Debug.Attribute, "Ordinary " + key.getId() + ": " + value);
@@ -129,7 +130,7 @@ public class RoleAttribute {
             });
         });
 
-        this.totalAttribute = new AttributeData(ordinary, potency);
+        this.totalAttribute = new AttributeSource(ordinary, potency);
         this.combat = CombatCapacity.get(totalAttribute);
 
         Scheduler.run(() -> {
@@ -155,7 +156,7 @@ public class RoleAttribute {
         ItemStack item = player.getInventory().getItem(slot);
         if (MegumiUtil.isEmpty(item)) item = new ItemStack(Material.AIR);
 
-        this.source.put(VanillaSlot.MainHand.getIdent(), new AttributeData(player, item, VanillaSlot.MainHand.getType()));
+        this.source.put(VanillaSlot.MainHand.getIdent(), new AttributeSource(player, item, VanillaSlot.MainHand.getType()));
 
         Scheduler.runAsync(this::updateRoleAttribute);
     }
@@ -170,7 +171,7 @@ public class RoleAttribute {
             item = new ItemStack(Material.AIR);
         }
 
-        this.source.put(ident, new AttributeData(player, item.clone(), type));
+        this.source.put(ident, new AttributeSource(player, item.clone(), type));
 
         Scheduler.runAsync(this::updateRoleAttribute);
     }
@@ -178,14 +179,14 @@ public class RoleAttribute {
     public void addAttributeSource(String key, ItemStack item) {
         if (MegumiUtil.isEmpty(item)) item = new ItemStack(Material.AIR);
 
-        this.source.put(key, new AttributeData(item));
+        this.source.put(key, new AttributeSource(item));
     }
 
-    public void addAttributeSource(String key, AttributeData source) {
+    public void addAttributeSource(String key, AttributeSource source) {
         this.source.put(key, source);
     }
 
-    public void addAttributeSource(String key, AttributeData source, int time) {
+    public void addAttributeSource(String key, AttributeSource source, int time) {
         this.source.put(key, source);
         this.updateRoleAttribute();
 
@@ -198,7 +199,7 @@ public class RoleAttribute {
     public HashMap<Attribute, Double> getOrdinaryAttributes() {
         HashMap<Attribute, Double> ordinary = new HashMap<>(base.getOrdinary());
         source.keySet().forEach(s -> {
-            AttributeData data = source.get(s);
+            AttributeSource data = source.get(s);
             data.getOrdinary().forEach((key, value) -> ordinary.merge(key, value, Double::sum));
         });
 
@@ -208,7 +209,7 @@ public class RoleAttribute {
     public HashMap<Attribute, Double> getPotencyAttributes() {
         HashMap<Attribute, Double> potency = new HashMap<>(base.getOrdinary());
         source.keySet().forEach(s -> {
-            AttributeData data = source.get(s);
+            AttributeSource data = source.get(s);
             data.getPotency().forEach((key, value) -> potency.merge(key, value, Double::sum));
         });
 

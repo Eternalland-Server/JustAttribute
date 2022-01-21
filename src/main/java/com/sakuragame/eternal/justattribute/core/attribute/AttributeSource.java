@@ -1,6 +1,5 @@
-package com.sakuragame.eternal.justattribute.core.attribute.stats;
+package com.sakuragame.eternal.justattribute.core.attribute;
 
-import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import ink.ptms.zaphkiel.ZaphkielAPI;
@@ -15,17 +14,17 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 
 @Getter
-public class AttributeData {
+public class AttributeSource {
 
     private final HashMap<Attribute, Double> ordinary;
     private final HashMap<Attribute, Double> potency;
 
-    public AttributeData() {
+    public AttributeSource() {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
     }
 
-    public AttributeData(ItemStack item) {
+    public AttributeSource(ItemStack item) {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
 
@@ -33,14 +32,14 @@ public class AttributeData {
         read(ZaphkielAPI.INSTANCE.read(item));
     }
 
-    public AttributeData(ItemStream itemStream) {
+    public AttributeSource(ItemStream itemStream) {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
 
         read(itemStream);
     }
 
-    public AttributeData(Player player, ItemStack item, EquipClassify type) {
+    public AttributeSource(Player player, ItemStack item, EquipClassify type) {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
 
@@ -48,17 +47,17 @@ public class AttributeData {
         read(player, ZaphkielAPI.INSTANCE.read(item), type);
     }
 
-    public AttributeData(HashMap<Attribute, Double> ordinary, HashMap<Attribute, Double> potency) {
+    public AttributeSource(HashMap<Attribute, Double> ordinary, HashMap<Attribute, Double> potency) {
         this.ordinary = ordinary;
         this.potency = potency;
     }
 
-    public AttributeData addOrdinary(Attribute attribute, double value) {
+    public AttributeSource addOrdinary(Attribute attribute, double value) {
         ordinary.put(attribute, value);
         return this;
     }
 
-    public AttributeData addPotency(Attribute attribute, double value) {
+    public AttributeSource addPotency(Attribute attribute, double value) {
         potency.put(attribute, value);
         return this;
     }

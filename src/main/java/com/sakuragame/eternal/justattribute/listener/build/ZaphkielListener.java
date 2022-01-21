@@ -1,13 +1,10 @@
 package com.sakuragame.eternal.justattribute.listener.build;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.AttributeManager;
-import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.AttributeData;
+import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.*;
-import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
@@ -16,8 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-
-import java.util.LinkedList;
 
 public class ZaphkielListener implements Listener {
 
@@ -100,7 +95,7 @@ public class ZaphkielListener implements Listener {
     public void onCombat(ItemReleaseEvent.Display e) {
         if (e.isCancelled()) return;
 
-        int combat = CombatCapacity.get(new AttributeData(e.getItemStream()));
+        int combat = CombatCapacity.get(new AttributeSource(e.getItemStream()));
         e.addLore(CombatCapacity.DISPLAY_NODE, CombatCapacity.format(combat));
     }
 }

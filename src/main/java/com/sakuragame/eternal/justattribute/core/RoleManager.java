@@ -3,7 +3,6 @@ package com.sakuragame.eternal.justattribute.core;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeLoadedEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleStateLoadedEvent;
-import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;

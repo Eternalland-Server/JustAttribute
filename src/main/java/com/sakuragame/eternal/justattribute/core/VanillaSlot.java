@@ -1,4 +1,4 @@
-package com.sakuragame.eternal.justattribute.core.attribute;
+package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import lombok.Getter;

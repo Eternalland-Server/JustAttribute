@@ -7,7 +7,7 @@ import com.sakuragame.eternal.justattribute.api.event.role.RoleStateLoadedEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
-import com.sakuragame.eternal.justattribute.core.attribute.VanillaSlot;
+import com.sakuragame.eternal.justattribute.core.VanillaSlot;
 import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
 import com.sakuragame.eternal.justattribute.util.Scheduler;
 import com.sakuragame.eternal.justattribute.util.Utils;

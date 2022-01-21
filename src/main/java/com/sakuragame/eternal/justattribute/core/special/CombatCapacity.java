@@ -1,7 +1,7 @@
 package com.sakuragame.eternal.justattribute.core.special;
 
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.AttributeData;
+import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Debug;
 import com.sakuragame.eternal.justattribute.util.Utils;
@@ -20,7 +20,7 @@ public class CombatCapacity {
         return display;
     }
 
-    public static int get(AttributeData data) {
+    public static int get(AttributeSource data) {
         int combat = 0;
         double damage = 0d;
 

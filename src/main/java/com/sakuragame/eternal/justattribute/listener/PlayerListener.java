@@ -4,7 +4,7 @@ import com.sakuragame.eternal.justattribute.core.AttributeManager;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.util.RoleSync;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotLoadedEvent;
-import net.sakuragame.eternal.justlevel.api.event.sub.JLPlayerInitFinishedEvent;
+import net.sakuragame.eternal.justlevel.api.event.PlayerDataLoadEvent;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,7 +44,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onJLInit(JLPlayerInitFinishedEvent e) {
+    public void onLevel(PlayerDataLoadEvent e) {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 

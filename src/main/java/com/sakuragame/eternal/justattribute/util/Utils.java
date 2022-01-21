@@ -5,7 +5,7 @@ import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
-import net.sakuragame.eternal.justlevel.level.PlayerLevelData;
+import net.sakuragame.eternal.justlevel.core.user.PlayerLevelData;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -63,13 +63,13 @@ public class Utils {
     }
 
     public static double getRealmDamagePromote(Player player) {
-        PlayerLevelData data = JustLevelAPI.getData(player);
+        PlayerLevelData data = JustLevelAPI.getUserData(player);
 
         return ((data.getStage() - 1) * 0.1 + (data.getRealm() - 1) * 0.7) * 0.5 + 1;
     }
 
     public static double getRealmDefencePromote(Player player) {
-        PlayerLevelData data = JustLevelAPI.getData(player);
+        PlayerLevelData data = JustLevelAPI.getUserData(player);
 
         return ((data.getStage() - 1) * 0.1 + (data.getRealm() - 1) * 0.7) * 0.38 + 1;
     }
