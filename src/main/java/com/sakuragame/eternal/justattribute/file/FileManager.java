@@ -34,7 +34,7 @@ public class FileManager extends JustConfiguration {
     private void initSmithy() {
         File file = new File(this.plugin.getDataFolder(), "smithy");
         if (file.exists()) return;
-        file.getParentFile().mkdirs();
+        file.mkdirs();
 
         MegumiUtil.copyFile(this.plugin.getResource("identify.yml"), new File(file, "identify.yml"));
     }

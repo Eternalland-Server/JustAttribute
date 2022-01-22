@@ -11,6 +11,7 @@ import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotHandleEvent;
 import net.sakuragame.eternal.dragoncore.api.event.slot.PlayerSlotClickEvent;
+import net.sakuragame.eternal.dragoncore.api.event.slot.PlayerSlotClickedEvent;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
@@ -58,77 +59,78 @@ public class IdentifyListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
         String ident = e.getIdentifier();
+        ItemStack handItem = player.getItemOnCursor();
 
         if (ident.equals("identify_result")) {
-            ItemStack result = resultCache.get(uuid);
+            if (!MegumiUtil.isEmpty(handItem)) {
+                MessageAPI.sendActionTip(player, "&c&l该槽位不能放入物品");
+                e.setCancelled(true);
+                return;
+            }
+            ItemStack result = resultCache.remove(uuid);
             if (result == null) return;
             e.setSlotItem(result);
             return;
         }
 
         if (ident.equals("identify_equip")) {
-            ItemStack equip = equipCache.get(uuid);
-            if (equip == null) return;
-            e.setSlotItem(equip);
+            if (!MegumiUtil.isEmpty(handItem)) {
+                ItemStream itemStream = ZaphkielAPI.INSTANCE.read(handItem);
+                if (itemStream.isVanilla()) {
+                    e.setCancelled(true);
+                    return;
+                }
+
+                ItemTag itemTag = itemStream.getZaphkielData();
+                ItemTagData data = itemTag.getDeep(PotencyGrade.NBT_TAG);
+                if (data == null) {
+                    MessageAPI.sendActionTip(player, "&c&l该物品不能鉴定");
+                    e.setCancelled(true);
+                    return;
+                }
+
+                ItemStack equip = equipCache.remove(uuid);
+                if (equip != null) {
+                    e.setSlotItem(equip);
+                }
+                equipCache.put(uuid, handItem);
+                return;
+            }
+
+            ItemStack equip = equipCache.remove(uuid);
+            if (equip != null) {
+                e.setSlotItem(equip);
+            }
             return;
         }
 
         if (ident.equals("identify_prop")) {
-            ItemStack prop = propCache.get(uuid);
-            if (prop == null) return;
-            e.setSlotItem(prop);
-        }
-    }
+            if (!MegumiUtil.isEmpty(handItem)) {
+                ItemStream itemStream = ZaphkielAPI.INSTANCE.read(handItem);
+                if (itemStream.isVanilla()) {
+                    e.setCancelled(true);
+                    return;
+                }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onHandle(PlayerSlotHandleEvent e) {
-        if (e.isCancelled()) return;
+                String zapID = itemStream.getZaphkielItem().getId();
+                if (!scroll.contains(zapID)) {
+                    MessageAPI.sendActionTip(player, "&c&l该槽位只能放入鉴定卷轴!");
+                    e.setCancelled(true);
+                    return;
+                }
 
-        Player player = e.getPlayer();
-        String ident = e.getIdentifier();
-        ItemStack item = e.getHandItem();
-
-        UUID uuid = player.getUniqueId();
-
-        if (ident.equals("identify_result") || !MegumiUtil.isEmpty(item)) {
-            MessageAPI.sendActionTip(player, "&c&l该槽位不能放入物品");
-            e.setCancelled(true);
-            return;
-        }
-
-        if (ident.equals("identify_equip") || !MegumiUtil.isEmpty(item)) {
-            ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-            if (itemStream.isVanilla()) {
-                e.setCancelled(true);
+                ItemStack prop = propCache.remove(uuid);
+                if (prop != null) {
+                    e.setSlotItem(prop);
+                }
+                propCache.put(uuid, handItem);
                 return;
             }
 
-            ItemTag itemTag = itemStream.getZaphkielData();
-            ItemTagData data = itemTag.getDeep(PotencyGrade.NBT_TAG);
-            if (data == null) {
-                MessageAPI.sendActionTip(player, "&c&l该物品不能鉴定");
-                e.setCancelled(true);
-                return;
+            ItemStack prop = propCache.remove(uuid);
+            if (prop != null) {
+                e.setSlotItem(prop);
             }
-
-            equipCache.put(uuid, item);
-        }
-
-        if (ident.equals("identify_prop") || !MegumiUtil.isEmpty(item)) {
-            ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-            if (itemStream.isVanilla()) {
-                e.setCancelled(true);
-                return;
-            }
-
-            String zapID = itemStream.getZaphkielItem().getId();
-            if (!scroll.contains(zapID)) {
-                MessageAPI.sendActionTip(player, "&c&l该槽位只能放入鉴定卷轴!");
-                e.setCancelled(true);
-                return;
-            }
-
-            propCache.put(uuid, item);
         }
     }
 
@@ -136,6 +138,9 @@ public class IdentifyListener implements Listener {
     public void onSubmit(UIFCompSubmitEvent e) {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
+
+        if (!e.getScreenID().equals("identify")) return;
+        if (e.getParams().getParamI(0) != 1) return;
 
         if (resultCache.containsKey(uuid)) {
             MessageAPI.sendActionTip(player, "&a&l鉴定前请取走已鉴定完的装备");
@@ -153,6 +158,7 @@ public class IdentifyListener implements Listener {
                 return;
             }
 
+            // TODO
             MessageAPI.sendActionTip(player, "&6&l[TEST] &3&l鉴定装备");
         }
         else {
@@ -161,6 +167,7 @@ public class IdentifyListener implements Listener {
                 return;
             }
 
+            // TODO
             MessageAPI.sendActionTip(player, "&6&l[TEST] &3&l重置鉴定");
         }
     }
