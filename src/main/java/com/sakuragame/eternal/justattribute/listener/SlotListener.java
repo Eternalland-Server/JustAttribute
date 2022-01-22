@@ -2,7 +2,6 @@ package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.AttributeHandler;
-import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.Owner;
@@ -94,12 +93,12 @@ public class SlotListener implements Listener {
         String ident = e.getIdentifier();
         ItemStack item = e.getHandItem();
 
-        if (MegumiUtil.isEmpty(item)) return;
-
         Integer id = ConfigFile.slotSetting.get(ident);
         if (id == null) return;
 
-        EquipClassify classify = EquipClassify.getType(id);
+        if (MegumiUtil.isEmpty(item)) return;
+
+        EquipClassify classify = EquipClassify.match(id);
         if (classify == null) return;
 
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);

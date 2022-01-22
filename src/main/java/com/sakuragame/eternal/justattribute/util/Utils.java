@@ -16,6 +16,11 @@ public class Utils {
 
     public final static DecimalFormat a = new DecimalFormat("0");
 
+    public static String getZapID(ItemStack item) {
+        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
+        return itemStream.getZaphkielItem().getId();
+    }
+
     public static String formatValue(double value, boolean isPercent) {
         value = isPercent ? value * 100 : value;
         String s = value >= 0 ? "+" + a.format(value) : "-" + a.format(value);

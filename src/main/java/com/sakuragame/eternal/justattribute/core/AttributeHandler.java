@@ -35,7 +35,7 @@ public class AttributeHandler {
             if (!FileManager.getSlotSettings().containsKey(key)) continue;
 
             int id = ConfigFile.slotSetting.get(key);
-            EquipClassify classify = EquipClassify.getType(id);
+            EquipClassify classify = EquipClassify.match(id);
             if (classify == null) continue;
 
             ItemStack item = SlotAPI.getCacheSlotItem(player, key);

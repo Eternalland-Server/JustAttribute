@@ -43,8 +43,6 @@ public class ZaphkielListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSoulBound(ItemReleaseEvent.Display e) {
-        if (e.isCancelled()) return;
-
         Player player = e.getPlayer();
         if (player == null) return;
 
@@ -63,14 +61,12 @@ public class ZaphkielListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onClassify(ItemReleaseEvent.Display e) {
-        if (e.isCancelled()) return;
-
         ItemTag itemTag = e.getItemStream().getZaphkielData();
         ItemTagData data = itemTag.getDeep(EquipClassify.NBT_NODE);
 
         if (data == null) return;
         int id = data.asInt();
-        EquipClassify equipClassify = EquipClassify.getType(id);
+        EquipClassify equipClassify = EquipClassify.match(id);
         if (equipClassify == null) return;
 
         e.addLore(EquipClassify.DISPLAY_NODE, equipClassify.formatting());
@@ -78,14 +74,12 @@ public class ZaphkielListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onQuality(ItemReleaseEvent.Display e) {
-        if (e.isCancelled()) return;
-
         ItemTag itemTag = e.getItemStream().getZaphkielData();
         ItemTagData data = itemTag.getDeep(EquipQuality.NBT_NODE);
 
         if (data == null) return;
         int id = data.asInt();
-        EquipQuality equipQuality = EquipQuality.getQuality(id);
+        EquipQuality equipQuality = EquipQuality.match(id);
         if (equipQuality == null) return;
 
         e.addLore(EquipQuality.DISPLAY_NODE, equipQuality.formatting());
@@ -93,7 +87,8 @@ public class ZaphkielListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCombat(ItemReleaseEvent.Display e) {
-        if (e.isCancelled()) return;
+        String display = e.getItemStream().getZaphkielItem().getDisplay();
+        if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;
 
         int combat = CombatCapacity.get(new AttributeSource(e.getItemStream()));
         e.addLore(CombatCapacity.DISPLAY_NODE, CombatCapacity.format(combat));

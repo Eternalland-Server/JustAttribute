@@ -13,8 +13,6 @@ public class SkinListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSkin(ItemReleaseEvent.Final e) {
-        if (e.isCancelled()) return;
-
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 
         ItemTagData data = itemTag.getDeep("justattribute.skin");

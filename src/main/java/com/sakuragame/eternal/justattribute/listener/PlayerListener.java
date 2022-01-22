@@ -1,7 +1,6 @@
 package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.util.Load;

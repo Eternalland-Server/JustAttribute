@@ -45,7 +45,7 @@ public enum Attribute {
         this.onlyPercent = onlyPercent;
     }
 
-    public static Attribute get(String id) {
+    public static Attribute match(String id) {
         for (Attribute ident : values()) {
             if (ident.getId().equals(id)) {
                 return ident;
@@ -101,6 +101,6 @@ public enum Attribute {
     }
 
     public String getPotencyNode() {
-        return (JustAttribute.getInstance().getName() + ".potency.addition." + getId()).toLowerCase();
+        return (JustAttribute.getInstance().getName() + ".potency." + getId()).toLowerCase();
     }
 }

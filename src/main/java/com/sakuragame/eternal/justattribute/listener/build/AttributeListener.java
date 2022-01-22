@@ -1,8 +1,6 @@
 package com.sakuragame.eternal.justattribute.listener.build;
 
-import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
-import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
@@ -23,6 +21,9 @@ public class AttributeListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBuild(ItemBuildEvent.Pre e) {
         if (e.isCancelled()) return;
+
+        String display = e.getItemStream().getZaphkielItem().getDisplay();
+        if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;
 
         ItemTag tag = e.getItemStream().getZaphkielData();
 
@@ -49,16 +50,20 @@ public class AttributeListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDisplay(ItemReleaseEvent.Display e) {
-        if (e.isCancelled()) return;
+        String display = e.getItemStream().getZaphkielItem().getDisplay();
+        if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;
 
         ItemTag tag = e.getItemStream().getZaphkielData();
 
         LinkedList<String> ordinaryDisplay = new LinkedList<>();
         LinkedList<String> potencyDisplay = new LinkedList<>();
 
-        PotencyGrade grade = PotencyGrade.getGrade(tag.getDeepOrElse(PotencyGrade.NBT_TAG, new ItemTagData(-1)).asInt());
-        potencyDisplay.add(grade == null ? PotencyGrade.NONE.formatting() : grade.formatting());
-        potencyDisplay.add("");
+        ItemTagData gradeData = tag.getDeep(PotencyGrade.NBT_TAG);
+        PotencyGrade grade = gradeData == null ? null : PotencyGrade.match(gradeData.asInt());
+        if (grade != null) {
+            potencyDisplay.add(grade.formatting());
+            potencyDisplay.add("");
+        }
 
         for (Attribute attr : Attribute.values()) {
             ItemTagData ordinary = tag.getDeep(attr.getOrdinaryNode());
@@ -67,22 +72,16 @@ public class AttributeListener implements Listener {
             if (ordinary != null) {
                 ordinaryDisplay.add(attr.format(ordinary.asDouble()));
             }
-            if (potency != null) {
+            if (potency != null && grade != null) {
                 potencyDisplay.add(attr.format(potency.asDouble(), true));
             }
         }
 
-        e.addLore(Attribute.ORDINARY_DISPLAY_NODE, ordinaryDisplay);
-
-        ItemTagData data = tag.getDeep(EquipClassify.NBT_NODE);
-        if (data == null) return;
-        int id = data.asInt();
-
-        if (id >= 100) return;
-
-        if (potencyDisplay.size() == 2) {
+        if (grade == PotencyGrade.NONE) {
             potencyDisplay.add(ConfigFile.potency_empty);
         }
+
+        e.addLore(Attribute.ORDINARY_DISPLAY_NODE, ordinaryDisplay);
         e.addLore(Attribute.POTENCY_DISPLAY_NODE, potencyDisplay);
     }
 

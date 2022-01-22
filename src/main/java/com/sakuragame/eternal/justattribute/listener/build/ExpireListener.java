@@ -13,7 +13,7 @@ import org.bukkit.event.Listener;
 
 public class ExpireListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void onBuild(ItemBuildEvent.Pre e) {
         if (e.isCancelled()) return;
         if (e.getPlayer() == null) return;
@@ -39,23 +39,32 @@ public class ExpireListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onDisplay(ItemReleaseEvent.Display e) {
+    public void onCheck(ItemBuildEvent.Pre e) {
         if (e.isCancelled()) return;
         if (e.getPlayer() == null) return;
 
         ItemTag tag = e.getItemStream().getZaphkielData();
         ItemTagData data = tag.getDeep(ItemExpire.NBT_EXPIRE_NODE);
-
         if (data == null) return;
 
         long time = data.asLong();
-        if (ItemExpire.isExpired(time)) {
-            e.setCancelled(true);
 
-            ItemExpiredEvent event = new ItemExpiredEvent(e.getPlayer(), e.getItemStream().getZaphkielItem().getId(), e.getName().get("NAME"));
-            event.call();
-            return;
-        }
+        if (!ItemExpire.isExpired(time)) return;
+
+        ItemExpiredEvent event = new ItemExpiredEvent(e.getPlayer(), e.getItemStream().getZaphkielItem().getId(), e.getName().get("NAME"));
+        event.call();
+        e.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onDisplay(ItemReleaseEvent.Display e) {
+        if (e.getPlayer() == null) return;
+
+        ItemTag tag = e.getItemStream().getZaphkielData();
+        ItemTagData data = tag.getDeep(ItemExpire.NBT_EXPIRE_NODE);
+        if (data == null) return;
+
+        long time = data.asLong();
 
         String expiredFormat = ItemExpire.formatting(time);
         e.addLore(ItemExpire.DISPLAY_NODE, expiredFormat);

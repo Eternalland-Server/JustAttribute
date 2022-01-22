@@ -132,7 +132,7 @@ public class ConfigFile {
 
         for (String s : section.getKeys(false)) {
             int value = section.getInt(s);
-            combatCapability.put(Attribute.get(s), value);
+            combatCapability.put(Attribute.match(s), value);
         }
     }
 }

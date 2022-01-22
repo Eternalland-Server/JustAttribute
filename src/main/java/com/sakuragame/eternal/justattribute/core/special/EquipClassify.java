@@ -54,7 +54,7 @@ public enum EquipClassify {
         return ConfigFile.format.classify.replace("<classify>", getName());
     }
 
-    public static EquipClassify getType(int id) {
+    public static EquipClassify match(int id) {
         for (EquipClassify type : values()) {
             if (type.getId() == id) {
                 return type;
@@ -76,6 +76,6 @@ public enum EquipClassify {
         ItemTagData data = tag.getDeep(NBT_NODE);
         if (data == null) return null;
 
-        return getType(data.asInt());
+        return match(data.asInt());
     }
 }

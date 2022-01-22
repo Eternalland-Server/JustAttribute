@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute;
 import com.sakuragame.eternal.justattribute.commands.MainCommand;
 import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
+import com.sakuragame.eternal.justattribute.core.smithy.IdentifyFactory;
 import com.sakuragame.eternal.justattribute.file.FileManager;
 import com.sakuragame.eternal.justattribute.hook.AttributePlaceholder;
 import com.sakuragame.eternal.justattribute.listener.PlayerListener;
@@ -17,6 +18,7 @@ import com.sakuragame.eternal.justattribute.listener.combat.CombatListener;
 import com.sakuragame.eternal.justattribute.listener.combat.VampireListener;
 import com.sakuragame.eternal.justattribute.listener.hook.LevelListener;
 import com.sakuragame.eternal.justattribute.listener.hook.StorageListener;
+import com.sakuragame.eternal.justattribute.listener.smithy.IdentifyListener;
 import com.sakuragame.eternal.justattribute.listener.smithy.UIListener;
 import com.sakuragame.eternal.justattribute.storage.StorageManager;
 import lombok.Getter;
@@ -50,6 +52,9 @@ public class JustAttribute extends JavaPlugin {
         getLogger().info("初始化角色管理...");
         roleManager = new RoleManager(this);
 
+        getLogger().info("初始化锻造...");
+        IdentifyFactory.init();
+
         getLogger().info("注册PAPI变量...");
         new AttributePlaceholder().register();
 
@@ -59,6 +64,9 @@ public class JustAttribute extends JavaPlugin {
         registerListener(new AttributeListener());
         registerListener(new ExpireListener());
 
+        registerListener(new UIListener());
+        registerListener(new IdentifyListener());
+
         registerListener(new PlayerListener());
         registerListener(new RoleListener());
         registerListener(new SlotListener());
@@ -66,8 +74,6 @@ public class JustAttribute extends JavaPlugin {
         registerListener(new VampireListener());
         registerListener(new SoulBoundListener());
         registerListener(new LevelListener());
-
-        registerListener(new UIListener());
 
         if (Bukkit.getPluginManager().getPlugin("PlayerSQL") != null) {
             PLAYER_SQL = true;

@@ -1,7 +1,12 @@
 package com.sakuragame.eternal.justattribute.core.special;
 
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import ink.ptms.zaphkiel.ZaphkielAPI;
+import ink.ptms.zaphkiel.api.ItemStream;
+import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
+import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import lombok.Getter;
+import org.bukkit.inventory.ItemStack;
 
 @Getter
 public enum EquipQuality {
@@ -35,7 +40,7 @@ public enum EquipQuality {
                 .replace("<desc>", getDesc());
     }
 
-    public static EquipQuality getQuality(int id) {
+    public static EquipQuality match(int id) {
         for (EquipQuality equipQuality : values()) {
             if (equipQuality.getId() == id) {
                 return equipQuality;
@@ -43,5 +48,20 @@ public enum EquipQuality {
         }
 
         return null;
+    }
+
+    public static EquipQuality getQuality(ItemStack item) {
+        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
+        if (itemStream.isVanilla()) return null;
+
+        ItemTag itemTag = itemStream.getZaphkielData();
+        return getQuality(itemTag);
+    }
+
+    public static EquipQuality getQuality(ItemTag tag) {
+        ItemTagData data = tag.getDeep(NBT_NODE);
+        if (data == null) return null;
+
+        return match(data.asInt());
     }
 }

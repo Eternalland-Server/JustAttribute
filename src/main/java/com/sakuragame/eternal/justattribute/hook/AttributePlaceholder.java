@@ -32,7 +32,7 @@ public class AttributePlaceholder extends PlaceholderExpansion {
         RoleAttribute role = JustAttributeAPI.getRoleAttribute(player.getUniqueId());
         if (role == null) return "0";
 
-        Attribute ident = Attribute.get(params);
+        Attribute ident = Attribute.match(params);
         if (ident == null) return "0";
 
         if (ident == Attribute.Damage) {
