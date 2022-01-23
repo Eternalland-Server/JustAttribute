@@ -36,6 +36,8 @@ public enum Attribute {
 
     public final static String ORDINARY_DISPLAY_NODE = "display.ordinary";
     public final static String POTENCY_DISPLAY_NODE = "display.potency";
+    public final static String ORDINARY_NBT_NODE = "justattribute.ordinary";
+    public final static String POTENCY_NBT_NODE = "justattribute.potency";
 
     Attribute(String id, String symbol, String display, double base, boolean onlyPercent) {
         this.id = id;
@@ -97,10 +99,10 @@ public enum Attribute {
     }
 
     public String getOrdinaryNode() {
-        return (JustAttribute.getInstance().getName() + ".ordinary." + getId()).toLowerCase();
+        return (ORDINARY_NBT_NODE + "." + getId()).toLowerCase();
     }
 
     public String getPotencyNode() {
-        return (JustAttribute.getInstance().getName() + ".potency." + getId()).toLowerCase();
+        return (POTENCY_NBT_NODE + "." + getId()).toLowerCase();
     }
 }

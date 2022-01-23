@@ -11,10 +11,26 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
+import java.util.Random;
 
 public class Utils {
 
     public final static DecimalFormat a = new DecimalFormat("0");
+    public final static Random RANDOM = new Random();
+
+    public static int getRandomInt(int value) {
+        return RANDOM.nextInt(value);
+    }
+
+    public static int getRangeValue(String s) {
+        if (!s.contains("-")) return Integer.parseInt(s);
+
+        String[] args = s.split("-");
+        int a = Integer.parseInt(args[0]);
+        int b = Integer.parseInt(args[1]);
+
+        return RANDOM.nextInt(b - a) + a;
+    }
 
     public static String getZapID(ItemStack item) {
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);

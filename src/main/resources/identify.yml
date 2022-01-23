@@ -1,5 +1,5 @@
 weapon:
-  0:
+  mini:
     weight: 60
     attribute:
       damage: 2-4
@@ -9,7 +9,7 @@ weapon:
       vampire_damage: 3-5
       vampire_versatile: 3-5
       exp_addition: 10
-  1:
+  pro:
     weight: 30
     attribute:
       damage: 6-8
@@ -19,7 +19,7 @@ weapon:
       vampire_damage: 5-8
       vampire_versatile: 5-8
       exp_addition: 20
-  2:
+  ultra:
     weight: 10
     attribute:
       damage: 8-12
@@ -30,7 +30,7 @@ weapon:
       vampire_versatile: 8-10
       exp_addition: 30
 equip:
-  0:
+  mini:
     weight: 60
     attribute:
       energy: 2
@@ -43,7 +43,7 @@ equip:
       mana: 4
       restore_health: 5-10
       restore_mana: 5-10
-  1:
+  pro:
     weight: 30
     attribute:
       energy: 4
@@ -56,7 +56,7 @@ equip:
       mana: 6
       restore_health: 12-18
       restore_mana: 12-18
-  2:
+  ultra:
     weight: 10
     attribute:
       energy: 6

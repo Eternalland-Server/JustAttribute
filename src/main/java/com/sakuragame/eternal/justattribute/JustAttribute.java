@@ -1,9 +1,8 @@
 package com.sakuragame.eternal.justattribute;
 
 import com.sakuragame.eternal.justattribute.commands.MainCommand;
-import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
-import com.sakuragame.eternal.justattribute.core.smithy.IdentifyFactory;
+import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.file.FileManager;
 import com.sakuragame.eternal.justattribute.hook.AttributePlaceholder;
 import com.sakuragame.eternal.justattribute.listener.PlayerListener;
@@ -52,8 +51,8 @@ public class JustAttribute extends JavaPlugin {
         getLogger().info("初始化角色管理...");
         roleManager = new RoleManager(this);
 
-        getLogger().info("初始化锻造...");
-        IdentifyFactory.init();
+        getLogger().info("初始化锻造功能...");
+        SmithyManager.init();
 
         getLogger().info("注册PAPI变量...");
         new AttributePlaceholder().register();

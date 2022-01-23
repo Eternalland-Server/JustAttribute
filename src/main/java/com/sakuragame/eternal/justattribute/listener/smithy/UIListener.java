@@ -1,10 +1,14 @@
 package com.sakuragame.eternal.justattribute.listener.smithy;
 
+import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.taylorswiftcn.megumi.uifactory.event.comp.UIFCompSubmitEvent;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.UUID;
 
 public class UIListener implements Listener {
 
@@ -17,5 +21,12 @@ public class UIListener implements Listener {
         if (!screenID.equals("smithy")) return;
 
         PacketSender.sendOpenGui(player, compID);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        Player player = e.getPlayer();
+        UUID uuid = player.getUniqueId();
+        SmithyManager.clearSlot(uuid);
     }
 }
