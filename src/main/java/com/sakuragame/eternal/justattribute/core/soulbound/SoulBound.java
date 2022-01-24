@@ -11,11 +11,12 @@ import org.bukkit.inventory.ItemStack;
 import java.util.UUID;
 
 public class SoulBound {
-
-    public final static String NBT_ACTION_NODE = "justattribute.soulbound.action";
-    public final static String NBT_TYPE_NODE = "justattribute.soulbound.type";
-    public final static String NBT_UUID_NODE = "justattribute.soulbound.uuid";
-    public final static String NBT_NAME_NODE = "justattribute.soulbound.name";
+    
+    public final static String NBT_NODE = "justattribute.soulbound";
+    public final static String NBT_ACTION_NODE = ".action";
+    public final static String NBT_TYPE_NODE = NBT_NODE + ".type";
+    public final static String NBT_UUID_NODE = NBT_NODE + ".uuid";
+    public final static String NBT_NAME_NODE = NBT_NODE + ".name";
     public final static String DISPLAY_NODE = "display.soulbound";
 
     public static Action getAction(ItemStack item) {
@@ -28,6 +29,13 @@ public class SoulBound {
 
     public static Action getAction(ItemTag tag) {
         ItemTagData data = tag.getDeep(NBT_ACTION_NODE);
+        if (data == null) return null;
+
+        return Action.match(data.asInt());
+    }
+
+    public static Action getType(ItemTag tag) {
+        ItemTagData data = tag.getDeep(NBT_TYPE_NODE);
         if (data == null) return null;
 
         return Action.match(data.asInt());
@@ -51,14 +59,9 @@ public class SoulBound {
         return new Owner(UUID.fromString(uuidDate.asString()), nameDate.asString());
     }
 
-    public static ItemStack binding(Player player, ItemStack item, Action action) {
-        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-        if (itemStream.isVanilla()) return item;
-
+    public static ItemStack binding(Player player, ItemStream itemStream, Action action) {
         ItemTag itemTag = itemStream.getZaphkielData();
-
         action.getHandler().build(player, itemTag);
-
         ItemStack rebuild = itemStream.rebuildToItemStack(player);
 
         EquipBoundEvent event = new EquipBoundEvent(player, rebuild);

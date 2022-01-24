@@ -6,18 +6,23 @@ import lombok.Getter;
 @Getter
 public enum Action {
 
-    AUTO_LOCK(0, new AutoHandler.Lock()),
-    USE_LOCK(1, new UseHandler.Lock()),
-    PROP_LOCK(2, new PropHandler.Lock()),
-    AUTO(10, new AutoHandler.Normal()),
-    USE(11, new UseHandler.Normal()),
-    PROP(22, new PropHandler.Normal());
+    SEAL(-1, false, false, new SealHandler()),
+    AUTO_LOCK(0, true, true, new AutoHandler.Lock()),
+    USE_LOCK(1, true, false, new UseHandler.Lock()),
+    PROP_LOCK(2, true, true, new PropHandler.Lock()),
+    AUTO(10, false, true, new AutoHandler.Normal()),
+    USE(11, false, false, new UseHandler.Normal()),
+    PROP(22, false, true, new PropHandler.Normal());
 
     private final int id;
+    private final boolean lock;
+    private final boolean initiative;
     private final BoundHandler handler;
 
-    Action(int id, BoundHandler handler) {
+    Action(int id, boolean lock, boolean initiative, BoundHandler handler) {
         this.id = id;
+        this.lock = lock;
+        this.initiative = initiative;
         this.handler = handler;
     }
 

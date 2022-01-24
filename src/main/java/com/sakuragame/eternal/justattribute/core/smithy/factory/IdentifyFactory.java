@@ -1,7 +1,10 @@
-package com.sakuragame.eternal.justattribute.core.smithy.identify;
+package com.sakuragame.eternal.justattribute.core.smithy.factory;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
+import com.sakuragame.eternal.justattribute.core.smithy.data.Entry;
+import com.sakuragame.eternal.justattribute.core.smithy.data.Group;
+import com.sakuragame.eternal.justattribute.core.smithy.data.Level;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
 import com.sakuragame.eternal.justattribute.util.Utils;

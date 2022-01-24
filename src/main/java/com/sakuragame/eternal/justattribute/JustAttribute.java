@@ -18,6 +18,8 @@ import com.sakuragame.eternal.justattribute.listener.combat.VampireListener;
 import com.sakuragame.eternal.justattribute.listener.hook.LevelListener;
 import com.sakuragame.eternal.justattribute.listener.hook.StorageListener;
 import com.sakuragame.eternal.justattribute.listener.smithy.IdentifyListener;
+import com.sakuragame.eternal.justattribute.listener.smithy.SealListener;
+import com.sakuragame.eternal.justattribute.listener.smithy.TransferListener;
 import com.sakuragame.eternal.justattribute.listener.smithy.UIListener;
 import com.sakuragame.eternal.justattribute.storage.StorageManager;
 import lombok.Getter;
@@ -65,6 +67,8 @@ public class JustAttribute extends JavaPlugin {
 
         registerListener(new UIListener());
         registerListener(new IdentifyListener());
+        registerListener(new SealListener());
+        registerListener(new TransferListener());
 
         registerListener(new PlayerListener());
         registerListener(new RoleListener());

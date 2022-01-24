@@ -1,7 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.smithy;
 
-import com.sakuragame.eternal.justattribute.core.smithy.identify.IdentifyFactory;
-import com.taylorswiftcn.justwei.util.MegumiUtil;
+import com.sakuragame.eternal.justattribute.core.smithy.factory.IdentifyFactory;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

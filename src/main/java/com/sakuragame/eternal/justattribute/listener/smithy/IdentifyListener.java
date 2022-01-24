@@ -1,6 +1,6 @@
 package com.sakuragame.eternal.justattribute.listener.smithy;
 
-import com.sakuragame.eternal.justattribute.core.smithy.identify.IdentifyFactory;
+import com.sakuragame.eternal.justattribute.core.smithy.factory.IdentifyFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;

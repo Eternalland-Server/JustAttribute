@@ -20,6 +20,7 @@ public class ConfigFile {
     public static String potency_empty;
 
     public static class SoulBound {
+        public static String seal;
         public static String auto;
         public static String use;
         public static String prop;
@@ -70,6 +71,7 @@ public class ConfigFile {
 
         damage_immune_limit = config.getDouble("base.damage-immune-limit");
         potency_empty = getString("base.potency.empty");
+        SoulBound.seal = getString("base.soulbound.seal");
         SoulBound.auto = getString("base.soulbound.auto");
         SoulBound.use = getString("base.soulbound.use");
         SoulBound.prop = getString("base.soulbound.prop");

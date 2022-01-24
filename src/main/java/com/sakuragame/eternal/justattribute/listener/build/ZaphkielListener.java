@@ -1,10 +1,11 @@
 package com.sakuragame.eternal.justattribute.listener.build;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
-import com.sakuragame.eternal.justattribute.core.special.*;
+import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
+import com.sakuragame.eternal.justattribute.core.special.EquipQuality;
 import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
@@ -15,8 +16,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 public class ZaphkielListener implements Listener {
-
-    private final JustAttribute plugin = JustAttribute.getInstance();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSoulBound(ItemBuildEvent.Pre e) {
@@ -31,9 +30,9 @@ public class ZaphkielListener implements Listener {
         int id = data.asInt();
 
         Action action = Action.match(id);
-        if (action == null || action == Action.USE) return;
+        if (action == null) return;
 
-        if (player != null) {
+        if (player != null && action.isInitiative()) {
             action.getHandler().build(player, itemTag);
             return;
         }
@@ -52,6 +51,11 @@ public class ZaphkielListener implements Listener {
         if (type == null) return;
         Action action = Action.match(type.asInt());
         if (action == null) return;
+
+        if (action == Action.SEAL) {
+            e.addLore(SoulBound.DISPLAY_NODE, action.getHandler().getUnboundDesc());
+            return;
+        }
 
         ItemTagData owner = itemTag.getDeep(SoulBound.NBT_NAME_NODE);
         if (owner == null) return;

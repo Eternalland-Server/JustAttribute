@@ -1,4 +1,4 @@
-package com.sakuragame.eternal.justattribute.core.smithy.identify;
+package com.sakuragame.eternal.justattribute.core.smithy.data;
 
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import lombok.Getter;

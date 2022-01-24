@@ -126,7 +126,7 @@ public class SlotListener implements Listener {
             if (action == null) return;
 
             if (action == Action.USE || action == Action.USE_LOCK) {
-                e.setHandItem(SoulBound.binding(player, item, action));
+                e.setHandItem(SoulBound.binding(player, itemStream, action));
             }
         }
     }
@@ -138,11 +138,14 @@ public class SlotListener implements Listener {
 
         if (MegumiUtil.isEmpty(item)) return;
 
-        Action action = SoulBound.getAction(item);
+        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
+        if (itemStream.isVanilla()) return;
+
+        Action action = SoulBound.getAction(itemStream.getZaphkielData());
         if (action == null) return;
 
         if (action == Action.USE || action == Action.USE_LOCK) {
-            player.getInventory().setItemInMainHand(SoulBound.binding(player, item, action));
+            player.getInventory().setItemInMainHand(SoulBound.binding(player, itemStream, action));
             AttributeHandler.updateVanillaSlot(player, VanillaSlot.MainHand);
         }
     }
@@ -156,11 +159,14 @@ public class SlotListener implements Listener {
 
         if (MegumiUtil.isEmpty(item)) return;
 
-        Action action = SoulBound.getAction(item);
+        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
+        if (itemStream.isVanilla()) return;
+
+        Action action = SoulBound.getAction(itemStream.getZaphkielData());
         if (action == null) return;
 
         if (action == Action.USE || action == Action.USE_LOCK) {
-            player.getInventory().setItemInMainHand(SoulBound.binding(player, item, action));
+            player.getInventory().setItemInMainHand(SoulBound.binding(player, itemStream, action));
             AttributeHandler.updateVanillaSlot(player, VanillaSlot.OffHand);
         }
     }
