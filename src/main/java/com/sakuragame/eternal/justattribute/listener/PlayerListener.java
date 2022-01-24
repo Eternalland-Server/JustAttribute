@@ -4,6 +4,7 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.util.Load;
+import com.sakuragame.eternal.justattribute.util.Scheduler;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotLoadedEvent;
 import net.sakuragame.eternal.justlevel.api.event.PlayerDataLoadEvent;
 import org.bukkit.GameMode;
@@ -107,7 +108,9 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        JustAttribute.getRoleManager().clearData(uuid);
+        RoleManager.delLoad(uuid);
+        JustAttribute.getRoleManager().removeAttributeData(uuid);
+        Scheduler.runAsync(() -> JustAttribute.getRoleManager().removeStateData(uuid));
     }
 
     @EventHandler

@@ -50,15 +50,27 @@ public class RoleManager {
     }
 
     public void removeAttributeData(Player player) {
-        this. playerAttribute.remove(player.getUniqueId());
+        this.removeAttributeData(player.getUniqueId());
+    }
+
+    public void removeAttributeData(UUID uuid) {
+        this.playerAttribute.remove(uuid);
     }
 
     public void removeStateData(Player player) {
-        RoleState state = this.playerState.remove(player.getUniqueId());
-        if (state == null) return;
+        this.removeStateData(player.getUniqueId());
+    }
 
+    public void removeStateData(UUID uuid) {
+        RoleState state = this.playerState.remove(uuid);
+        if (state == null) return;
         state.save();
-        plugin.getLogger().info(" 保存 " + player.getName() + " 角色数据成功！");
+    }
+
+    public void clearData(UUID uuid) {
+        this.playerAttribute.remove(uuid);
+        this.playerState.remove(uuid);
+        delLoad(uuid);
     }
 
     public RoleAttribute getPlayerAttribute(Player player) {
@@ -75,12 +87,6 @@ public class RoleManager {
 
     public RoleState getPlayerState(UUID uuid) {
         return this.playerState.get(uuid);
-    }
-
-    public void clearData(UUID uuid) {
-        this.playerAttribute.remove(uuid);
-        this.playerState.remove(uuid);
-        delLoad(uuid);
     }
 
     public void saveAllRole() {
