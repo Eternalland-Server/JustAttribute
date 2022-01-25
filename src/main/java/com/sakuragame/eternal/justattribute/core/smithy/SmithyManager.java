@@ -1,6 +1,8 @@
 package com.sakuragame.eternal.justattribute.core.smithy;
 
 import com.sakuragame.eternal.justattribute.core.smithy.factory.IdentifyFactory;
+import com.sakuragame.eternal.justattribute.core.smithy.factory.SealFactory;
+import com.sakuragame.eternal.justattribute.core.smithy.factory.TransferFactory;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,6 +19,8 @@ public class SmithyManager {
 
     public static void init() {
         IdentifyFactory.init();
+        SealFactory.init();
+        TransferFactory.init();
     }
 
     public static void putSlot(Player player, String ident, ItemStack item) {

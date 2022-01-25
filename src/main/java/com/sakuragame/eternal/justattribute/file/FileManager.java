@@ -37,10 +37,22 @@ public class FileManager extends JustConfiguration {
         file.mkdirs();
 
         MegumiUtil.copyFile(this.plugin.getResource("identify.yml"), new File(file, "identify.yml"));
+        MegumiUtil.copyFile(this.plugin.getResource("seal.yml"), new File(file, "seal.yml"));
+        MegumiUtil.copyFile(this.plugin.getResource("transfer.yml"), new File(file, "transfer.yml"));
     }
 
     public YamlConfiguration getIdentifyConfig() {
         File file = new File(this.plugin.getDataFolder(), "smithy/identify.yml");
+        return YamlConfiguration.loadConfiguration(file);
+    }
+
+    public YamlConfiguration getSealConfig() {
+        File file = new File(this.plugin.getDataFolder(), "smithy/seal.yml");
+        return YamlConfiguration.loadConfiguration(file);
+    }
+
+    public YamlConfiguration getTransferConfig() {
+        File file = new File(this.plugin.getDataFolder(), "smithy/transfer.yml");
         return YamlConfiguration.loadConfiguration(file);
     }
 }

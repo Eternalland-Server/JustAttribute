@@ -13,6 +13,7 @@ import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import net.sakuragame.eternal.dragoncore.api.event.slot.PlayerSlotClickEvent;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
+import net.sakuragame.eternal.gemseconomy.api.GemsEconomyAPI;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -82,8 +83,8 @@ public class SealListener implements Listener {
         }
     }
 
-    private void switchButton(Player player, boolean lock) {
-        PacketSender.sendRunFunction(player, "default", "global.seal_mode = " + (lock ? 1 : 0) + ";", false);
+    private void switchButton(Player player, boolean seal) {
+        PacketSender.sendRunFunction(player, "default", "global.seal_mode = " + (seal ? 0 : 1) + ";", false);
     }
 
     @EventHandler
@@ -107,7 +108,7 @@ public class SealListener implements Listener {
         }
 
         if (operate == 0) {
-            ItemStack result = SealFactory.unlock(player, prop);
+            ItemStack result = SealFactory.unlock(player, prop.clone());
 
             prop.setAmount(prop.getAmount() - 1);
 
@@ -121,7 +122,13 @@ public class SealListener implements Listener {
         }
 
         if (operate == 1) {
-            ItemStack result = SealFactory.lock(prop);
+            if (GemsEconomyAPI.getBalance(uuid) < SealFactory.price) {
+                MessageAPI.sendActionTip(player, "&c&l你没有足够的神石");
+                return;
+            }
+
+            GemsEconomyAPI.withdraw(uuid, SealFactory.price, "封印道具");
+            ItemStack result = SealFactory.lock(prop.clone());
 
             prop.setAmount(prop.getAmount() - 1);
 
@@ -129,7 +136,7 @@ public class SealListener implements Listener {
             SmithyManager.putSlot(player, SealFactory.RESULT_SLOT, result, true);
 
             MessageAPI.sendActionTip(player, "&3&l已封印道具");
-            player.sendMessage(ConfigFile.prefix + "§7封印成功，现在这个道具可以自由交易了!");
+            player.sendMessage(ConfigFile.prefix + "§7你花费了 §a" + SealFactory.price + " §7神石封印道具，现在这个道具可以自由交易了!");
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.6f, 1f);
         }
     }

@@ -12,6 +12,7 @@ depend:
   - Zaphkiel
   - DragonCore
   - MythicMobs
+  - GemsEconomy
 softdepend:
   - PlayerSQL
 

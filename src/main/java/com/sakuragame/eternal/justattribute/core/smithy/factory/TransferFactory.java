@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.smithy.factory;
 
+import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
@@ -9,11 +10,16 @@ import org.bukkit.inventory.ItemStack;
 
 public class TransferFactory {
 
-    public final static String SCREEN_ID = "transfer";
+    public static int price;
 
+    public final static String SCREEN_ID = "transfer";
     public final static String EQUIP_SLOT = "transfer_equip";
     public final static String PROP_SLOT = "transfer_prop";
     public final static String RESULT_SLOT = "transfer_result";
+
+    public static void init() {
+        price = JustAttribute.getFileManager().getTransferConfig().getInt("price");
+    }
 
     public static ItemStack machining(Player player, ItemStack equip, ItemStack prop) {
         equip.setAmount(1);

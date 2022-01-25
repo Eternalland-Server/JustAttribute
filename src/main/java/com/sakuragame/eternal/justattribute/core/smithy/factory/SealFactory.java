@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.smithy.factory;
 
+import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import ink.ptms.zaphkiel.ZaphkielAPI;
@@ -10,10 +11,15 @@ import org.bukkit.inventory.ItemStack;
 
 public class SealFactory {
 
-    public final static String SCREEN_ID = "seal";
+    public static int price;
 
+    public final static String SCREEN_ID = "seal";
     public final static String PROP_SLOT = "seal_prop";
     public final static String RESULT_SLOT = "seal_result";
+
+    public static void init() {
+        price = JustAttribute.getFileManager().getSealConfig().getInt("price");
+    }
 
     public static ItemStack unlock(Player player, ItemStack item) {
         item.setAmount(1);

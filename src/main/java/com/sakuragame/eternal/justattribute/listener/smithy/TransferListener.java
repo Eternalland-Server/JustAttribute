@@ -12,6 +12,7 @@ import com.taylorswiftcn.megumi.uifactory.event.screen.UIFScreenCloseEvent;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import net.sakuragame.eternal.dragoncore.api.event.slot.PlayerSlotClickEvent;
+import net.sakuragame.eternal.gemseconomy.api.GemsEconomyAPI;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -103,7 +104,14 @@ public class TransferListener implements Listener {
             return;
         }
 
-        ItemStack result = TransferFactory.machining(player, equip, prop);
+        if (GemsEconomyAPI.getBalance(uuid) < TransferFactory.price) {
+            MessageAPI.sendActionTip(player, "&c&l你没有足够的神石");
+            return;
+        }
+
+        GemsEconomyAPI.withdraw(uuid, TransferFactory.price, "属性转移");
+
+        ItemStack result = TransferFactory.machining(player, equip.clone(), prop.clone());
 
         equip.setAmount(equip.getAmount() - 1);
         prop.setAmount(prop.getAmount() - 1);
@@ -113,6 +121,6 @@ public class TransferListener implements Listener {
         SmithyManager.putSlot(player, TransferFactory.RESULT_SLOT, result, true);
 
         MessageAPI.sendActionTip(player, "&a&l转移成功!");
-        player.sendMessage(ConfigFile.prefix + "§7转移属性成功!");
+        player.sendMessage(ConfigFile.prefix + "§7转移属性成功!你花费了 §a" + TransferFactory.price + " §7神石");
     }
 }
