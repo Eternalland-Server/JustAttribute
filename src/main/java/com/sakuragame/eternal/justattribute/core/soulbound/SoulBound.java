@@ -13,7 +13,7 @@ import java.util.UUID;
 public class SoulBound {
     
     public final static String NBT_NODE = "justattribute.soulbound";
-    public final static String NBT_ACTION_NODE = ".action";
+    public final static String NBT_ACTION_NODE = NBT_NODE + ".action";
     public final static String NBT_TYPE_NODE = NBT_NODE + ".type";
     public final static String NBT_UUID_NODE = NBT_NODE + ".uuid";
     public final static String NBT_NAME_NODE = NBT_NODE + ".name";
