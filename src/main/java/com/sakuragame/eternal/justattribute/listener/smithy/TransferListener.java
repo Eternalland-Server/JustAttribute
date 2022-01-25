@@ -74,9 +74,9 @@ public class TransferListener implements Listener {
                     return;
                 }
 
-                Action action = SoulBound.getType(itemTag);
-                if (action == Action.SEAL) {
+                if (SoulBound.isSeal(itemTag)) {
                     MessageAPI.sendActionTip(player, "&c&l该物品已被封印");
+                    e.setCancelled(true);
                     return;
                 }
 

@@ -49,8 +49,7 @@ public class AttributeSource {
 
         ItemTag itemTag = itemStream.getZaphkielData();
         EquipClassify equip = EquipClassify.getClassify(itemTag);
-        Action action = SoulBound.getType(itemTag);
-        if (classify != equip || action == Action.SEAL) return new AttributeSource();
+        if (classify != equip || SoulBound.isSeal(itemTag)) return new AttributeSource();
 
         return new AttributeSource(item);
     }

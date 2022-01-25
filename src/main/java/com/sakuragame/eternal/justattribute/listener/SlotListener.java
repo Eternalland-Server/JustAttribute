@@ -1,20 +1,19 @@
 package com.sakuragame.eternal.justattribute.listener;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.VanillaSlot;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.Owner;
-import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
-import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotHandleEvent;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotUpdateEvent;
+import net.sakuragame.eternal.dragoncore.api.event.slot.PlayerSlotClickEvent;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -29,8 +28,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class SlotListener implements Listener {
-
-    private final JustAttribute plugin = JustAttribute.getInstance();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onVanilla(InventoryClickEvent e) {
@@ -53,15 +50,21 @@ public class SlotListener implements Listener {
             if (itemStream.isVanilla()) return;
             ItemTag itemTag = itemStream.getZaphkielData();
 
-            int itemType = itemTag.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
-            if (slot.getType().getId() != itemType) {
+            EquipClassify classify = EquipClassify.getClassify(itemTag);
+            if (classify == null || classify != slot.getType()) {
                 MessageAPI.sendActionTip(player, "§a§l该槽位只能放入 §c§l" + slot.getType().getName() + " §a§l类型的装备");
                 e.setCancelled(true);
                 return;
             }
 
-            String owner = itemTag.getDeepOrElse(SoulBound.NBT_UUID_NODE, new ItemTagData("")).asString();
-            if (!owner.isEmpty() && !player.getUniqueId().toString().equals(owner)) {
+            if (SoulBound.isSeal(itemTag)) {
+                MessageAPI.sendActionTip(player, "&a&l该道具需要解封才能使用");
+                e.setCancelled(true);
+                return;
+            }
+
+            Owner owner = SoulBound.getOwner(itemTag);
+            if (owner != null && !player.getUniqueId().equals(owner.getUUID())) {
                 MessageAPI.sendActionTip(player, "§c§l你不是这件装备的所有者");
                 e.setCancelled(true);
             }
@@ -98,8 +101,8 @@ public class SlotListener implements Listener {
 
         if (MegumiUtil.isEmpty(item)) return;
 
-        EquipClassify classify = EquipClassify.match(id);
-        if (classify == null) return;
+        EquipClassify slotClassify = EquipClassify.match(id);
+        if (slotClassify == null) return;
 
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
         if (itemStream.isVanilla()) {
@@ -109,11 +112,16 @@ public class SlotListener implements Listener {
         }
         ItemTag itemTag = itemStream.getZaphkielData();
 
-        int itemType = itemTag.getDeepOrElse(EquipClassify.NBT_NODE, new ItemTagData(-1)).asInt();
-        if (classify.getId() != itemType) {
-            MessageAPI.sendActionTip(player, "§a§l该槽位只能放入 §c§l" + classify.getName() + " §a§l类型的装备");
+        EquipClassify classify = EquipClassify.getClassify(itemTag);
+        if (classify == null || classify != slotClassify) {
+            MessageAPI.sendActionTip(player, "§a§l该槽位只能放入 §c§l" + slotClassify.getName() + " §a§l类型的装备");
             e.setCancelled(true);
             return;
+        }
+
+        if (SoulBound.isSeal(item)) {
+            MessageAPI.sendActionTip(player, "&a&l该道具需要解封才能使用");
+            e.setCancelled(true);
         }
 
         Owner owner = SoulBound.getOwner(itemTag);

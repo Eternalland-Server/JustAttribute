@@ -41,6 +41,21 @@ public class SoulBound {
         return Action.match(data.asInt());
     }
 
+    public static boolean isSeal(ItemStack item) {
+        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
+        if (itemStream.isVanilla()) return false;
+
+        ItemTag tag = itemStream.getZaphkielData();
+        return isSeal(tag);
+    }
+
+    public static boolean isSeal(ItemTag tag) {
+        Action action = getType(tag);
+        if (action == null) return false;
+
+        return action == Action.SEAL;
+    }
+
     public static Owner getOwner(ItemStack item) {
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
         if (itemStream.isVanilla()) return null;
