@@ -35,7 +35,7 @@ public class SealFactory {
         return itemStream.rebuildToItemStack(player);
     }
 
-    public static ItemStack lock(ItemStack item) {
+    public static ItemStack lock(Player player, ItemStack item) {
         item.setAmount(1);
 
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
@@ -44,6 +44,6 @@ public class SealFactory {
         itemTag.removeDeep(SoulBound.NBT_NODE);
         itemTag.putDeep(SoulBound.NBT_TYPE_NODE, Action.SEAL.getId());
 
-        return itemStream.rebuildToItemStack(null);
+        return itemStream.rebuildToItemStack(player);
     }
 }

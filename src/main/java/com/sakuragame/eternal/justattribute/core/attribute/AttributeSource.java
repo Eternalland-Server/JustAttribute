@@ -1,5 +1,7 @@
 package com.sakuragame.eternal.justattribute.core.attribute;
 
+import com.sakuragame.eternal.justattribute.core.soulbound.Action;
+import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
@@ -42,8 +44,13 @@ public class AttributeSource {
     }
 
     public static AttributeSource getItemAttribute(ItemStack item, EquipClassify classify) {
-        EquipClassify equip = EquipClassify.getClassify(item);
-        if (classify != equip) return new AttributeSource();
+        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
+        if (itemStream.isVanilla()) return new AttributeSource();
+
+        ItemTag itemTag = itemStream.getZaphkielData();
+        EquipClassify equip = EquipClassify.getClassify(itemTag);
+        Action action = SoulBound.getAction(itemTag);
+        if (classify != equip || action == Action.SEAL) return new AttributeSource();
 
         return new AttributeSource(item);
     }

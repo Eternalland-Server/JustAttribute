@@ -14,6 +14,7 @@ import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import net.sakuragame.eternal.dragoncore.api.event.slot.PlayerSlotClickEvent;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
 import net.sakuragame.eternal.gemseconomy.api.GemsEconomyAPI;
+import net.sakuragame.eternal.gemseconomy.currency.EternalCurrency;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -122,13 +123,13 @@ public class SealListener implements Listener {
         }
 
         if (operate == 1) {
-            if (GemsEconomyAPI.getBalance(uuid) < SealFactory.price) {
+            if (GemsEconomyAPI.getBalance(uuid, EternalCurrency.Points) < SealFactory.price) {
                 MessageAPI.sendActionTip(player, "&c&l你没有足够的神石");
                 return;
             }
 
-            GemsEconomyAPI.withdraw(uuid, SealFactory.price, "封印道具");
-            ItemStack result = SealFactory.lock(prop.clone());
+            GemsEconomyAPI.withdraw(uuid, SealFactory.price, EternalCurrency.Points, "封印道具");
+            ItemStack result = SealFactory.lock(player, prop.clone());
 
             prop.setAmount(prop.getAmount() - 1);
 

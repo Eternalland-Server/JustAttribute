@@ -2,6 +2,8 @@ package com.sakuragame.eternal.justattribute.listener.smithy;
 
 import com.sakuragame.eternal.justattribute.core.smithy.factory.IdentifyFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
+import com.sakuragame.eternal.justattribute.core.soulbound.Action;
+import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Utils;
@@ -82,6 +84,12 @@ public class IdentifyListener implements Listener {
                 if (data == null) {
                     MessageAPI.sendActionTip(player, "&c&l该物品不能鉴定");
                     e.setCancelled(true);
+                    return;
+                }
+
+                Action action = SoulBound.getAction(itemTag);
+                if (action == Action.SEAL) {
+                    MessageAPI.sendActionTip(player, "&c&l该物品已被封印");
                     return;
                 }
 

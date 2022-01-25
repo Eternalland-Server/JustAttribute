@@ -4,6 +4,8 @@ import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.IdentifyFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.SealFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.TransferFactory;
+import com.sakuragame.eternal.justattribute.core.soulbound.Action;
+import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
@@ -11,8 +13,10 @@ import com.taylorswiftcn.megumi.uifactory.event.comp.UIFCompSubmitEvent;
 import com.taylorswiftcn.megumi.uifactory.event.screen.UIFScreenCloseEvent;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
+import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import net.sakuragame.eternal.dragoncore.api.event.slot.PlayerSlotClickEvent;
 import net.sakuragame.eternal.gemseconomy.api.GemsEconomyAPI;
+import net.sakuragame.eternal.gemseconomy.currency.EternalCurrency;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -62,10 +66,17 @@ public class TransferListener implements Listener {
                     return;
                 }
 
-                EquipClassify classify = EquipClassify.getClassify(itemStream.getZaphkielData());
+                ItemTag itemTag = itemStream.getZaphkielData();
+                EquipClassify classify = EquipClassify.getClassify(itemTag);
                 if (classify == null) {
                     MessageAPI.sendActionTip(player, "&a&l该道具无法转移属性");
                     e.setCancelled(true);
+                    return;
+                }
+
+                Action action = SoulBound.getAction(itemTag);
+                if (action == Action.SEAL) {
+                    MessageAPI.sendActionTip(player, "&c&l该物品已被封印");
                     return;
                 }
 
@@ -104,12 +115,12 @@ public class TransferListener implements Listener {
             return;
         }
 
-        if (GemsEconomyAPI.getBalance(uuid) < TransferFactory.price) {
+        if (GemsEconomyAPI.getBalance(uuid, EternalCurrency.Points) < TransferFactory.price) {
             MessageAPI.sendActionTip(player, "&c&l你没有足够的神石");
             return;
         }
 
-        GemsEconomyAPI.withdraw(uuid, TransferFactory.price, "属性转移");
+        GemsEconomyAPI.withdraw(uuid, TransferFactory.price, EternalCurrency.Points, "属性转移");
 
         ItemStack result = TransferFactory.machining(player, equip.clone(), prop.clone());
 
