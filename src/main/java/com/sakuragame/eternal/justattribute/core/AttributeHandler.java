@@ -8,7 +8,6 @@ import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import net.sakuragame.eternal.dragoncore.api.SlotAPI;
 import net.sakuragame.eternal.dragoncore.config.FileManager;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,9 +20,11 @@ public class AttributeHandler {
         for (VanillaSlot slot : VanillaSlot.values()) {
             ItemStack item = slot.getItem(player);
             if (MegumiUtil.isEmpty(item)) {
-                item = new ItemStack(Material.AIR);
+                role.addAttributeSource(slot.getIdent(), new AttributeSource());
             }
-            role.addAttributeSource(slot.getIdent(), new AttributeSource(item));
+            else {
+                role.addAttributeSource(slot.getIdent(), new AttributeSource(item));
+            }
         }
     }
 
@@ -34,43 +35,50 @@ public class AttributeHandler {
         for (String key : ConfigFile.slotSetting.keySet()) {
             if (!FileManager.getSlotSettings().containsKey(key)) continue;
 
-            int id = ConfigFile.slotSetting.get(key);
-            EquipClassify classify = EquipClassify.match(id);
-            if (classify == null) continue;
-
             ItemStack item = SlotAPI.getCacheSlotItem(player, key);
-
-            updateSlot(player, key, item);
+            if (MegumiUtil.isEmpty(item)) {
+                role.addAttributeSource(key, new AttributeSource());
+            }
+            else {
+                role.addAttributeSource(key, new AttributeSource(item));
+            }
         }
     }
 
     public static void updateVanillaSlot(Player player, VanillaSlot slot) {
         ItemStack item = slot.getItem(player);
-        updateSlot(player, slot.getIdent(), item);
+        updateSlot(player, slot, item);
     }
 
     public static void updateVanillaSlot(Player player, VanillaSlot slot, ItemStack item) {
-        updateSlot(player, slot.getIdent(), item);
+        updateSlot(player, slot, item);
     }
 
     public static void updateMainHandSlot(Player player, int slot) {
         ItemStack item = player.getInventory().getItem(slot);
-        updateSlot(player, VanillaSlot.MainHand.getIdent(), item);
+        updateSlot(player, VanillaSlot.MainHand.getIdent(), VanillaSlot.MainHand.getType(), item);
     }
 
     public static void updateCustomSlot(Player player, String ident, ItemStack item) {
-        updateSlot(player, ident, item);
+        EquipClassify classify = EquipClassify.match(ConfigFile.slotSetting.get(ident));
+        updateSlot(player, ident, classify, item);
     }
 
-    private static void updateSlot(Player player, String ident, ItemStack item) {
+    public static void updateSlot(Player player, VanillaSlot slot, ItemStack item) {
+        updateSlot(player, slot.getIdent(), slot.getType(), item);
+    }
+
+    private static void updateSlot(Player player, String ident, EquipClassify classify, ItemStack item) {
         RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
         if (role == null) return;
 
         if (MegumiUtil.isEmpty(item)) {
-            item = new ItemStack(Material.AIR);
+            role.addAttributeSource(ident, new AttributeSource());
+        }
+        else {
+            role.addAttributeSource(ident, AttributeSource.getItemAttribute(item, classify));
         }
 
-        role.addAttributeSource(ident, new AttributeSource(item.clone()));
         role.updateRoleAttribute();
     }
 }

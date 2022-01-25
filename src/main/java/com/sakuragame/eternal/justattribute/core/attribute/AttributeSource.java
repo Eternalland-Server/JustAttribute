@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.attribute;
 
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
@@ -32,13 +33,19 @@ public class AttributeSource {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
 
-        if (item.getType() == Material.AIR) return;
         read(ZaphkielAPI.INSTANCE.read(item));
     }
 
     public AttributeSource(HashMap<Attribute, Double> ordinary, HashMap<Attribute, Double> potency) {
         this.ordinary = ordinary;
         this.potency = potency;
+    }
+
+    public static AttributeSource getItemAttribute(ItemStack item, EquipClassify classify) {
+        EquipClassify equip = EquipClassify.getClassify(item);
+        if (classify != equip) return new AttributeSource();
+
+        return new AttributeSource(item);
     }
 
     public static AttributeSource getRoleDefault() {
