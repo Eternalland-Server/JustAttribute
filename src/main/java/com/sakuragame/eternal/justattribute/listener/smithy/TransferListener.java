@@ -74,7 +74,7 @@ public class TransferListener implements Listener {
                     return;
                 }
 
-                Action action = SoulBound.getAction(itemTag);
+                Action action = SoulBound.getType(itemTag);
                 if (action == Action.SEAL) {
                     MessageAPI.sendActionTip(player, "&c&l该物品已被封印");
                     return;
