@@ -74,9 +74,9 @@ public class RoleManager {
         state.save();
     }
 
-    public void clearData(UUID uuid) {
-        this.playerAttribute.remove(uuid);
-        this.playerState.remove(uuid);
+    public void saveData(UUID uuid) {
+        this.removeAttributeData(uuid);
+        this.removeStateData(uuid);
         delLoad(uuid);
     }
 

@@ -63,7 +63,6 @@ public class PlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
 
         Load load = RoleManager.getLoad(uuid);
-        if (load == null) return;
 
         load.setJustLevel(true);
         if (load.isFinished()) {
@@ -77,7 +76,6 @@ public class PlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
 
         Load load = RoleManager.getLoad(uuid);
-        if (load == null) return;
 
         load.setDragonSlot(true);
         if (load.isFinished()) {
@@ -90,9 +88,7 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        RoleManager.delLoad(uuid);
-        JustAttribute.getRoleManager().removeAttributeData(uuid);
-        Scheduler.runAsync(() -> JustAttribute.getRoleManager().removeStateData(uuid));
+        Scheduler.runAsync(() -> JustAttribute.getRoleManager().saveData(uuid));
     }
 
     @EventHandler
