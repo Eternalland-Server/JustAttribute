@@ -30,6 +30,13 @@ public class RoleManager {
 
     public void loadAttributeData(Player player) {
         UUID uuid = player.getUniqueId();
+        RoleState state = getPlayerState(uuid);
+        if (state == null) {
+            player.kickPlayer("账户未被正确加载，请重新进入。");
+            plugin.getLogger().info("玩家 " + player.getName() + " 账户数据载入失败!");
+            return;
+        }
+
         RoleAttribute role = new RoleAttribute(uuid);
         this.playerAttribute.put(uuid, role);
 

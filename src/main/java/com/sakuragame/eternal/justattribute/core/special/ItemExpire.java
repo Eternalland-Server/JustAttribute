@@ -22,7 +22,7 @@ public class ItemExpire {
 
     public static long getExpiredDay(int day) {
         Calendar calendar = getCalendar();
-        calendar.add(Calendar.DAY_OF_MONTH, day);
+        calendar.add(Calendar.DAY_OF_MONTH, day + 1);
         return calendar.getTimeInMillis() / 1000;
     }
 

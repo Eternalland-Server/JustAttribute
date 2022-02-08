@@ -2,7 +2,6 @@ package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.util.Load;
 import com.sakuragame.eternal.justattribute.util.Scheduler;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotLoadedEvent;
@@ -21,42 +20,25 @@ public class PlayerListener implements Listener {
 
     private final JustAttribute plugin = JustAttribute.getInstance();
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPreLogin(AsyncPlayerPreLoginEvent e) {
-        if (e.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
-            return;
-        }
         UUID uuid = e.getUniqueId();
-        JustAttribute.getRoleManager().loadStateData(uuid);
         RoleManager.addLoad(uuid);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPreLoginMonitor(AsyncPlayerPreLoginEvent e) {
-        if (e.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
-            JustAttribute.getRoleManager().clearData(e.getUniqueId());
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerLogin(PlayerLoginEvent e) {
-        Player player = e.getPlayer();
-        RoleState state = JustAttribute.getRoleManager().getPlayerState(player);
-
-        if (state == null) {
-            e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-            e.setKickMessage("账户未被正确加载，请重新进入。");
-            plugin.getLogger().info("玩家 " + player.getName() + " 账户数据载入失败!");
-            return;
-        }
-
-        PlayerDataLoadEvent event = new PlayerDataLoadEvent(player);
-        event.call();
+    @EventHandler(priority = EventPriority.LOW)
+    public void onLogin(AsyncPlayerPreLoginEvent e) {
+        if (e.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED) return;
+        UUID uuid = e.getUniqueId();
+        RoleManager.delLoad(uuid);
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
+        UUID uuid = player.getUniqueId();
+
+        Scheduler.runLaterAsync(() -> JustAttribute.getRoleManager().loadStateData(uuid), 6);
 
         player.setHealthScale(20);
         player.setHealthScaled(true);
