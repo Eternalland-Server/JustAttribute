@@ -6,7 +6,7 @@ import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.VanillaSlot;
-import com.sakuragame.eternal.justattribute.hook.DragonCoreSync;
+import com.sakuragame.eternal.justattribute.hook.ClientPlaceholder;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import org.bukkit.entity.Entity;
@@ -26,15 +26,13 @@ import java.util.UUID;
 
 public class RoleListener implements Listener {
 
-    private final JustAttribute plugin = JustAttribute.getInstance();
-
     @EventHandler
     public void onAttributeUpdate(RoleAttributeUpdateEvent e) {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
         JustAttribute.getRoleManager().getPlayerState(uuid).update();
-        DragonCoreSync.sendAttribute(player);
+        ClientPlaceholder.sendAttribute(player);
     }
 
     @EventHandler
@@ -43,7 +41,7 @@ public class RoleListener implements Listener {
         UUID uuid = player.getUniqueId();
         if (RoleManager.isLoading(uuid)) return;
 
-        DragonCoreSync.sendState(player);
+        ClientPlaceholder.sendState(player);
     }
 
     @EventHandler

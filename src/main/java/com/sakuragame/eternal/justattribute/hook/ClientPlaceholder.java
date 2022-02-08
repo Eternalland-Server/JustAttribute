@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
-public class DragonCoreSync {
+public class ClientPlaceholder {
 
     private final static String RESTORE_HP_PAPI = "attribute_restore_hp";
     private final static String RESTORE_MP_PAPI = "attribute_restore_mp";
