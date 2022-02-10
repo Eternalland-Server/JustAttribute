@@ -7,6 +7,7 @@ import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.UnitConvert;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
+import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -26,6 +27,10 @@ public class ClientPlaceholder {
     private final static String ROLE_MAX_MANA = "attribute_role_max_mana";
 
     private final static String ROLE_TOTAL_COMBAT = "attribute_role_total_combat";
+
+    private final static String EXP_ADDITION_SUPPORT = "exp_addition_support";
+    private final static String EXP_ADDITION_EQUIP = "exp_addition_equip";
+    private final static String EXP_ADDITION_CARD = "exp_addition_card";
 
     public static void sendAttribute(Player player) {
         HashMap<String, String> map = new HashMap<>();
@@ -51,6 +56,11 @@ public class ClientPlaceholder {
                 map.put(ident.getPlaceholder(), ident.formatting(role.getTotalMana()));
                 continue;
             }
+            if (ident == Attribute.EXP_Addition) {
+                double total = JustLevelAPI.getTotalAddition(player);
+                map.put(ident.getPlaceholder(), ident.formatting(value + total));
+                continue;
+            }
             map.put(ident.getPlaceholder(), ident.formatting(value));
         }
 
@@ -61,6 +71,10 @@ public class ClientPlaceholder {
         map.put(ROLE_DAMAGE_PAPI, Attribute.Damage.formatting(role.getTotalDamage()));
         map.put(ROLE_DEFENCE_PAPI, Attribute.Defence.formatting(role.getTotalDefence()));
         map.put(ROLE_TOTAL_COMBAT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombat()));
+
+        map.put(EXP_ADDITION_SUPPORT, formatPercent(JustLevelAPI.getSupportAddition(player)));
+        map.put(EXP_ADDITION_EQUIP, Attribute.EXP_Addition.formatting(role.getTotalValue(Attribute.EXP_Addition)));
+        map.put(EXP_ADDITION_CARD, formatPercent(JustLevelAPI.getCardAddition(player)));
 
         PacketSender.sendSyncPlaceholder(player, map);
     }

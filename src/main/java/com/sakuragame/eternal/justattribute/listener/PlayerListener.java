@@ -18,8 +18,6 @@ import java.util.UUID;
 
 public class PlayerListener implements Listener {
 
-    private final JustAttribute plugin = JustAttribute.getInstance();
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPreLogin(AsyncPlayerPreLoginEvent e) {
         UUID uuid = e.getUniqueId();
