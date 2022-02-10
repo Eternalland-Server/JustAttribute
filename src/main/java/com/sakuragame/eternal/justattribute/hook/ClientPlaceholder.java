@@ -73,7 +73,7 @@ public class ClientPlaceholder {
         map.put(ROLE_TOTAL_COMBAT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombat()));
 
         map.put(EXP_ADDITION_SUPPORT, formatPercent(JustLevelAPI.getSupportAddition(player)));
-        map.put(EXP_ADDITION_EQUIP, Attribute.EXP_Addition.formatting(role.getTotalValue(Attribute.EXP_Addition)));
+        map.put(EXP_ADDITION_EQUIP, "+" + Attribute.EXP_Addition.formatting(role.getTotalValue(Attribute.EXP_Addition)));
         map.put(EXP_ADDITION_CARD, formatPercent(JustLevelAPI.getCardAddition(player)));
 
         PacketSender.sendSyncPlaceholder(player, map);
