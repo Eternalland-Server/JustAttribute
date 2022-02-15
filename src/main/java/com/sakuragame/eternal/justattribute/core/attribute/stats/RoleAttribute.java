@@ -102,16 +102,19 @@ public class RoleAttribute {
         event.call();
     }
 
+    @Deprecated
     public void addAttributeSource(String key, ItemStack item) {
         if (MegumiUtil.isEmpty(item)) item = new ItemStack(Material.AIR);
 
         this.source.put(key, new AttributeSource(item));
     }
 
+    @Deprecated
     public void addAttributeSource(String key, AttributeSource source) {
         this.source.put(key, source);
     }
 
+    @Deprecated
     public void addAttributeSource(String key, AttributeSource source, int time) {
         this.source.put(key, source);
         this.updateRoleAttribute();
@@ -120,6 +123,56 @@ public class RoleAttribute {
             this.source.remove(key);
             this.updateRoleAttribute();
         }, time * 20);
+    }
+
+    public void putImmediateSource(String key, ItemStack item) {
+        if (MegumiUtil.isEmpty(item)) {
+            this.source.remove(key);
+            this.updateRoleAttribute();
+            return;
+        }
+
+        this.source.put(key, new AttributeSource(item));
+    }
+
+    public void putImmediateSource(String key, AttributeSource source) {
+        this.putImmediateSource(key, source, -1);
+    }
+
+    public void putImmediateSource(String key, AttributeSource source, int second) {
+        this.source.put(key, source);
+        this.updateRoleAttribute();
+
+        if (second == -1) return;
+
+        Scheduler.runLaterAsync(() -> {
+            this.source.remove(key);
+            this.updateRoleAttribute();
+        }, second * 20);
+    }
+
+    public void putSource(String key, ItemStack item) {
+        if (MegumiUtil.isEmpty(item)) {
+            this.source.remove(key);
+            return;
+        }
+
+        this.source.put(key, new AttributeSource(item));
+    }
+
+    public void putSource(String key, AttributeSource source) {
+        this.putImmediateSource(key, source, -1);
+    }
+
+    public void putSource(String key, AttributeSource source, int second) {
+        this.source.put(key, source);
+
+        if (second == -1) return;
+
+        Scheduler.runLaterAsync(() -> {
+            this.source.remove(key);
+            this.updateRoleAttribute();
+        }, second * 20);
     }
 
     public HashMap<Attribute, Double> getOrdinaryAttributes() {
