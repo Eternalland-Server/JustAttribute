@@ -140,7 +140,9 @@ public class RoleAttribute {
     }
 
     public void putImmediateSource(String key, AttributeSource source, int second) {
-        this.source.put(key, source);
+        if (source == null) this.source.remove(key);
+        else this.source.put(key, source);
+
         this.updateRoleAttribute();
 
         if (second == -1) return;
@@ -165,7 +167,8 @@ public class RoleAttribute {
     }
 
     public void putSource(String key, AttributeSource source, int second) {
-        this.source.put(key, source);
+        if (source == null) this.source.remove(key);
+        else this.source.put(key, source);
 
         if (second == -1) return;
 
