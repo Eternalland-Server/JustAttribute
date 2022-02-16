@@ -86,6 +86,7 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
+        Scheduler.cancel(player);
         Scheduler.runAsync(() -> JustAttribute.getRoleManager().saveData(uuid));
     }
 
