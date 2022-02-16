@@ -2,7 +2,6 @@ package com.sakuragame.eternal.justattribute.util;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -26,13 +25,13 @@ public class Scheduler {
         Bukkit.getScheduler().runTaskLaterAsynchronously(JustAttribute.getInstance(), runnable, tick);
     }
 
-    public static void runLaterAsync(Player player, Runnable runnable, int tick) {
+    public static void runLaterAsync(UUID uuid, Runnable runnable, int tick) {
         int id = Bukkit.getScheduler().runTaskLaterAsynchronously(JustAttribute.getInstance(), runnable, tick).getTaskId();
-        tasks.computeIfAbsent(player.getUniqueId(), v -> new ArrayList<>()).add(id);
+        tasks.computeIfAbsent(uuid, v -> new ArrayList<>()).add(id);
     }
 
-    public static void cancel(Player player) {
-        List<Integer> result = tasks.remove(player.getUniqueId());
+    public static void cancel(UUID uuid) {
+        List<Integer> result = tasks.remove(uuid);
         if (result == null) return;
 
         result.forEach(i -> Bukkit.getScheduler().cancelTask(i));

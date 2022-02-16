@@ -119,7 +119,7 @@ public class RoleAttribute {
         this.source.put(key, source);
         this.updateRoleAttribute();
 
-        Scheduler.runLaterAsync(() -> {
+        Scheduler.runLaterAsync(uuid, () -> {
             this.source.remove(key);
             this.updateRoleAttribute();
         }, time * 20);
@@ -147,7 +147,7 @@ public class RoleAttribute {
 
         if (second == -1) return;
 
-        Scheduler.runLaterAsync(() -> {
+        Scheduler.runLaterAsync(uuid, () -> {
             this.source.remove(key);
             this.updateRoleAttribute();
         }, second * 20);
@@ -172,7 +172,7 @@ public class RoleAttribute {
 
         if (second == -1) return;
 
-        Scheduler.runLaterAsync(() -> {
+        Scheduler.runLaterAsync(uuid, () -> {
             this.source.remove(key);
             this.updateRoleAttribute();
         }, second * 20);
