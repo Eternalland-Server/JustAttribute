@@ -51,15 +51,16 @@ public class RoleState {
         Debug.info(Debug.Role, "hp: " + health);
         Debug.info(Debug.Role, "mp: " + mana);
 
+        this.setMaxHealth(maxHealth);
+        this.setMaxMana(maxMana);
+
         if (maxHealth < currentHP) {
             this.setHealth(maxHealth);
         }
 
-        this.setMaxHealth(maxHealth);
-        this.setMaxMana(maxMana);
+        this.setHealth(health <= 20 ? maxHealth : Math.min(maxHealth, health));
+        this.setMana(mana <= 20 ? maxMana : Math.min(maxMana, mana));
 
-        this.setHealth(health <= 20 ? maxHealth : Math.min(getMaxHealth(), health));
-        this.setMana(mana <= 20 ? maxMana : Math.min(getMaxMana(), mana));
         this.setRestoreHP((1 + Attribute.Restore_Health.calculate(role)) * role.getRestoreHP());
         this.setRestoreMP((1 + Attribute.Restore_Mana.calculate(role)) * role.getRestoreMP());
 

@@ -46,7 +46,6 @@ public class RoleManager {
         delLoad(uuid);
 
         role.updateRoleAttribute();
-        getPlayerState(uuid).update();
 
         plugin.getLogger().info(" 加载 " + player.getName() + " 角色数据成功！");
     }

@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
 import java.util.UUID;
@@ -46,7 +47,7 @@ public class PlayerListener implements Listener {
         player.setGameMode(GameMode.ADVENTURE);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onGameModeChange(PlayerGameModeChangeEvent e) {
         Player player = e.getPlayer();
         if (player.isOp()) return;
@@ -93,5 +94,10 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onFood(FoodLevelChangeEvent e) {
         e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent e) {
+        System.out.println("death");
     }
 }
