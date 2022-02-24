@@ -9,15 +9,15 @@ import org.bukkit.entity.Player;
 public class RoleLaunchAttackEvent extends JustEvent {
 
     private final LivingEntity victim;
-    private final double damage;
-    private final boolean critical;
+    private final double baseDamage;
+    private final double criticalDamage;
     private final Cause cause;
 
-    public RoleLaunchAttackEvent(Player who, LivingEntity victim, double damage, boolean critical, Cause cause) {
+    public RoleLaunchAttackEvent(Player who, LivingEntity victim, double baseDamage, double criticalDamage, Cause cause) {
         super(who);
         this.victim = victim;
-        this.damage = damage;
-        this.critical = critical;
+        this.baseDamage = baseDamage;
+        this.criticalDamage = criticalDamage;
         this.cause = cause;
     }
 

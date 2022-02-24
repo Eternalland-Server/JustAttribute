@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 public class CombatHandler {
 
     public static RoleLaunchAttackEvent calculate(RoleAttribute attacker, RoleAttribute sufferer) {
-        boolean critical = false;
         double damage = getValue(attacker, Attribute.Damage);
         double dp = getValue(attacker, Attribute.Defence_Penetration);
         double cc = getValue(attacker, Attribute.Critical_Chance);
@@ -24,36 +23,35 @@ public class CombatHandler {
         double defence = getValue(sufferer, Attribute.Defence);
         double di = getValue(sufferer, Attribute.Damage_Immune);
 
-        double lastDamage = damage - (Math.max(defence - dp, 0));
+        double baseDamage = damage - (Math.max(defence - dp, 0));
+        double criticalDamage = 0;
+
+        baseDamage = baseDamage * (1 - di);
 
         if (cc >= 1 || cc > Math.random()) {
-            lastDamage = lastDamage * cd;
-            critical = true;
+            criticalDamage = baseDamage * (cd - 1);
         }
-        
-        lastDamage = lastDamage * (1 - di);
 
-        return new RoleLaunchAttackEvent(attacker.getBukkitPlayer(), sufferer.getBukkitPlayer(), lastDamage, critical, RoleLaunchAttackEvent.Cause.Normal);
+        return new RoleLaunchAttackEvent(attacker.getBukkitPlayer(), sufferer.getBukkitPlayer(), baseDamage, criticalDamage, RoleLaunchAttackEvent.Cause.Normal);
     }
 
     public static RoleLaunchAttackEvent calculate(RoleAttribute attacker, MobAttribute sufferer) {
-        boolean critical = false;
         double damage = getValue(attacker, Attribute.Damage);
         double cc = getValue(attacker, Attribute.Critical_Chance);
         double cd = getValue(attacker, Attribute.Critical_Damage);
 
         double defence = sufferer.getDefence();
-        double lastDamage = damage - defence;
+        double baseDamage = damage - defence;
+        double criticalDamage = 0;
 
         if (cc >= 1 || cc > Math.random()) {
-            lastDamage = lastDamage * cd;
-            critical = true;
+            criticalDamage = baseDamage * (cd - 1);
         }
 
         double damageModify = sufferer.getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1.0);
-        lastDamage = lastDamage * damageModify;
+        baseDamage = baseDamage * damageModify;
 
-        return new RoleLaunchAttackEvent(attacker.getBukkitPlayer(), sufferer.getEntity(), lastDamage, critical, RoleLaunchAttackEvent.Cause.Normal);
+        return new RoleLaunchAttackEvent(attacker.getBukkitPlayer(), sufferer.getEntity(), baseDamage, criticalDamage, RoleLaunchAttackEvent.Cause.Normal);
     }
 
     public static double calculate(MobAttribute attacker, RoleAttribute sufferer) {

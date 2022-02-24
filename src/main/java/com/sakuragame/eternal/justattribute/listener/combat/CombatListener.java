@@ -112,7 +112,7 @@ public class CombatListener implements Listener {
             return;
         }
 
-        e.setDamage(event.getDamage());
+        e.setDamage(event.getBaseDamage());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

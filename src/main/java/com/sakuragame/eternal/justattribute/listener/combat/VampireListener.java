@@ -12,6 +12,6 @@ public class VampireListener implements Listener {
     public void onAttack(RoleLaunchAttackEvent e) {
         Player player = e.getPlayer();
 
-        CombatHandler.physicalVampire(player, e.getVictim(), e.getDamage());
+        CombatHandler.physicalVampire(player, e.getVictim(), e.getBaseDamage());
     }
 }
