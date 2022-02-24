@@ -1,10 +1,7 @@
 package com.sakuragame.eternal.justattribute.listener.smithy;
 
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
-import com.sakuragame.eternal.justattribute.core.smithy.factory.IdentifyFactory;
-import com.sakuragame.eternal.justattribute.core.smithy.factory.SealFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.TransferFactory;
-import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;

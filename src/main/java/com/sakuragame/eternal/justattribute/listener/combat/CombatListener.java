@@ -2,8 +2,8 @@ package com.sakuragame.eternal.justattribute.listener.combat;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
-import com.sakuragame.eternal.justattribute.api.event.PlayerUnderAttackedEvent;
-import com.sakuragame.eternal.justattribute.api.event.role.RoleAttackEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleUnderAttackEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleLaunchAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.MobAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
@@ -76,7 +76,7 @@ public class CombatListener implements Listener {
             return;
         }
 
-        RoleAttackEvent event;
+        RoleLaunchAttackEvent event;
 
         if (attacker instanceof Player) {
             RoleAttribute attackData = getTargetAttrData((Player) attacker);
@@ -106,7 +106,8 @@ public class CombatListener implements Listener {
             return;
         }
 
-        if (event.call()) {
+        event.call();
+        if (event.isCancelled()) {
             e.setCancelled(true);
             return;
         }
@@ -129,7 +130,7 @@ public class CombatListener implements Listener {
         double damage =  e.getDamage();
         state.updateHealth(player.getHealth() - damage);
 
-        PlayerUnderAttackedEvent event = new PlayerUnderAttackedEvent(player, e.getCause(), damage);
+        RoleUnderAttackEvent event = new RoleUnderAttackEvent(player, e.getCause(), damage);
         event.call();
     }
 

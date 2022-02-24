@@ -1,7 +1,7 @@
 package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
-import com.sakuragame.eternal.justattribute.api.event.role.RoleAttackEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleLaunchAttackEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStealEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStoleEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 public class CombatHandler {
 
-    public static RoleAttackEvent calculate(RoleAttribute attacker, RoleAttribute sufferer) {
+    public static RoleLaunchAttackEvent calculate(RoleAttribute attacker, RoleAttribute sufferer) {
         boolean critical = false;
         double damage = getValue(attacker, Attribute.Damage);
         double dp = getValue(attacker, Attribute.Defence_Penetration);
@@ -33,10 +33,10 @@ public class CombatHandler {
         
         lastDamage = lastDamage * (1 - di);
 
-        return new RoleAttackEvent(attacker.getBukkitPlayer(), sufferer.getBukkitPlayer(), lastDamage, critical);
+        return new RoleLaunchAttackEvent(attacker.getBukkitPlayer(), sufferer.getBukkitPlayer(), lastDamage, critical, RoleLaunchAttackEvent.Cause.Normal);
     }
 
-    public static RoleAttackEvent calculate(RoleAttribute attacker, MobAttribute sufferer) {
+    public static RoleLaunchAttackEvent calculate(RoleAttribute attacker, MobAttribute sufferer) {
         boolean critical = false;
         double damage = getValue(attacker, Attribute.Damage);
         double cc = getValue(attacker, Attribute.Critical_Chance);
@@ -53,7 +53,7 @@ public class CombatHandler {
         double damageModify = sufferer.getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1.0);
         lastDamage = lastDamage * damageModify;
 
-        return new RoleAttackEvent(attacker.getBukkitPlayer(), sufferer.getEntity(), lastDamage, critical);
+        return new RoleLaunchAttackEvent(attacker.getBukkitPlayer(), sufferer.getEntity(), lastDamage, critical, RoleLaunchAttackEvent.Cause.Normal);
     }
 
     public static double calculate(MobAttribute attacker, RoleAttribute sufferer) {
@@ -88,16 +88,15 @@ public class CombatHandler {
         double versatileValue = damage * versatileRate;
 
         RoleHealthStealEvent stealEvent = new RoleHealthStealEvent(player, source, damageValue + versatileValue);
-        if (stealEvent.call()) {
-            return;
-        }
+        stealEvent.call();
+        if (stealEvent.isCancelled()) return;
 
         double vampire = stealEvent.getVampire();
 
+        JustAttributeAPI.getRoleState(player).addHealth(vampire);
+
         RoleHealthStoleEvent stoleEvent = new RoleHealthStoleEvent(player, source, vampire);
         stoleEvent.call();
-
-        JustAttributeAPI.getRoleState(player).addHealth(vampire);
     }
 
     private static double getValue(RoleAttribute role, Attribute ident) {

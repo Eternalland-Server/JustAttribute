@@ -1,24 +1,28 @@
 package com.sakuragame.eternal.justattribute.api.event;
 
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerEvent;
 
-@Getter
-public class PlayerUnderAttackedEvent extends PlayerEvent {
+public abstract class JustEvent extends PlayerEvent implements Cancellable {
 
-    private final EntityDamageEvent.DamageCause cause;
-    private final double damage;
+    private boolean cancel;
+    private static final HandlerList handlerList = new HandlerList();
 
-    private final static HandlerList handlerList = new HandlerList();
-
-    public PlayerUnderAttackedEvent(Player who, EntityDamageEvent.DamageCause cause, double damage) {
+    public JustEvent(Player who) {
         super(who);
-        this.cause = cause;
-        this.damage = damage;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return this.cancel;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancel = cancel;
     }
 
     @Override
