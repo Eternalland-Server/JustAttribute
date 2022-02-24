@@ -22,7 +22,7 @@ public class CombatHandler {
         double defence = sufferer.getValue(Attribute.Defence);
         double di = sufferer.getValue(Attribute.Damage_Immune);
 
-        double lastDamage = damage - (Math.max(defence - dp, 0));
+        double lastDamage = Math.max(1, damage - (Math.max(defence - dp, 0)));
         double cd = 0;
 
         lastDamage = lastDamage * (1 - di);
