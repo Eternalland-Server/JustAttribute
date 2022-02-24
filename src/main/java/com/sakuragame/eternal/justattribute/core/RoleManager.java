@@ -3,7 +3,7 @@ package com.sakuragame.eternal.justattribute.core;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
-import com.sakuragame.eternal.justattribute.util.Load;
+import com.sakuragame.eternal.justattribute.util.Loader;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -19,7 +19,7 @@ public class RoleManager {
     private final Map<UUID, RoleAttribute> playerAttribute;
     private final Map<UUID, RoleState> playerState;
 
-    private final static Map<UUID, Load> LOAD_MAP = new HashMap<>();
+    private final static Map<UUID, Loader> LOAD_MAP = new HashMap<>();
 
     public RoleManager(JustAttribute plugin) {
         this.plugin = plugin;
@@ -30,6 +30,13 @@ public class RoleManager {
 
     public void loadAttributeData(Player player) {
         UUID uuid = player.getUniqueId();
+        this.loadAttributeData(uuid);
+    }
+
+    public void loadAttributeData(UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return;
+
         RoleState state = getPlayerState(uuid);
         if (state == null) {
             player.kickPlayer("账户未被正确加载，请重新进入。");
@@ -115,10 +122,10 @@ public class RoleManager {
     }
 
     public static void addLoad(UUID uuid) {
-        LOAD_MAP.put(uuid, new Load());
+        LOAD_MAP.put(uuid, new Loader(uuid));
     }
 
-    public static Load getLoad(UUID uuid) {
+    public static Loader getLoad(UUID uuid) {
         return LOAD_MAP.get(uuid);
     }
 

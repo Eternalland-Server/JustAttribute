@@ -1,10 +1,8 @@
 package com.sakuragame.eternal.justattribute.listener.hook;
 
 import com.mengcraft.playersql.event.PlayerDataProcessedEvent;
-import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
-import com.sakuragame.eternal.justattribute.util.Load;
+import com.sakuragame.eternal.justattribute.util.Loader;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,11 +16,9 @@ public class StorageListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        Load load = RoleManager.getLoad(uuid);
+        Loader loader = RoleManager.getLoad(uuid);
 
-        load.setInventory(true);
-        if (load.isFinished()) {
-            JustAttribute.getRoleManager().loadAttributeData(player);
-        }
+        loader.setInventory(true);
+        loader.tryExecute();
     }
 }

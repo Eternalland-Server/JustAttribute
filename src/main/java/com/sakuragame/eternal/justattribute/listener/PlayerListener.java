@@ -2,7 +2,7 @@ package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
-import com.sakuragame.eternal.justattribute.util.Load;
+import com.sakuragame.eternal.justattribute.util.Loader;
 import com.sakuragame.eternal.justattribute.util.Scheduler;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotLoadedEvent;
 import net.sakuragame.eternal.justlevel.api.event.PlayerDataLoadEvent;
@@ -61,12 +61,10 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        Load load = RoleManager.getLoad(uuid);
+        Loader loader = RoleManager.getLoad(uuid);
 
-        load.setJustLevel(true);
-        if (load.isFinished()) {
-            JustAttribute.getRoleManager().loadAttributeData(player);
-        }
+        loader.setJustLevel(true);
+        loader.tryExecute();
     }
 
     @EventHandler
@@ -74,12 +72,10 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        Load load = RoleManager.getLoad(uuid);
+        Loader loader = RoleManager.getLoad(uuid);
 
-        load.setDragonSlot(true);
-        if (load.isFinished()) {
-            JustAttribute.getRoleManager().loadAttributeData(player);
-        }
+        loader.setDragonSlot(true);
+        loader.tryExecute();
     }
 
     @EventHandler
