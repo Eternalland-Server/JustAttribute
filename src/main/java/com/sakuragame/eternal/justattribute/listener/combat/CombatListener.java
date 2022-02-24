@@ -91,7 +91,7 @@ public class CombatListener implements Listener {
             e.setDamage(totalDamage);
 
             RoleState state = JustAttributeAPI.getRoleState(player);
-            state.updateHealth(totalDamage);
+            state.updateHealth(player.getHealth() - totalDamage);
 
             RoleUnderAttackEvent.Post postEvent = new RoleUnderAttackEvent.Post(player, attacker, damage, criticalDamage, cause);
             postEvent.call();
