@@ -13,8 +13,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
 
@@ -92,10 +94,5 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onFood(FoodLevelChangeEvent e) {
         e.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onDeath(PlayerDeathEvent e) {
-        System.out.println("death");
     }
 }

@@ -23,7 +23,7 @@ public class CombatHandler {
         double di = sufferer.getValue(Attribute.Damage_Immune);
 
         double lastDamage = Math.max(1, damage - (Math.max(defence - dp, 0)));
-        double cd = 0;
+        double cd = 1;
 
         lastDamage = lastDamage * (1 - di);
 
@@ -33,7 +33,7 @@ public class CombatHandler {
         }
 
         if (cc >= 1 || cc > Math.random()) {
-            cd = attacker.getValue(Attribute.Critical_Damage);
+            cd = cd + attacker.getValue(Attribute.Critical_Damage);
         }
 
         return new Pair<>(lastDamage, cd);

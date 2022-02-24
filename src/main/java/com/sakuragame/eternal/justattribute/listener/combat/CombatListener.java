@@ -2,8 +2,8 @@ package com.sakuragame.eternal.justattribute.listener.combat;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
-import com.sakuragame.eternal.justattribute.api.event.role.RoleUnderAttackEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleLaunchAttackEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleUnderAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.EntityAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.MobAttribute;
@@ -40,7 +40,7 @@ public class CombatListener implements Listener {
         this.mobs = new HashMap<>();
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onCombat(EntityDamageByEntityEvent e) {
         if (e.isCancelled()) return;
 
@@ -79,12 +79,19 @@ public class CombatListener implements Listener {
             Pair<Double, Double> result = CombatHandler.calculate(attackAttribute, sufferAttribute);
             RoleUnderAttackEvent.Pre preEvent = new RoleUnderAttackEvent.Pre(player, attacker, result.getKey(), result.getValue(), cause);
             preEvent.call();
-            if (preEvent.isCancelled()) return;
+            if (preEvent.isCancelled()) {
+                e.setCancelled(true);
+                return;
+            }
 
             double damage = preEvent.getDamage();
             double criticalDamage = preEvent.getCriticalDamage();
+            double totalDamage = damage * criticalDamage;
 
-            e.setDamage(damage * criticalDamage);
+            e.setDamage(totalDamage);
+
+            RoleState state = JustAttributeAPI.getRoleState(player);
+            state.updateHealth(totalDamage);
 
             RoleUnderAttackEvent.Post postEvent = new RoleUnderAttackEvent.Post(player, attacker, damage, criticalDamage, cause);
             postEvent.call();
@@ -100,12 +107,21 @@ public class CombatListener implements Listener {
         Pair<Double, Double> result = CombatHandler.calculate(attackAttribute, sufferAttribute);
         RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, result.getKey(), result.getValue(), cause);
         preEvent.call();
-        if (preEvent.isCancelled()) return;
+        if (preEvent.isCancelled()) {
+            e.setCancelled(true);
+            return;
+        }
 
         double damage = preEvent.getDamage();
         double criticalDamage = preEvent.getCriticalDamage();
+        double totalDamage = damage * criticalDamage;
 
-        e.setDamage(damage * criticalDamage);
+        e.setDamage(totalDamage);
+
+        if (sufferer instanceof Player) {
+            RoleState state = JustAttributeAPI.getRoleState(player);
+            state.updateHealth(totalDamage);
+        }
 
         RoleLaunchAttackEvent.Post postEvent = new RoleLaunchAttackEvent.Post(player, sufferer, damage, criticalDamage, cause);
         postEvent.call();

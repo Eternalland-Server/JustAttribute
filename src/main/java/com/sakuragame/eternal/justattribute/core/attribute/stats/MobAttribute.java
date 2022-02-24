@@ -32,13 +32,16 @@ public class MobAttribute implements EntityAttribute {
         this.entity = (LivingEntity) mob.getEntity().getBukkitEntity();
         this.attributes = new HashMap<>();
 
+        double level = mob.getLevel();
+        double promote = (level - 1) * 0.5;
+
         MythicMob type = mob.getType();
         MythicConfig config = type.getConfig();
-        this.attributes.put(Attribute.Damage, config.getDouble("JustAttribute." + Attribute.Damage.getId(), type.getDamage().get()));
-        this.attributes.put(Attribute.Defence, config.getDouble("JustAttribute." + Attribute.Defence.getId(), type.getArmor().get()));
-        this.attributes.put(Attribute.Critical_Chance, config.getDouble("JustAttribute." + Attribute.Critical_Chance.getId(), 0));
-        this.attributes.put(Attribute.Critical_Damage, config.getDouble("JustAttribute." + Attribute.Critical_Damage.getId(), 0));
-        this.attributes.put(Attribute.Defence_Penetration, config.getDouble("JustAttribute." + Attribute.Defence_Penetration.getId(), 0));
+        this.attributes.put(Attribute.Damage, config.getDouble("JustAttribute." + Attribute.Damage.getId(), type.getDamage().get()) * promote);
+        this.attributes.put(Attribute.Defence, config.getDouble("JustAttribute." + Attribute.Defence.getId(), type.getArmor().get()) * promote);
+        this.attributes.put(Attribute.Critical_Chance, config.getDouble("JustAttribute." + Attribute.Critical_Chance.getId(), 0) * promote);
+        this.attributes.put(Attribute.Critical_Damage, config.getDouble("JustAttribute." + Attribute.Critical_Damage.getId(), 0) * promote);
+        this.attributes.put(Attribute.Defence_Penetration, config.getDouble("JustAttribute." + Attribute.Defence_Penetration.getId(), 0) * promote);
         this.minimumDamage = config.getDouble("JustAttribute.minimum_damage", 0);
         this.damageModifiers = type.getDamageModifiers();
     }

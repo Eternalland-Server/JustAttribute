@@ -98,7 +98,7 @@ public class RoleAttribute implements EntityAttribute {
         this.combat = CombatCapacity.get(totalAttribute);
 
         RoleAttributeUpdateEvent event = new RoleAttributeUpdateEvent(this.getBukkitPlayer(), this);
-        event.call();
+        Scheduler.run(event::call);
     }
 
     @Deprecated
