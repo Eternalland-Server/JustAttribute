@@ -9,9 +9,9 @@ import org.bukkit.event.Listener;
 public class VampireListener implements Listener {
 
     @EventHandler
-    public void onAttack(RoleLaunchAttackEvent e) {
+    public void onAttack(RoleLaunchAttackEvent.Post e) {
         Player player = e.getPlayer();
 
-        CombatHandler.physicalVampire(player, e.getVictim(), e.getBaseDamage());
+        CombatHandler.physicalVampire(player, e.getVictim(), e.getTotalDamage());
     }
 }

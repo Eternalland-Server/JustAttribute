@@ -1,77 +1,42 @@
 package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
-import com.sakuragame.eternal.justattribute.api.event.role.RoleLaunchAttackEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStealEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStoleEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
+import com.sakuragame.eternal.justattribute.core.attribute.stats.EntityAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.MobAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
-import com.sakuragame.eternal.justattribute.hook.DamageModify;
+import net.sakuragame.eternal.dragoncore.util.Pair;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 
 public class CombatHandler {
 
-    public static RoleLaunchAttackEvent calculate(RoleAttribute attacker, RoleAttribute sufferer) {
-        double damage = getValue(attacker, Attribute.Damage);
-        double dp = getValue(attacker, Attribute.Defence_Penetration);
-        double cc = getValue(attacker, Attribute.Critical_Chance);
-        double cd = getValue(attacker, Attribute.Critical_Damage);
+    public static Pair<Double, Double> calculate(EntityAttribute attacker, EntityAttribute sufferer) {
+        double damage = attacker.getValue(Attribute.Damage);
+        double dp = attacker.getValue(Attribute.Defence_Penetration);
+        double cc = attacker.getValue(Attribute.Critical_Chance);
 
-        double defence = getValue(sufferer, Attribute.Defence);
-        double di = getValue(sufferer, Attribute.Damage_Immune);
+        double defence = sufferer.getValue(Attribute.Defence);
+        double di = sufferer.getValue(Attribute.Damage_Immune);
 
-        double baseDamage = damage - (Math.max(defence - dp, 0));
-        double criticalDamage = 0;
+        double lastDamage = damage - (Math.max(defence - dp, 0));
+        double cd = 0;
 
-        baseDamage = baseDamage * (1 - di);
+        lastDamage = lastDamage * (1 - di);
 
-        if (cc >= 1 || cc > Math.random()) {
-            criticalDamage = baseDamage * (cd - 1);
+        if (attacker instanceof MobAttribute) {
+            MobAttribute mob = (MobAttribute) attacker;
+            lastDamage = Math.max(mob.getMinimumDamage(), lastDamage);
         }
 
-        return new RoleLaunchAttackEvent(attacker.getBukkitPlayer(), sufferer.getBukkitPlayer(), baseDamage, criticalDamage, RoleLaunchAttackEvent.Cause.Normal);
-    }
-
-    public static RoleLaunchAttackEvent calculate(RoleAttribute attacker, MobAttribute sufferer) {
-        double damage = getValue(attacker, Attribute.Damage);
-        double cc = getValue(attacker, Attribute.Critical_Chance);
-        double cd = getValue(attacker, Attribute.Critical_Damage);
-
-        double defence = sufferer.getDefence();
-        double baseDamage = damage - defence;
-        double criticalDamage = 0;
-
         if (cc >= 1 || cc > Math.random()) {
-            criticalDamage = baseDamage * (cd - 1);
+            cd = attacker.getValue(Attribute.Critical_Damage);
         }
 
-        double damageModify = sufferer.getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1.0);
-        baseDamage = baseDamage * damageModify;
-
-        return new RoleLaunchAttackEvent(attacker.getBukkitPlayer(), sufferer.getEntity(), baseDamage, criticalDamage, RoleLaunchAttackEvent.Cause.Normal);
-    }
-
-    public static double calculate(MobAttribute attacker, RoleAttribute sufferer) {
-        double damage = attacker.getDamage();
-        double dp = attacker.getDefencePenetration();
-        double cc = attacker.getCriticalChance();
-        double cd = attacker.getCriticalDamage();
-
-        double defence = getValue(sufferer, Attribute.Defence);
-        double di = getValue(sufferer, Attribute.Damage_Immune);
-
-        double lastDamage = damage - defence * dp;
-
-        if (cc >= 1 || cc > Math.random()) {
-            lastDamage = lastDamage * cd;
-        }
-
-        lastDamage = Math.max(attacker.getMinimumDamage(), lastDamage * (1 - di));
-
-        return lastDamage;
+        return new Pair<>(lastDamage, cd);
     }
 
     public static void physicalVampire(Player player, LivingEntity source, double damage) {

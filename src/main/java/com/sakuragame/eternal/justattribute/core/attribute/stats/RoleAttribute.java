@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class RoleAttribute {
+public class RoleAttribute implements EntityAttribute {
 
     @Getter private final UUID uuid;
 
@@ -242,5 +242,13 @@ public class RoleAttribute {
     
     public Player getBukkitPlayer() {
         return Bukkit.getPlayer(this.uuid);
+    }
+
+    @Override
+    public double getValue(Attribute attribute) {
+        if (attribute == Attribute.Damage) return this.getActualDamage();
+        if (attribute == Attribute.Defence) return this.getActualDefence();
+
+        return attribute.calculate(this);
     }
 }
