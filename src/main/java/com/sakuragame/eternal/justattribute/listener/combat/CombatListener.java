@@ -73,18 +73,28 @@ public class CombatListener implements Listener {
             if (!(sufferer instanceof Player)) return;
 
             Player player = (Player) sufferer;
-            ActiveMob mob = getMob(attacker.getUniqueId());
-            if (mob == null) return;
+            EntityAttribute attackAttribute = getMobAttribute(attacker);
+            EntityAttribute sufferAttribute = getPlayerAttribute(player);
 
-            Pair<Double, Double> result = CombatHandler.calculate(getMobAttribute(attacker), getPlayerAttribute(player));
-            e.setDamage(result.getKey() * result.getValue());
+            Pair<Double, Double> result = CombatHandler.calculate(attackAttribute, sufferAttribute);
+            RoleUnderAttackEvent.Pre preEvent = new RoleUnderAttackEvent.Pre(player, attacker, result.getKey(), result.getValue(), cause);
+            preEvent.call();
+            if (preEvent.isCancelled()) return;
+
+            double damage = preEvent.getDamage();
+            double criticalDamage = preEvent.getCriticalDamage();
+
+            e.setDamage(damage * criticalDamage);
+
+            RoleUnderAttackEvent.Post postEvent = new RoleUnderAttackEvent.Post(player, attacker, damage, criticalDamage, cause);
+            postEvent.call();
             return;
         }
 
         // player attack
         Player player = (Player) attacker;
 
-        RoleAttribute attackAttribute = getPlayerAttribute(player);
+        EntityAttribute attackAttribute = getPlayerAttribute(player);
         EntityAttribute sufferAttribute = (sufferer instanceof Player) ? getPlayerAttribute((Player) sufferer) : getMobAttribute(sufferer);
 
         Pair<Double, Double> result = CombatHandler.calculate(attackAttribute, sufferAttribute);
@@ -99,25 +109,6 @@ public class CombatListener implements Listener {
 
         RoleLaunchAttackEvent.Post postEvent = new RoleLaunchAttackEvent.Post(player, sufferer, damage, criticalDamage, cause);
         postEvent.call();
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onDamage(EntityDamageEvent e) {
-        if (e.isCancelled()) return;
-
-        Entity entity = e.getEntity();
-        if (!(entity instanceof Player)) return;
-
-        Player player = (Player) entity;
-
-        RoleState state = JustAttributeAPI.getRoleState(player);
-        if (state == null) return;
-
-        double damage =  e.getDamage();
-        state.updateHealth(player.getHealth() - damage);
-
-        RoleUnderAttackEvent event = new RoleUnderAttackEvent(player, e.getCause(), damage);
-        event.call();
     }
 
     @EventHandler
