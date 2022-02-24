@@ -41,7 +41,6 @@ public class RoleAttribute implements EntityAttribute {
         this.uuid = uuid;
         this.base = AttributeSource.getRoleDefault();
         this.source = new HashMap<>();
-        this.updateStageGrowth();
     }
 
     public void updateStageGrowth() {

@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
+import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.util.Loader;
 import com.sakuragame.eternal.justattribute.util.Scheduler;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotLoadedEvent;
@@ -22,14 +23,15 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPreLogin(AsyncPlayerPreLoginEvent e) {
         UUID uuid = e.getUniqueId();
-        RoleManager.addLoad(uuid);
+        JustAttribute.getRoleManager().putAttributeData(uuid, new RoleAttribute(uuid));
+        RoleManager.generateLoader(uuid);
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onLogin(AsyncPlayerPreLoginEvent e) {
         if (e.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED) return;
         UUID uuid = e.getUniqueId();
-        RoleManager.delLoad(uuid);
+        RoleManager.removeLoader(uuid);
     }
 
     @EventHandler
@@ -61,7 +63,7 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        Loader loader = RoleManager.getLoad(uuid);
+        Loader loader = RoleManager.getLoader(uuid);
 
         loader.setJustLevel(true);
         loader.tryExecute();
@@ -72,7 +74,7 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        Loader loader = RoleManager.getLoad(uuid);
+        Loader loader = RoleManager.getLoader(uuid);
 
         loader.setDragonSlot(true);
         loader.tryExecute();

@@ -44,13 +44,13 @@ public class RoleManager {
             return;
         }
 
-        RoleAttribute role = new RoleAttribute(uuid);
-        this.playerAttribute.put(uuid, role);
+        RoleAttribute role = this.getPlayerAttribute(uuid);
 
         AttributeHandler.loadVanillaSlot(player);
         AttributeHandler.loadCustomSlot(player);
+        role.updateStageGrowth();
 
-        delLoad(uuid);
+        removeLoader(uuid);
 
         role.updateRoleAttribute();
 
@@ -80,10 +80,14 @@ public class RoleManager {
         state.save();
     }
 
+    public void putAttributeData(UUID uuid, RoleAttribute role) {
+        this.playerAttribute.put(uuid, role);
+    }
+
     public void saveData(UUID uuid) {
         this.removeAttributeData(uuid);
         this.removeStateData(uuid);
-        delLoad(uuid);
+        removeLoader(uuid);
     }
 
     public RoleAttribute getPlayerAttribute(Player player) {
@@ -121,15 +125,15 @@ public class RoleManager {
         return role;
     }
 
-    public static void addLoad(UUID uuid) {
+    public static void generateLoader(UUID uuid) {
         LOAD_MAP.put(uuid, new Loader(uuid));
     }
 
-    public static Loader getLoad(UUID uuid) {
+    public static Loader getLoader(UUID uuid) {
         return LOAD_MAP.get(uuid);
     }
 
-    public static void delLoad(UUID uuid) {
+    public static void removeLoader(UUID uuid) {
         LOAD_MAP.remove(uuid);
     }
 
