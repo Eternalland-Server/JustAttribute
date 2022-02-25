@@ -16,7 +16,7 @@ public class MobListener implements Listener {
         MythicMob mob = e.getMobType();
 
         double level = e.getMobLevel();
-        double promote = (level - 1) * 0.5;
+        double promote = 1 + (level - 1) * 0.5;
         double health = mob.getHealth().get();
 
         double hp = health * promote;

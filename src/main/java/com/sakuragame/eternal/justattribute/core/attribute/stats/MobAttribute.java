@@ -33,7 +33,7 @@ public class MobAttribute implements EntityAttribute {
         this.attributes = new HashMap<>();
 
         double level = mob.getLevel();
-        double promote = (level - 1) * 0.5;
+        double promote =  1 + (level - 1) * 0.5;
 
         MythicMob type = mob.getType();
         MythicConfig config = type.getConfig();
