@@ -39,9 +39,9 @@ public class MobAttribute implements EntityAttribute {
         MythicConfig config = type.getConfig();
         this.attributes.put(Attribute.Damage, config.getDouble("JustAttribute." + Attribute.Damage.getId(), type.getDamage().get()) * promote);
         this.attributes.put(Attribute.Defence, config.getDouble("JustAttribute." + Attribute.Defence.getId(), type.getArmor().get()) * promote);
-        this.attributes.put(Attribute.Critical_Chance, config.getDouble("JustAttribute." + Attribute.Critical_Chance.getId(), 0) * promote);
-        this.attributes.put(Attribute.Critical_Damage, config.getDouble("JustAttribute." + Attribute.Critical_Damage.getId(), 0) * promote);
-        this.attributes.put(Attribute.Defence_Penetration, config.getDouble("JustAttribute." + Attribute.Defence_Penetration.getId(), 0) * promote);
+        this.attributes.put(Attribute.Critical_Chance, config.getDouble("JustAttribute." + Attribute.Critical_Chance.getId(), 0));
+        this.attributes.put(Attribute.Critical_Damage, config.getDouble("JustAttribute." + Attribute.Critical_Damage.getId(), 0));
+        this.attributes.put(Attribute.Defence_Penetration, config.getDouble("JustAttribute." + Attribute.Defence_Penetration.getId(), 0));
         this.minimumDamage = config.getDouble("JustAttribute.minimum_damage", 0);
         this.damageModifiers = type.getDamageModifiers();
     }
