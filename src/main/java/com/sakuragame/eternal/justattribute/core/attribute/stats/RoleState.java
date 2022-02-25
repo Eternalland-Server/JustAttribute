@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleConsumeManaEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
@@ -169,6 +170,22 @@ public class RoleState {
 
     public double getManaPercentage() {
         return getMana() / getMaxMana();
+    }
+
+    public boolean consumeMana(double value) {
+        double mp = this.getMana();
+        if (mp < value) return false;
+
+        Player player = this.getBukkitPlayer();
+        RoleConsumeManaEvent.Pre preEvent = new RoleConsumeManaEvent.Pre(player, value);
+        preEvent.call();
+        if (preEvent.isCancelled()) return false;
+
+        this.setMana(mp - value);
+
+        RoleConsumeManaEvent.Post postEvent = new RoleConsumeManaEvent.Post(player, value);
+        postEvent.call();
+        return true;
     }
 
     public Player getBukkitPlayer() {

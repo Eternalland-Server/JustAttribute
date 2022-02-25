@@ -89,22 +89,14 @@ public class JustAttributeAPI {
         RoleState state = getRoleState(uuid);
         if (state == null) return false;
 
-        double hp = state.getHealth();
-        if (hp < value) return false;
-
-        state.setHealth(hp - value);
-        return true;
+        return state.consumeMana(value);
     }
 
     public static boolean consumeMP(UUID uuid, double value) {
         RoleState state = getRoleState(uuid);
         if (state == null) return false;
 
-        double mp = state.getMana();
-        if (mp < value) return false;
-
-        state.setMana(mp - value);
-        return true;
+        return state.consumeMana(value);
     }
 
 }
