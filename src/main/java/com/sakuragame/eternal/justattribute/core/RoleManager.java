@@ -1,6 +1,7 @@
 package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleAccountLoadedEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import com.sakuragame.eternal.justattribute.util.Loader;
@@ -53,6 +54,9 @@ public class RoleManager {
         removeLoader(uuid);
 
         role.updateRoleAttribute();
+
+        RoleAccountLoadedEvent event = new RoleAccountLoadedEvent(player);
+        event.call();
 
         plugin.getLogger().info(" 加载 " + player.getName() + " 角色数据成功！");
     }
