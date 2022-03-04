@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class SkinListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onSkin(ItemReleaseEvent.Final e) {
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 

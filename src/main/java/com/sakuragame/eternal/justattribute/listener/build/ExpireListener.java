@@ -38,7 +38,7 @@ public class ExpireListener implements Listener {
         tag.putDeep(ItemExpire.NBT_EXPIRE_NODE, expired);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onCheck(ItemBuildEvent.Pre e) {
         if (e.isCancelled()) return;
         if (e.getPlayer() == null) return;
@@ -56,7 +56,7 @@ public class ExpireListener implements Listener {
         e.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onDisplay(ItemReleaseEvent.Display e) {
         if (e.getPlayer() == null) return;
 

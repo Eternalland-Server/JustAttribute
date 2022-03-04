@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.listener.smithy;
 
+import com.sakuragame.eternal.justattribute.api.event.smithy.SmithySealEvent;
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.SealFactory;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
@@ -119,6 +120,9 @@ public class SealListener implements Listener {
             MessageAPI.sendActionTip(player, "&6&l已解封道具");
             player.sendMessage(ConfigFile.prefix + "§7解封成功，你是该道具新的主人!");
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.6f, 1f);
+
+            SmithySealEvent.Unlock event = new SmithySealEvent.Unlock(player, result.clone());
+            event.call();
             return;
         }
 
@@ -139,6 +143,9 @@ public class SealListener implements Listener {
             MessageAPI.sendActionTip(player, "&3&l已封印道具");
             player.sendMessage(ConfigFile.prefix + "§7你花费了 §a" + SealFactory.price + " §7神石封印道具，现在这个道具可以自由交易了!");
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.6f, 1f);
+
+            SmithySealEvent.Lock event = new SmithySealEvent.Lock(player, result.clone());
+            event.call();
         }
     }
 

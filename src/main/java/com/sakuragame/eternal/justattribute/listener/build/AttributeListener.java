@@ -16,7 +16,7 @@ import java.util.LinkedList;
 
 public class AttributeListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onBuild(ItemBuildEvent.Pre e) {
         if (e.isCancelled()) return;
 
@@ -46,7 +46,7 @@ public class AttributeListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onDisplay(ItemReleaseEvent.Display e) {
         String display = e.getItemStream().getZaphkielItem().getDisplay();
         if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;

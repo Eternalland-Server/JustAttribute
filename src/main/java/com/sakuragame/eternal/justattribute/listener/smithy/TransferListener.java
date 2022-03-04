@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.listener.smithy;
 
+import com.sakuragame.eternal.justattribute.api.event.smithy.SmithyTransferEvent;
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.TransferFactory;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
@@ -120,6 +121,8 @@ public class TransferListener implements Listener {
         GemsEconomyAPI.withdraw(uuid, TransferFactory.price, EternalCurrency.Points, "属性转移");
 
         ItemStack result = TransferFactory.machining(player, equip.clone(), prop.clone());
+        ItemStack transfer = prop.clone();
+        transfer.setAmount(1);
 
         equip.setAmount(equip.getAmount() - 1);
         prop.setAmount(prop.getAmount() - 1);
@@ -130,5 +133,8 @@ public class TransferListener implements Listener {
 
         MessageAPI.sendActionTip(player, "&a&l转移成功!");
         player.sendMessage(ConfigFile.prefix + "§7转移属性成功!你花费了 §a" + TransferFactory.price + " §7神石");
+
+        SmithyTransferEvent event = new SmithyTransferEvent(player, transfer, result.clone());
+        event.call();
     }
 }

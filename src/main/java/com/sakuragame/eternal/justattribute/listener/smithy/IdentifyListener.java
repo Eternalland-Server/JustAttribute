@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.listener.smithy;
 
+import com.sakuragame.eternal.justattribute.api.event.smithy.SmithyIdentifyEvent;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.IdentifyFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
@@ -174,6 +175,9 @@ public class IdentifyListener implements Listener {
             MessageAPI.sendActionTip(player, "&a&l鉴定成功!");
             player.sendMessage(ConfigFile.prefix + "§7鉴定成功，装备获得了 §3" + grade.getName() + " §7级潜能");
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.6f, 1f);
+
+            SmithyIdentifyEvent event = new SmithyIdentifyEvent(player, grade, item.clone());
+            event.call();
         }
         else {
             if (propID.equals("normal_potency_identify_scroll")) {
@@ -197,6 +201,9 @@ public class IdentifyListener implements Listener {
             MessageAPI.sendActionTip(player, "&a&l潜能重置成功!");
             player.sendMessage(ConfigFile.prefix + "§7潜能重置成功，装备新的潜能等级为 §3" + grade.getName() + " §7级");
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.6f, 1f);
+
+            SmithyIdentifyEvent event = new SmithyIdentifyEvent(player, grade, item.clone());
+            event.call();
         }
     }
 

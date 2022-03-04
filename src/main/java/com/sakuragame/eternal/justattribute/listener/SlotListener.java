@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class SlotListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onVanilla(InventoryClickEvent e) {
         if (e.isCancelled()) return;
         if (!(e.getWhoClicked() instanceof Player)) return;

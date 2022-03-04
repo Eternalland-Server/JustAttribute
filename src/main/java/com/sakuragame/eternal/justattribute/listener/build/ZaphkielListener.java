@@ -17,7 +17,7 @@ import org.bukkit.event.Listener;
 
 public class ZaphkielListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onSoulBound(ItemBuildEvent.Pre e) {
         if (e.isCancelled()) return;
 
@@ -40,7 +40,7 @@ public class ZaphkielListener implements Listener {
         e.addLore(SoulBound.DISPLAY_NODE, action.getHandler().getUnboundDesc());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onSoulBound(ItemReleaseEvent.Display e) {
         Player player = e.getPlayer();
         if (player == null) return;
@@ -63,7 +63,7 @@ public class ZaphkielListener implements Listener {
         e.addLore(SoulBound.DISPLAY_NODE, action.getHandler().getBoundDesc(owner.asString()));
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onClassify(ItemReleaseEvent.Display e) {
         ItemTag itemTag = e.getItemStream().getZaphkielData();
         ItemTagData data = itemTag.getDeep(EquipClassify.NBT_NODE);
@@ -76,7 +76,7 @@ public class ZaphkielListener implements Listener {
         e.addLore(EquipClassify.DISPLAY_NODE, equipClassify.formatting());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onQuality(ItemReleaseEvent.Display e) {
         ItemTag itemTag = e.getItemStream().getZaphkielData();
         ItemTagData data = itemTag.getDeep(EquipQuality.NBT_NODE);
@@ -89,7 +89,7 @@ public class ZaphkielListener implements Listener {
         e.addLore(EquipQuality.DISPLAY_NODE, equipQuality.formatting());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onCombat(ItemReleaseEvent.Display e) {
         String display = e.getItemStream().getZaphkielItem().getDisplay();
         if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;
