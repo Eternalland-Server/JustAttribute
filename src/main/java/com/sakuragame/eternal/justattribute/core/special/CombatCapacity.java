@@ -48,13 +48,13 @@ public class CombatCapacity {
                         .calculate(
                             data.getOrdinary().get(Attribute.Critical_Damage),
                             data.getPotency().get(Attribute.Critical_Damage)
-                        ) - 1) * damage;
+                        )) * damage;
         double cChance = Math.min(0,
                 Attribute.Critical_Chance
                         .calculate(
                                 data.getOrdinary().get(Attribute.Critical_Chance),
                                 data.getPotency().get(Attribute.Critical_Chance)
-                        )) * cDamage;
+                        ) - 1) * cDamage;
 
         int cdSource = (int) cDamage * ConfigFile.combatCapability.get(Attribute.Critical_Damage);
         int ccSource = (int) cChance * ConfigFile.combatCapability.get(Attribute.Critical_Chance);
