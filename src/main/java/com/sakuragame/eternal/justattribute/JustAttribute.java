@@ -15,6 +15,7 @@ import com.sakuragame.eternal.justattribute.listener.build.SkinListener;
 import com.sakuragame.eternal.justattribute.listener.build.ZaphkielListener;
 import com.sakuragame.eternal.justattribute.listener.combat.CombatListener;
 import com.sakuragame.eternal.justattribute.listener.combat.VampireListener;
+import com.sakuragame.eternal.justattribute.listener.hook.InfoListener;
 import com.sakuragame.eternal.justattribute.listener.hook.LevelListener;
 import com.sakuragame.eternal.justattribute.listener.hook.MobListener;
 import com.sakuragame.eternal.justattribute.listener.hook.StorageListener;
@@ -79,6 +80,7 @@ public class JustAttribute extends JavaPlugin {
         registerListener(new SoulBoundListener());
         registerListener(new LevelListener());
         registerListener(new MobListener());
+        registerListener(new InfoListener());
 
         if (Bukkit.getPluginManager().getPlugin("PlayerSQL") != null) {
             PLAYER_SQL = true;

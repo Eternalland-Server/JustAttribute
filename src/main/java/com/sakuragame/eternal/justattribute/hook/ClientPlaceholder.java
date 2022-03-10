@@ -11,6 +11,7 @@ import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class ClientPlaceholder {
 
@@ -77,6 +78,47 @@ public class ClientPlaceholder {
         map.put(EXP_ADDITION_CARD, formatPercent(JustLevelAPI.getCardAddition(player)));
 
         PacketSender.sendSyncPlaceholder(player, map);
+    }
+
+    public static Map<String, String> getTargetPlaceholder(Player target) {
+        HashMap<String, String> map = new HashMap<>();
+
+        RoleAttribute role = JustAttributeAPI.getRoleAttribute(target);
+        RoleState state = JustAttributeAPI.getRoleState(target);
+
+        for (Attribute ident : Attribute.values()) {
+            double value = role.getTotalValue(ident);
+            if (ident == Attribute.Damage) {
+                map.put("target_" + ident.getPlaceholder(), ident.formatting(role.getActualDamage()));
+                continue;
+            }
+            if (ident == Attribute.Defence) {
+                map.put("target_" + ident.getPlaceholder(), ident.formatting(role.getActualDefence()));
+                continue;
+            }
+            if (ident == Attribute.Health) {
+                map.put("target_" + ident.getPlaceholder(), ident.formatting(role.getTotalHealth()));
+                continue;
+            }
+            if (ident == Attribute.Mana) {
+                map.put("target_" + ident.getPlaceholder(), ident.formatting(role.getTotalMana()));
+                continue;
+            }
+            if (ident == Attribute.EXP_Addition) {
+                double total = JustLevelAPI.getTotalAddition(target);
+                map.put("target_" + ident.getPlaceholder(), ident.formatting(value + total));
+                continue;
+            }
+            map.put("target_" + ident.getPlaceholder(), ident.formatting(value));
+        }
+
+        map.put("target_" + RESTORE_HP_PAPI, formatRestoreHP(state.getRestoreHP()));
+        map.put("target_" + RESTORE_MP_PAPI, formatRestoreMP(state.getRestoreMP()));
+        map.put("target_" + ROLE_DAMAGE_PAPI, Attribute.Damage.formatting(role.getTotalDamage()));
+        map.put("target_" + ROLE_DEFENCE_PAPI, Attribute.Defence.formatting(role.getTotalDefence()));
+        map.put("target_" + ROLE_TOTAL_COMBAT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombat()));
+
+        return map;
     }
 
     public static void sendState(Player player) {
