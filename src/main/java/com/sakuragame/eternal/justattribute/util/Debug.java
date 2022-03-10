@@ -20,7 +20,7 @@ public enum Debug {
     public static void info(Debug debug, String message) {
         int level = ConfigFile.debug;
 
-        if (debug.getLevel() > level) return;
+        if (debug.getLevel() != level) return;
 
         Bukkit.getConsoleSender().sendMessage("[JustAttribute - Debug] " + message);
     }
