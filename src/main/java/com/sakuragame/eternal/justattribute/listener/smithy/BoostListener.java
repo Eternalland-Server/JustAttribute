@@ -3,7 +3,6 @@ package com.sakuragame.eternal.justattribute.listener.smithy;
 import com.sakuragame.eternal.justattribute.api.event.smithy.SmithyBoostEvent;
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.BoostFactory;
-import com.sakuragame.eternal.justattribute.core.smithy.factory.IdentifyFactory;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
@@ -80,7 +79,7 @@ public class BoostListener implements Listener {
             return;
         }
 
-        if (ident.equals(IdentifyFactory.PROP_SLOT)) {
+        if (ident.equals(BoostFactory.PROP_SLOT)) {
             if (!MegumiUtil.isEmpty(handItem)) {
                 ItemStream itemStream = ZaphkielAPI.INSTANCE.read(handItem);
                 if (itemStream.isVanilla()) {

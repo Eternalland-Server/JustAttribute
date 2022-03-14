@@ -104,7 +104,7 @@ public class RoleAttribute implements EntityAttribute {
     }
 
     public void setWeapon(ItemStack item) {
-        this.damageUpperLimit = DamageLimit.getDamageUpperLimit(item);
+        this.damageUpperLimit = Math.max(1, DamageLimit.getDamageUpperLimit(item));
     }
 
     @Deprecated
