@@ -32,13 +32,10 @@ public class FileManager extends JustConfiguration {
     }
 
     private void initSmithy() {
-        File file = new File(this.plugin.getDataFolder(), "smithy");
-        if (file.exists()) return;
-        file.mkdirs();
-
-        MegumiUtil.copyFile(this.plugin.getResource("identify.yml"), new File(file, "identify.yml"));
-        MegumiUtil.copyFile(this.plugin.getResource("seal.yml"), new File(file, "seal.yml"));
-        MegumiUtil.copyFile(this.plugin.getResource("transfer.yml"), new File(file, "transfer.yml"));
+        initFile("smithy/identify.yml");
+        initFile("smithy/seal.yml");
+        initFile("smithy/transfer.yml");
+        initFile("smithy/boost.yml");
     }
 
     public YamlConfiguration getIdentifyConfig() {
@@ -53,6 +50,11 @@ public class FileManager extends JustConfiguration {
 
     public YamlConfiguration getTransferConfig() {
         File file = new File(this.plugin.getDataFolder(), "smithy/transfer.yml");
+        return YamlConfiguration.loadConfiguration(file);
+    }
+
+    public YamlConfiguration getBoostConfig() {
+        File file = new File(this.plugin.getDataFolder(), "smithy/boost.yml");
         return YamlConfiguration.loadConfiguration(file);
     }
 }

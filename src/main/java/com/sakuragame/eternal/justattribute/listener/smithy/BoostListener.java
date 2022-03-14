@@ -1,11 +1,11 @@
 package com.sakuragame.eternal.justattribute.listener.smithy;
 
-import com.sakuragame.eternal.justattribute.api.event.smithy.SmithyTransferEvent;
+import com.sakuragame.eternal.justattribute.api.event.smithy.SmithyBoostEvent;
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
-import com.sakuragame.eternal.justattribute.core.smithy.factory.TransferFactory;
-import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
+import com.sakuragame.eternal.justattribute.core.smithy.factory.BoostFactory;
+import com.sakuragame.eternal.justattribute.core.smithy.factory.IdentifyFactory;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
-import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import com.taylorswiftcn.megumi.uifactory.event.comp.UIFCompSubmitEvent;
 import com.taylorswiftcn.megumi.uifactory.event.screen.UIFScreenCloseEvent;
@@ -13,8 +13,6 @@ import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import net.sakuragame.eternal.dragoncore.api.event.slot.PlayerSlotClickEvent;
-import net.sakuragame.eternal.gemseconomy.api.GemsEconomyAPI;
-import net.sakuragame.eternal.gemseconomy.currency.EternalCurrency;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -24,18 +22,18 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
-public class TransferListener implements Listener {
+public class BoostListener implements Listener {
 
     @EventHandler
     public void onClose(UIFScreenCloseEvent e) {
         Player player = e.getPlayer();
-        if (!e.getScreenID().equals(TransferFactory.SCREEN_ID)) return;
+        if (!e.getScreenID().equals(BoostFactory.SCREEN_ID)) return;
 
         SmithyManager.backSlot(
                 player,
-                TransferFactory.EQUIP_SLOT,
-                TransferFactory.PROP_SLOT,
-                TransferFactory.RESULT_SLOT
+                BoostFactory.EQUIP_SLOT,
+                BoostFactory.PROP_SLOT,
+                BoostFactory.RESULT_SLOT
         );
     }
 
@@ -46,7 +44,7 @@ public class TransferListener implements Listener {
         String ident = e.getIdentifier();
         ItemStack handItem = player.getItemOnCursor();
 
-        if (ident.equals(TransferFactory.RESULT_SLOT)) {
+        if (ident.equals(BoostFactory.RESULT_SLOT)) {
             if (!MegumiUtil.isEmpty(handItem)) {
                 MessageAPI.sendActionTip(player, "&c&l该槽位不能放入物品");
                 e.setCancelled(true);
@@ -57,7 +55,7 @@ public class TransferListener implements Listener {
             return;
         }
 
-        if (ident.equals(TransferFactory.EQUIP_SLOT) || ident.equals(TransferFactory.PROP_SLOT)) {
+        if (ident.equals(BoostFactory.EQUIP_SLOT)) {
             if (!MegumiUtil.isEmpty(handItem)) {
                 ItemStream itemStream = ZaphkielAPI.INSTANCE.read(handItem);
                 if (itemStream.isVanilla()) {
@@ -67,14 +65,32 @@ public class TransferListener implements Listener {
 
                 ItemTag itemTag = itemStream.getZaphkielData();
                 EquipClassify classify = EquipClassify.getClassify(itemTag);
-                if (classify == null) {
-                    MessageAPI.sendActionTip(player, "&a&l该道具无法转移属性");
+
+                if (classify != EquipClassify.MainHand) {
+                    MessageAPI.sendActionTip(player, "&c&l该物品不能突破伤害");
                     e.setCancelled(true);
                     return;
                 }
 
-                if (SoulBound.isSeal(itemTag)) {
-                    MessageAPI.sendActionTip(player, "&c&l该物品已被封印");
+                e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
+                SmithyManager.putSlot(uuid, ident, handItem);
+            }
+
+            e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
+            return;
+        }
+
+        if (ident.equals(IdentifyFactory.PROP_SLOT)) {
+            if (!MegumiUtil.isEmpty(handItem)) {
+                ItemStream itemStream = ZaphkielAPI.INSTANCE.read(handItem);
+                if (itemStream.isVanilla()) {
+                    e.setCancelled(true);
+                    return;
+                }
+
+                String zapID = itemStream.getZaphkielItem().getId();
+                if (!BoostFactory.stones.containsKey(zapID)) {
+                    MessageAPI.sendActionTip(player, "&c&l该槽位只能放入伤害突破石!");
                     e.setCancelled(true);
                     return;
                 }
@@ -93,49 +109,37 @@ public class TransferListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        if (!e.getScreenID().equals(TransferFactory.SCREEN_ID)) return;
+        if (!e.getScreenID().equals(BoostFactory.SCREEN_ID)) return;
         if (e.getParams().getParamI(0) != 1) return;
 
-        if (SmithyManager.getSlot(uuid, TransferFactory.RESULT_SLOT) != null) {
-            MessageAPI.sendActionTip(player, "&a&l请取走已转移属性的道具");
-            return;
-        }
+        ItemStack equip = SmithyManager.getSlot(uuid, BoostFactory.EQUIP_SLOT);
+        ItemStack prop = SmithyManager.getSlot(uuid, BoostFactory.PROP_SLOT);
 
-        ItemStack equip = SmithyManager.getSlot(uuid, TransferFactory.EQUIP_SLOT);
-        ItemStack prop = SmithyManager.getSlot(uuid, TransferFactory.PROP_SLOT);
+        String propID = Utils.getZapID(prop);
+        int value = BoostFactory.stones.get(propID);
 
         if (MegumiUtil.isEmpty(equip) || equip.getType() == Material.AIR) {
-            MessageAPI.sendActionTip(player, "&c&l请放入主道具");
+            MessageAPI.sendActionTip(player, "&c&l请放入武器");
             return;
         }
 
         if (MegumiUtil.isEmpty(prop) || equip.getType() == Material.AIR) {
-            MessageAPI.sendActionTip(player, "&c&l请放入副道具");
+            MessageAPI.sendActionTip(player, "&c&l请放入突破石");
             return;
         }
 
-        if (GemsEconomyAPI.getBalance(uuid, EternalCurrency.Points) < TransferFactory.price) {
-            MessageAPI.sendActionTip(player, "&c&l你没有足够的神石");
-            return;
-        }
-
-        GemsEconomyAPI.withdraw(uuid, TransferFactory.price, EternalCurrency.Points, "属性转移");
-
-        ItemStack result = TransferFactory.machining(player, equip.clone(), prop.clone());
-        ItemStack transfer = prop.clone();
-        transfer.setAmount(1);
+        ItemStack result = BoostFactory.machining(player, equip.clone(), prop.clone());
 
         equip.setAmount(equip.getAmount() - 1);
         prop.setAmount(prop.getAmount() - 1);
 
-        SmithyManager.putSlot(player, TransferFactory.EQUIP_SLOT, equip, true);
-        SmithyManager.putSlot(player, TransferFactory.PROP_SLOT, prop, true);
-        SmithyManager.putSlot(player, TransferFactory.RESULT_SLOT, result, true);
+        SmithyManager.putSlot(player, BoostFactory.EQUIP_SLOT, equip, true);
+        SmithyManager.putSlot(player, BoostFactory.PROP_SLOT, prop, true);
+        SmithyManager.putSlot(player, BoostFactory.RESULT_SLOT, result, true);
 
-        MessageAPI.sendActionTip(player, "&a&l转移成功!");
-        player.sendMessage(ConfigFile.prefix + "§7转移属性成功!你花费了 §a" + TransferFactory.price + " §7神石");
+        MessageAPI.sendActionTip(player, "&a&l伤害突破成功&6&l(" + value + ")");
 
-        SmithyTransferEvent event = new SmithyTransferEvent(player, transfer, result.clone());
+        SmithyBoostEvent event = new SmithyBoostEvent(player, result, value);
         event.call();
     }
 }

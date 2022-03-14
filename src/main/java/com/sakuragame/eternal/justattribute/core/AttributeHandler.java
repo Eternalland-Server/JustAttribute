@@ -19,6 +19,12 @@ public class AttributeHandler {
 
         for (VanillaSlot slot : VanillaSlot.values()) {
             ItemStack item = slot.getItem(player);
+            if (MegumiUtil.isEmpty(item)) continue;
+
+            if (slot == VanillaSlot.MainHand) {
+                role.setWeapon(item);
+            }
+
             role.putSource(slot.getIdent(), item);
         }
     }
@@ -31,6 +37,8 @@ public class AttributeHandler {
             if (!FileManager.getSlotSettings().containsKey(key)) continue;
 
             ItemStack item = SlotAPI.getCacheSlotItem(player, key);
+            if (MegumiUtil.isEmpty(item)) continue;
+
             role.putSource(key, item);
         }
     }
@@ -62,11 +70,10 @@ public class AttributeHandler {
         RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
         if (role == null) return;
 
-        if (MegumiUtil.isEmpty(item)) {
-            role.putImmediateSource(ident, new AttributeSource());
-        }
-        else {
-            role.putImmediateSource(ident, AttributeSource.getItemAttribute(item, classify));
-        }
+        if (MegumiUtil.isEmpty(item)) role.putImmediateSource(ident, new AttributeSource());
+        else role.putImmediateSource(ident, AttributeSource.getItemAttribute(item, classify));
+
+        if (classify != EquipClassify.MainHand) return;
+        role.setWeapon(item);
     }
 }

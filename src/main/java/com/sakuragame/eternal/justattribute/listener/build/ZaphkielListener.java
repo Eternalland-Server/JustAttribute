@@ -4,12 +4,14 @@ import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
+import com.sakuragame.eternal.justattribute.core.special.DamageLimit;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.EquipQuality;
 import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
+import net.sakuragame.eternal.dragoncore.util.Pair;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -96,5 +98,19 @@ public class ZaphkielListener implements Listener {
 
         int combat = CombatCapacity.get(new AttributeSource(e.getItemStream()));
         e.addLore(CombatCapacity.DISPLAY_NODE, CombatCapacity.format(combat));
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onDamageLimit(ItemReleaseEvent.Display e) {
+        String display = e.getItemStream().getZaphkielItem().getDisplay();
+        if (!display.equals("EQUIP_COMMON_DISPLAY")) return;
+
+        ItemTag itemTag = e.getItemStream().getZaphkielData();
+
+        Pair<Integer, Integer> result = DamageLimit.getDamagePair(itemTag);
+        int limit = result.getKey();
+        int boost = result.getValue();
+
+        e.addLore(DamageLimit.DISPLAY_NODE, DamageLimit.format(limit, boost));
     }
 }

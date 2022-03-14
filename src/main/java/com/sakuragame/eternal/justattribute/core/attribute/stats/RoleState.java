@@ -43,7 +43,7 @@ public class RoleState {
         double maxHealth = role.getTotalHealth();
         double maxMana = role.getTotalMana();
 
-        double currentHP = this.getBukkitPlayer().getHealth();
+        double currentHP = player.getHealth();
 
         Debug.info(Debug.Role, "max hp: " + maxHealth);
         Debug.info(Debug.Role, "max mp: " + maxMana);

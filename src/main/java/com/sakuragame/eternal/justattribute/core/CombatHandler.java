@@ -32,6 +32,11 @@ public class CombatHandler {
             lastDamage = Math.max(mob.getMinimumDamage(), lastDamage);
         }
 
+        if (attacker instanceof RoleAttribute) {
+            RoleAttribute role = (RoleAttribute) attacker;
+            lastDamage = Math.min(role.getDamageUpperLimit(), lastDamage);
+        }
+
         if (cc >= 1 || cc > Math.random()) {
             cd = cd + attacker.getValue(Attribute.Critical_Damage);
         }
