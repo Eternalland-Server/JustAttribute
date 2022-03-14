@@ -55,11 +55,12 @@ public class CombatListener implements Listener {
             double damage = e.getDamage();
 
             if (attacker instanceof Player) {
+                RoleAttribute role = JustAttributeAPI.getRoleAttribute((Player) attacker);
                 ActiveMob mob = getMob(sufferer.getUniqueId());
                 if (mob == null) return;
 
                 double damageModify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ABILITY_ATTACK.name(), 1.0);
-                double lastDamage = damage * damageModify;
+                double lastDamage = Math.min(role.getDamageUpperLimit(), damage * damageModify);
                 e.setDamage(lastDamage);
                 return;
             }
