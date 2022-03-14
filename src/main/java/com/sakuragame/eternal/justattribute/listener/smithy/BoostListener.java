@@ -73,6 +73,7 @@ public class BoostListener implements Listener {
 
                 e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
                 SmithyManager.putSlot(uuid, ident, handItem);
+                return;
             }
 
             e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
@@ -136,7 +137,7 @@ public class BoostListener implements Listener {
         SmithyManager.putSlot(player, BoostFactory.PROP_SLOT, prop, true);
         SmithyManager.putSlot(player, BoostFactory.RESULT_SLOT, result, true);
 
-        MessageAPI.sendActionTip(player, "&a&l伤害突破成功&6&l(" + value + ")");
+        MessageAPI.sendActionTip(player, "&a&l伤害突破成功&6&l(+" + value + ")");
 
         SmithyBoostEvent event = new SmithyBoostEvent(player, result, value);
         event.call();

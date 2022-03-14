@@ -103,6 +103,10 @@ public class RoleAttribute implements EntityAttribute {
         Scheduler.run(event::call);
     }
 
+    public void setDamageUpperLimit(int value) {
+        this.damageUpperLimit = value;
+    }
+
     public void setWeapon(ItemStack item) {
         this.damageUpperLimit = Math.max(1, DamageLimit.getDamageUpperLimit(item));
     }

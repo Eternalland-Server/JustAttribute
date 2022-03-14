@@ -70,10 +70,14 @@ public class AttributeHandler {
         RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
         if (role == null) return;
 
-        if (MegumiUtil.isEmpty(item)) role.putImmediateSource(ident, new AttributeSource());
-        else role.putImmediateSource(ident, AttributeSource.getItemAttribute(item, classify));
-
-        if (classify != EquipClassify.MainHand) return;
-        role.setWeapon(item);
+        if (MegumiUtil.isEmpty(item)) {
+            role.putImmediateSource(ident, new AttributeSource());
+            role.setDamageUpperLimit(1);
+        }
+        else {
+            role.putImmediateSource(ident, AttributeSource.getItemAttribute(item, classify));
+            if (classify != EquipClassify.MainHand) return;
+            role.setWeapon(item);
+        }
     }
 }
