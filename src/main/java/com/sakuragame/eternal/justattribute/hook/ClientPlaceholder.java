@@ -28,6 +28,7 @@ public class ClientPlaceholder {
     private final static String ROLE_MAX_MANA = "attribute_role_max_mana";
 
     private final static String ROLE_TOTAL_COMBAT = "attribute_role_total_combat";
+    private final static String ROLE_DAMAGE_UPPER_LIMIT = "attribute_role_damage_upper_limit";
 
     private final static String EXP_ADDITION_SUPPORT = "exp_addition_support";
     private final static String EXP_ADDITION_EQUIP = "exp_addition_equip";
@@ -72,6 +73,7 @@ public class ClientPlaceholder {
         map.put(ROLE_DAMAGE_PAPI, Attribute.Damage.formatting(role.getTotalDamage()));
         map.put(ROLE_DEFENCE_PAPI, Attribute.Defence.formatting(role.getTotalDefence()));
         map.put(ROLE_TOTAL_COMBAT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombat()));
+        map.put(ROLE_DAMAGE_UPPER_LIMIT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getDamageUpperLimit()));
 
         map.put(EXP_ADDITION_SUPPORT, formatPercent(JustLevelAPI.getSupportAddition(player)));
         map.put(EXP_ADDITION_EQUIP, "+" + Attribute.EXP_Addition.formatting(role.getTotalValue(Attribute.EXP_Addition)));
