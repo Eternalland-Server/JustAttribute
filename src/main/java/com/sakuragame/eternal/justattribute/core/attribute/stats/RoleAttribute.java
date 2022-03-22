@@ -31,7 +31,8 @@ public class RoleAttribute implements EntityAttribute {
     private double defence;
     @Getter private double restoreHP;
     @Getter private double restoreMP;
-    @Getter private double damageUpperLimit;
+    private double realmDamageUpperLimit;
+    private double weaponDamageUpperLimit;
 
     private final AttributeSource base;
     private final HashMap<String, AttributeSource> source;
@@ -45,7 +46,8 @@ public class RoleAttribute implements EntityAttribute {
         this.source = new HashMap<>();
     }
 
-    public void updateStageGrowth() {
+    public void updateRealmAddition() {
+        int realm = JustLevelAPI.getRealm(uuid);
         int stage = JustLevelAPI.getTotalStage(uuid);
 
         this.health = ConfigFile.RoleBase.health + ConfigFile.RolePromote.health * stage;
@@ -54,6 +56,8 @@ public class RoleAttribute implements EntityAttribute {
         this.defence = ConfigFile.RoleBase.defence + ConfigFile.RolePromote.defence * stage;
         this.restoreHP = ConfigFile.RoleBase.restoreHP + ConfigFile.RolePromote.restoreHP * stage;
         this.restoreMP = ConfigFile.RoleBase.restoreMP + ConfigFile.RolePromote.restoreMP * stage;
+
+        this.realmDamageUpperLimit = (realm - 1) * 20000 + stage * 500;
     }
 
     public void updateRoleAttribute() {
@@ -103,12 +107,16 @@ public class RoleAttribute implements EntityAttribute {
         Scheduler.run(event::call);
     }
 
-    public void setDamageUpperLimit(int value) {
-        this.damageUpperLimit = value;
+    public double getDamageUpperLimit() {
+        return this.realmDamageUpperLimit + this.weaponDamageUpperLimit;
     }
 
-    public void setWeapon(ItemStack item) {
-        this.damageUpperLimit = Math.max(1, DamageLimit.getDamageUpperLimit(item));
+    public void setWeaponDamageUpperLimit(int value) {
+        this.weaponDamageUpperLimit = value;
+    }
+
+    public void setWeaponDamageUpperLimit(ItemStack item) {
+        this.weaponDamageUpperLimit = Math.max(1, DamageLimit.getDamageUpperLimit(item));
     }
 
     @Deprecated

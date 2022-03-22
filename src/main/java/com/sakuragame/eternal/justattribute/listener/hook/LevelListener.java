@@ -3,11 +3,9 @@ package com.sakuragame.eternal.justattribute.listener.hook;
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
-import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import net.sakuragame.eternal.justlevel.api.event.PlayerExpIncreaseEvent;
 import net.sakuragame.eternal.justlevel.api.event.PlayerRealmChangeEvent;
 import net.sakuragame.eternal.justlevel.api.event.PlayerStageChangeEvent;
-import net.sakuragame.eternal.justlevel.util.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,7 +26,7 @@ public class LevelListener implements Listener {
 
     private void updateChange(Player player) {
         RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
-        role.updateStageGrowth();
+        role.updateRealmAddition();
         role.updateRoleAttribute();
     }
 

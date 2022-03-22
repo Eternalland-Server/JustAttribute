@@ -49,7 +49,7 @@ public class RoleManager {
 
         AttributeHandler.loadVanillaSlot(player);
         AttributeHandler.loadCustomSlot(player);
-        role.updateStageGrowth();
+        role.updateRealmAddition();
 
         removeLoader(uuid);
 
