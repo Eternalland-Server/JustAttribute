@@ -3,10 +3,7 @@ package com.sakuragame.eternal.justattribute.listener.build;
 import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
-import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
-import com.sakuragame.eternal.justattribute.core.special.DamageLimit;
-import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
-import com.sakuragame.eternal.justattribute.core.special.EquipQuality;
+import com.sakuragame.eternal.justattribute.core.special.*;
 import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
@@ -79,7 +76,7 @@ public class ZaphkielListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onQuality(ItemReleaseEvent.Display e) {
+    public void onEquipQuality(ItemReleaseEvent.Display e) {
         ItemTag itemTag = e.getItemStream().getZaphkielData();
         ItemTagData data = itemTag.getDeep(EquipQuality.NBT_NODE);
 
@@ -89,6 +86,19 @@ public class ZaphkielListener implements Listener {
         if (equipQuality == null) return;
 
         e.addLore(EquipQuality.DISPLAY_NODE, equipQuality.formatting());
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPropQuality(ItemReleaseEvent.Display e) {
+        ItemTag itemTag = e.getItemStream().getZaphkielData();
+        ItemTagData data = itemTag.getDeep(PropQuality.NBT_NODE);
+
+        if (data == null) return;
+        int id = data.asInt();
+        PropQuality propQuality = PropQuality.match(id);
+        if (propQuality == null) return;
+
+        e.addLore(PropQuality.DISPLAY_NODE, propQuality.getName());
     }
 
     @EventHandler(priority = EventPriority.LOW)
