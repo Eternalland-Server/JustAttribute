@@ -56,11 +56,13 @@ public class DamageLimit {
     }
 
     public static Pair<Integer, Integer> getDamagePair(ItemTag tag) {
-        int first = 0;
+        int first;
         int second = 0;
         ItemTagData limit = tag.getDeep(LIMIT_NBT_NODE);
         ItemTagData boost = tag.getDeep(BOOST_NBT_NODE);
+
         if (limit != null) first = limit.asInt();
+        else return null;
         if (boost != null) second = boost.asInt();
 
         return new Pair<>(first, second);

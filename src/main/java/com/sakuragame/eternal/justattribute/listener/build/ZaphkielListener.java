@@ -118,6 +118,8 @@ public class ZaphkielListener implements Listener {
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 
         Pair<Integer, Integer> result = DamageLimit.getDamagePair(itemTag);
+        if (result == null) return;
+
         int limit = result.getKey();
         int boost = result.getValue();
 
