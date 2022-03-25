@@ -109,20 +109,4 @@ public class ZaphkielListener implements Listener {
         int combat = CombatCapacity.get(new AttributeSource(e.getItemStream()));
         e.addLore(CombatCapacity.DISPLAY_NODE, CombatCapacity.format(combat));
     }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onDamageLimit(ItemReleaseEvent.Display e) {
-        String display = e.getItemStream().getZaphkielItem().getDisplay();
-        if (!display.equals("EQUIP_COMMON_DISPLAY")) return;
-
-        ItemTag itemTag = e.getItemStream().getZaphkielData();
-
-        Pair<Integer, Integer> result = DamageLimit.getDamagePair(itemTag);
-        if (result == null) return;
-
-        int limit = result.getKey();
-        int boost = result.getValue();
-
-        e.addLore(DamageLimit.DISPLAY_NODE, DamageLimit.format(limit, boost));
-    }
 }
