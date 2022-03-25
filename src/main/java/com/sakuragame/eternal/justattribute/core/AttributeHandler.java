@@ -21,10 +21,6 @@ public class AttributeHandler {
             ItemStack item = slot.getItem(player);
             if (MegumiUtil.isEmpty(item)) continue;
 
-            if (slot == VanillaSlot.MainHand) {
-                role.setWeaponDamageUpperLimit(item);
-            }
-
             role.putSource(slot.getIdent(), item);
         }
     }
@@ -72,12 +68,9 @@ public class AttributeHandler {
 
         if (MegumiUtil.isEmpty(item)) {
             role.putImmediateSource(ident, new AttributeSource());
-            role.setWeaponDamageUpperLimit(1);
         }
         else {
             role.putImmediateSource(ident, AttributeSource.getItemAttribute(item, classify));
-            if (classify != EquipClassify.MainHand) return;
-            role.setWeaponDamageUpperLimit(item);
         }
     }
 }

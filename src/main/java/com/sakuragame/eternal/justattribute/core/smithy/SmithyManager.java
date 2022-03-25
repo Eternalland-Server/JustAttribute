@@ -1,6 +1,5 @@
 package com.sakuragame.eternal.justattribute.core.smithy;
 
-import com.sakuragame.eternal.justattribute.core.smithy.factory.BoostFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.IdentifyFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.SealFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.TransferFactory;
@@ -22,7 +21,6 @@ public class SmithyManager {
         IdentifyFactory.init();
         SealFactory.init();
         TransferFactory.init();
-        BoostFactory.init();
     }
 
     public static void putSlot(Player player, String ident, ItemStack item) {

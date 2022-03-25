@@ -5,7 +5,6 @@ import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
 import com.sakuragame.eternal.justattribute.core.special.CombatCapacity;
-import com.sakuragame.eternal.justattribute.core.special.DamageLimit;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Debug;
 import com.sakuragame.eternal.justattribute.util.Scheduler;
@@ -32,7 +31,6 @@ public class RoleAttribute implements EntityAttribute {
     @Getter private double restoreHP;
     @Getter private double restoreMP;
     private double realmDamageUpperLimit;
-    private double weaponDamageUpperLimit;
 
     private final AttributeSource base;
     private final HashMap<String, AttributeSource> source;
@@ -108,15 +106,7 @@ public class RoleAttribute implements EntityAttribute {
     }
 
     public double getDamageUpperLimit() {
-        return this.realmDamageUpperLimit + this.weaponDamageUpperLimit;
-    }
-
-    public void setWeaponDamageUpperLimit(int value) {
-        this.weaponDamageUpperLimit = value;
-    }
-
-    public void setWeaponDamageUpperLimit(ItemStack item) {
-        this.weaponDamageUpperLimit = Math.max(1, DamageLimit.getDamageUpperLimit(item));
+        return this.realmDamageUpperLimit + 6666;
     }
 
     @Deprecated

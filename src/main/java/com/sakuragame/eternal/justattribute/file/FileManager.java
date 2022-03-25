@@ -4,7 +4,6 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.file.sub.MessageFile;
 import com.taylorswiftcn.justwei.file.JustConfiguration;
-import com.taylorswiftcn.justwei.util.MegumiUtil;
 import lombok.Getter;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -35,7 +34,6 @@ public class FileManager extends JustConfiguration {
         initFile("smithy/identify.yml");
         initFile("smithy/seal.yml");
         initFile("smithy/transfer.yml");
-        initFile("smithy/boost.yml");
     }
 
     public YamlConfiguration getIdentifyConfig() {
@@ -50,11 +48,6 @@ public class FileManager extends JustConfiguration {
 
     public YamlConfiguration getTransferConfig() {
         File file = new File(this.plugin.getDataFolder(), "smithy/transfer.yml");
-        return YamlConfiguration.loadConfiguration(file);
-    }
-
-    public YamlConfiguration getBoostConfig() {
-        File file = new File(this.plugin.getDataFolder(), "smithy/boost.yml");
         return YamlConfiguration.loadConfiguration(file);
     }
 }

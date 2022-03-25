@@ -68,7 +68,6 @@ public class JustAttribute extends JavaPlugin {
         registerListener(new IdentifyListener());
         registerListener(new SealListener());
         registerListener(new TransferListener());
-        registerListener(new BoostListener());
 
         registerListener(new PlayerListener());
         registerListener(new RoleListener());
