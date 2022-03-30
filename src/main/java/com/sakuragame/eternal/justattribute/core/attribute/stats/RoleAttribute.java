@@ -1,6 +1,7 @@
 package com.sakuragame.eternal.justattribute.core.attribute.stats;
 
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeUpdateEvent;
+import com.sakuragame.eternal.justattribute.core.JungleStats;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
@@ -30,7 +31,8 @@ public class RoleAttribute implements EntityAttribute {
     private double defence;
     @Getter private double restoreHP;
     @Getter private double restoreMP;
-    private double realmDamageUpperLimit;
+    private int realmDamageUpperLimit;
+    private int boostDamageUpperLimit;
 
     private final AttributeSource base;
     private final HashMap<String, AttributeSource> source;
@@ -40,6 +42,7 @@ public class RoleAttribute implements EntityAttribute {
 
     public RoleAttribute(UUID uuid) {
         this.uuid = uuid;
+        this.boostDamageUpperLimit = JungleStats.DamageBoost.get(uuid);
         this.base = AttributeSource.getRoleDefault();
         this.source = new HashMap<>();
     }
@@ -106,7 +109,12 @@ public class RoleAttribute implements EntityAttribute {
     }
 
     public double getDamageUpperLimit() {
-        return this.realmDamageUpperLimit + 6666;
+        return this.realmDamageUpperLimit + this.boostDamageUpperLimit + 6666;
+    }
+
+    public void addBoostDamageUpperLimit(int value) {
+        this.boostDamageUpperLimit += value;
+        JungleStats.DamageBoost.set(this.uuid, this.boostDamageUpperLimit);
     }
 
     @Deprecated

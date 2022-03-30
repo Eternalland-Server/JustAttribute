@@ -1,14 +1,12 @@
 package com.sakuragame.eternal.justattribute;
 
 import com.sakuragame.eternal.justattribute.commands.MainCommand;
+import com.sakuragame.eternal.justattribute.core.JungleStats;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.file.FileManager;
 import com.sakuragame.eternal.justattribute.hook.AttributePlaceholder;
-import com.sakuragame.eternal.justattribute.listener.PlayerListener;
-import com.sakuragame.eternal.justattribute.listener.RoleListener;
-import com.sakuragame.eternal.justattribute.listener.SlotListener;
-import com.sakuragame.eternal.justattribute.listener.SoulBoundListener;
+import com.sakuragame.eternal.justattribute.listener.*;
 import com.sakuragame.eternal.justattribute.listener.build.AttributeListener;
 import com.sakuragame.eternal.justattribute.listener.build.ExpireListener;
 import com.sakuragame.eternal.justattribute.listener.build.SkinListener;
@@ -58,6 +56,8 @@ public class JustAttribute extends JavaPlugin {
         getLogger().info("注册PAPI变量...");
         new AttributePlaceholder().register();
 
+        JungleStats.register();
+
         getLogger().info("注册事件...");
         registerListener(new ZaphkielListener());
         registerListener(new SkinListener());
@@ -78,6 +78,7 @@ public class JustAttribute extends JavaPlugin {
         registerListener(new LevelListener());
         registerListener(new MobListener());
         registerListener(new InfoListener());
+        registerListener(new BoostListener());
 
         if (Bukkit.getPluginManager().getPlugin("PlayerSQL") != null) {
             PLAYER_SQL = true;

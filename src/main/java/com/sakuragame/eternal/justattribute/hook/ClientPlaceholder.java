@@ -15,24 +15,24 @@ import java.util.Map;
 
 public class ClientPlaceholder {
 
-    private final static String RESTORE_HP_PAPI = "attribute_restore_hp";
-    private final static String RESTORE_MP_PAPI = "attribute_restore_mp";
-    private final static String DAMAGE_PROMOTE_PAPI = "attribute_damage_promote";
-    private final static String DEFENCE_PROMOTE_PAPI = "attribute_defence_promote";
-    private final static String ROLE_DAMAGE_PAPI = "attribute_role_damage";
-    private final static String ROLE_DEFENCE_PAPI = "attribute_role_defence";
+    public final static String RESTORE_HP_PAPI = "attribute_restore_hp";
+    public final static String RESTORE_MP_PAPI = "attribute_restore_mp";
+    public final static String DAMAGE_PROMOTE_PAPI = "attribute_damage_promote";
+    public final static String DEFENCE_PROMOTE_PAPI = "attribute_defence_promote";
+    public final static String ROLE_DAMAGE_PAPI = "attribute_role_damage";
+    public final static String ROLE_DEFENCE_PAPI = "attribute_role_defence";
 
-    private final static String ROLE_CURRENT_HEALTH = "attribute_role_current_health";
-    private final static String ROLE_MAX_HEALTH = "attribute_role_max_health";
-    private final static String ROLE_CURRENT_MANA = "attribute_role_current_mana";
-    private final static String ROLE_MAX_MANA = "attribute_role_max_mana";
+    public final static String ROLE_CURRENT_HEALTH = "attribute_role_current_health";
+    public final static String ROLE_MAX_HEALTH = "attribute_role_max_health";
+    public final static String ROLE_CURRENT_MANA = "attribute_role_current_mana";
+    public final static String ROLE_MAX_MANA = "attribute_role_max_mana";
 
-    private final static String ROLE_TOTAL_COMBAT = "attribute_role_total_combat";
-    private final static String ROLE_DAMAGE_UPPER_LIMIT = "attribute_role_damage_upper_limit";
+    public final static String ROLE_TOTAL_COMBAT = "attribute_role_total_combat";
+    public final static String ROLE_DAMAGE_UPPER_LIMIT = "attribute_role_damage_upper_limit";
 
-    private final static String EXP_ADDITION_SUPPORT = "exp_addition_support";
-    private final static String EXP_ADDITION_EQUIP = "exp_addition_equip";
-    private final static String EXP_ADDITION_CARD = "exp_addition_card";
+    public final static String EXP_ADDITION_SUPPORT = "exp_addition_support";
+    public final static String EXP_ADDITION_EQUIP = "exp_addition_equip";
+    public final static String EXP_ADDITION_CARD = "exp_addition_card";
 
     public static void sendAttribute(Player player) {
         HashMap<String, String> map = new HashMap<>();
@@ -134,7 +134,6 @@ public class ClientPlaceholder {
 
         PacketSender.sendSyncPlaceholder(player, map);
     }
-
 
     public static String formatRestoreHP(double value) {
         return Utils.a.format(value) + " HP/s";
