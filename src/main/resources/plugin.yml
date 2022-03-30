@@ -6,6 +6,7 @@ api-version: '1.13'
 depend:
   - MegumiLib
   - DataManager
+  - EternalJungle
   - NBTAPI
   - JustLevel
   - JustMessage
