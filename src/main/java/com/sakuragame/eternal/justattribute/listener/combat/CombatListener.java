@@ -101,6 +101,9 @@ public class CombatListener implements Listener {
 
         // player attack
         Player player = (Player) attacker;
+        ActiveMob mob = this.getMob(sufferer.getUniqueId());
+
+        if (mob == null) return;
 
         EntityAttribute attackAttribute = getPlayerAttribute(player);
         EntityAttribute sufferAttribute = (sufferer instanceof Player) ? getPlayerAttribute((Player) sufferer) : getMobAttribute(sufferer);
@@ -115,6 +118,8 @@ public class CombatListener implements Listener {
 
         double damage = preEvent.getDamage();
         double criticalDamage = preEvent.getCriticalDamage();
+        double damageModify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1.0d);
+        damage = damage * damageModify;
         double totalDamage = damage * criticalDamage;
 
         e.setDamage(totalDamage);
