@@ -46,7 +46,7 @@ public class PlayerListener implements Listener {
 
         player.setHealthScale(20);
         player.setHealthScaled(true);
-        player.setFoodLevel(20);
+        player.setFoodLevel(10);
 
         if (!player.isOp()) return;
         player.setGameMode(GameMode.ADVENTURE);
