@@ -35,6 +35,7 @@ public class MobConfig {
                 this.attributes.put(attribute, value);
             }
         }
+        this.attributes.put(Attribute.Health, config.getDouble("Health"));
     }
 
     public String getID() {
