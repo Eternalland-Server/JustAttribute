@@ -78,7 +78,6 @@ public class JustAttribute extends JavaPlugin {
         registerListener(new LevelListener());
         registerListener(new MobListener());
         registerListener(new InfoListener());
-        registerListener(new BoostListener());
 
         if (Bukkit.getPluginManager().getPlugin("PlayerSQL") != null) {
             PLAYER_SQL = true;
