@@ -41,9 +41,6 @@ public class ZaphkielListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onSoulBound(ItemReleaseEvent.Display e) {
-        Player player = e.getPlayer();
-        if (player == null) return;
-
         ItemTag itemTag = e.getItemStream().getZaphkielData();
 
         ItemTagData type = itemTag.getDeep(SoulBound.NBT_TYPE_NODE);
