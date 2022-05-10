@@ -15,6 +15,7 @@ import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
+import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotUpdateEvent;
 import net.sakuragame.eternal.dragoncore.api.event.slot.PlayerSlotClickEvent;
 import net.sakuragame.eternal.dragoncore.util.Pair;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
@@ -52,6 +53,19 @@ public class IdentifyListener implements Listener {
                 IdentifyFactory.PROP_SLOT,
                 IdentifyFactory.RESULT_SLOT
         );
+    }
+
+    @EventHandler
+    public void onUpdate(PlayerSlotUpdateEvent e) {
+        Player player = e.getPlayer();
+        UUID uuid = player.getUniqueId();
+        String ident = e.getIdentifier();
+        ItemStack item = e.getItemStack();
+
+        if (!(ident.equals(IdentifyFactory.EQUIP_SLOT) || ident.equals(IdentifyFactory.PROP_SLOT))) return;
+        if (item.getType() == Material.AIR) return;
+
+        SmithyManager.putSlot(uuid, ident, item);
     }
 
     @EventHandler
@@ -95,7 +109,6 @@ public class IdentifyListener implements Listener {
                 }
 
                 e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
-                SmithyManager.putSlot(uuid, ident, handItem);
                 return;
             }
 
@@ -119,7 +132,6 @@ public class IdentifyListener implements Listener {
                 }
 
                 e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
-                SmithyManager.putSlot(uuid, ident, handItem);
                 return;
             }
 

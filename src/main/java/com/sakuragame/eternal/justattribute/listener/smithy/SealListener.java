@@ -12,6 +12,7 @@ import com.taylorswiftcn.megumi.uifactory.event.screen.UIFScreenCloseEvent;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
+import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotUpdateEvent;
 import net.sakuragame.eternal.dragoncore.api.event.slot.PlayerSlotClickEvent;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
 import net.sakuragame.eternal.gemseconomy.api.GemsEconomyAPI;
@@ -38,6 +39,19 @@ public class SealListener implements Listener {
                 SealFactory.PROP_SLOT,
                 SealFactory.RESULT_SLOT
         );
+    }
+
+    @EventHandler
+    public void onUpdate(PlayerSlotUpdateEvent e) {
+        Player player = e.getPlayer();
+        UUID uuid = player.getUniqueId();
+        String ident = e.getIdentifier();
+        ItemStack item = e.getItemStack();
+
+        if (!ident.equals(SealFactory.PROP_SLOT)) return;
+        if (item.getType() == Material.AIR) return;
+
+        SmithyManager.putSlot(uuid, ident, item);
     }
 
     @EventHandler
@@ -77,7 +91,6 @@ public class SealListener implements Listener {
                 switchButton(player, action == Action.SEAL);
 
                 e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
-                SmithyManager.putSlot(uuid, ident, handItem);
                 return;
             }
 
