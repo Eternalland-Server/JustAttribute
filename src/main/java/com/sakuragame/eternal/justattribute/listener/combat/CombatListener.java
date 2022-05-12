@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.listener.combat;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleLaunchAttackEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleSkillAttackEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleUnderAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.EntityAttribute;
@@ -55,13 +56,23 @@ public class CombatListener implements Listener {
             double damage = e.getDamage();
 
             if (attacker instanceof Player) {
-                RoleAttribute role = JustAttributeAPI.getRoleAttribute((Player) attacker);
+                Player player = (Player) sufferer;
+                RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
                 ActiveMob mob = getMob(sufferer.getUniqueId());
                 if (mob == null) return;
 
-                double damageModify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ABILITY_ATTACK.name(), 1.0);
-                double lastDamage = Math.min(role.getDamageUpperLimit(), damage * damageModify);
+                double modify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ABILITY_ATTACK.name(), 1.0);
+                damage = damage * modify;
+
+                RoleSkillAttackEvent.Pre preEvent = new RoleSkillAttackEvent.Pre(player, sufferer, damage);
+                preEvent.call();
+                if (preEvent.isCancelled()) return;
+
+                double lastDamage = Math.min(role.getDamageUpperLimit(), damage);
                 e.setDamage(lastDamage);
+
+                RoleSkillAttackEvent.Post postEvent = new RoleSkillAttackEvent.Post(player, sufferer, lastDamage);
+                postEvent.call();
                 return;
             }
 
@@ -109,17 +120,19 @@ public class CombatListener implements Listener {
         EntityAttribute sufferAttribute = (sufferer instanceof Player) ? getPlayerAttribute((Player) sufferer) : getMobAttribute(sufferer);
 
         Pair<Double, Double> result = CombatHandler.calculate(attackAttribute, sufferAttribute);
-        RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, result.getKey(), result.getValue(), cause);
+        double damage = result.getKey();
+        double modify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1.0d);
+        damage = damage * modify;
+
+        RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, damage, result.getValue(), cause);
         preEvent.call();
         if (preEvent.isCancelled()) {
             e.setCancelled(true);
             return;
         }
 
-        double damage = preEvent.getDamage();
+        damage = preEvent.getDamage();
         double criticalDamage = preEvent.getCriticalDamage();
-        double damageModify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1.0d);
-        damage = damage * damageModify;
         double totalDamage = damage * criticalDamage;
 
         e.setDamage(totalDamage);
