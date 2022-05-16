@@ -17,9 +17,10 @@ public enum EquipQuality {
     A(3, "A", "§a百里挑一"),
     AP(4, "A+", "§3千载难逢"),
     S(5, "S", "§b希世之珍"),
-    SP(6, "S+", "§e万众瞩目"),
+    SP(6, "S+", "§d万众瞩目"),
     SS(7, "SS", "§6王者无敌"),
-    SSS(8, "SSS", "§c超凡入圣");
+    SSP(8, "SS+", "§c超凡入圣"),
+    SSS(9, "SSS", "§e创世之光");
 
     private final int id;
     private final String name;
