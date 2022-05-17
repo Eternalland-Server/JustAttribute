@@ -56,7 +56,7 @@ public class CombatListener implements Listener {
             double damage = e.getDamage();
 
             if (attacker instanceof Player) {
-                Player player = (Player) sufferer;
+                Player player = (Player) attacker;
                 RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
                 ActiveMob mob = getMob(sufferer.getUniqueId());
                 if (mob == null) return;
