@@ -34,6 +34,14 @@ public class SoulBound {
         return Action.match(data.asInt());
     }
 
+    public static Action getType(ItemStack item) {
+        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
+        if (itemStream.isVanilla()) return null;
+
+        ItemTag itemTag = itemStream.getZaphkielData();
+        return getType(itemTag);
+    }
+
     public static Action getType(ItemTag tag) {
         ItemTagData data = tag.getDeep(NBT_TYPE_NODE);
         if (data == null) return null;

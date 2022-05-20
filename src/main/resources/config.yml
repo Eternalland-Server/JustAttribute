@@ -5,7 +5,7 @@ base:
   potency:
     empty: '  &3使用潜能卷轴进行鉴定'
   soulbound:
-    seal: '&a已封印'
+    seal: '&a已封印&f(右键解封)'
     auto: '&a自动绑定'
     use: '&a使用后绑定'
     prop: '&c绑定道具'
