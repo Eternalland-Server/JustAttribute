@@ -46,7 +46,7 @@ public class SoulBoundListener implements Listener {
         e.setCurrentItem(unseal);
         e.setCancelled(true);
 
-        MessageAPI.sendActionTip(player, "&6&l已解封道具");
+        MessageAPI.sendActionTip(player, "&6&l封印已解除，你是该道具新的主人!");
         player.playSound(player.getLocation(), Sound.ENTITY_LLAMA_CHEST, 1, 1);
     }
 }
