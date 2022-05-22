@@ -9,6 +9,7 @@ import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -46,5 +47,6 @@ public class SoulBoundListener implements Listener {
         e.setCancelled(true);
 
         MessageAPI.sendActionTip(player, "&6&l已解封道具");
+        player.playSound(player.getLocation(), Sound.ENTITY_LLAMA_CHEST, 1, 1);
     }
 }

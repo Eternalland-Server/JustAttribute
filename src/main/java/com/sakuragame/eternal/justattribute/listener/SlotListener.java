@@ -120,8 +120,9 @@ public class SlotListener implements Listener {
         }
 
         if (SoulBound.isSeal(item)) {
-            MessageAPI.sendActionTip(player, "&a&l该道具需要解封才能使用");
+            MessageAPI.sendActionTip(player, "&a&l该道具需要右键解封后才能使用");
             e.setCancelled(true);
+            return;
         }
 
         Owner owner = SoulBound.getOwner(itemTag);
