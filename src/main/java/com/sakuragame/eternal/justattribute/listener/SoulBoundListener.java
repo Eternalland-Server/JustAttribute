@@ -32,7 +32,6 @@ public class SoulBoundListener implements Listener {
     public void onUnseal(InventoryClickEvent e) {
         if (!(e.getWhoClicked() instanceof Player)) return;
         if (e.getInventory().getType() != InventoryType.CRAFTING) return;
-        System.out.println(e.getAction().name());
         if (e.getAction() != InventoryAction.PICKUP_HALF) return;
 
         Player player = (Player) e.getWhoClicked();
