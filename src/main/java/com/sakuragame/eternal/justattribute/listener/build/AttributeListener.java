@@ -8,6 +8,7 @@ import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,12 +17,11 @@ import java.util.LinkedList;
 
 public class AttributeListener implements Listener {
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBuild(ItemBuildEvent.Pre e) {
-        if (e.isCancelled()) return;
-
         String display = e.getItemStream().getZaphkielItem().getDisplay();
         if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;
+        if (e.getPlayer() == null) return;
 
         ItemTag tag = e.getItemStream().getZaphkielData();
 
@@ -46,7 +46,7 @@ public class AttributeListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onDisplay(ItemReleaseEvent.Display e) {
         String display = e.getItemStream().getZaphkielItem().getDisplay();
         if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;
@@ -68,7 +68,7 @@ public class AttributeListener implements Listener {
             ItemTagData potency = tag.getDeep(attr.getPotencyNode());
 
             if (ordinary != null) {
-                ordinaryDisplay.add(attr.format(ordinary.asDouble()));
+                ordinaryDisplay.add(attr.format(ordinary));
             }
             if (potency != null && grade != null) {
                 potencyDisplay.add(attr.format(potency.asDouble(), true));
@@ -82,6 +82,5 @@ public class AttributeListener implements Listener {
         e.addLore(Attribute.ORDINARY_DISPLAY_NODE, ordinaryDisplay);
         e.addLore(Attribute.POTENCY_DISPLAY_NODE, potencyDisplay);
     }
-
 
 }

@@ -4,6 +4,7 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Utils;
+import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import lombok.Getter;
 
 @Getter
@@ -84,11 +85,20 @@ public enum Attribute {
     }
 
     public String format(double value) {
-        return format(value, onlyPercent);
+        return format(value, this.onlyPercent);
     }
 
-    public String formatting(double value) {
-        return Utils.format(value, onlyPercent);
+    public String format(ItemTagData data) {
+        String s = data.asString();
+        if (s.contains("-")) {
+            return ConfigFile.format.attribute
+                    .replace("<symbol>", getSymbol())
+                    .replace("<identifier>", getDisplay())
+                    .replace("<value>", s);
+        }
+        else {
+            return format(data.asDouble(), this.onlyPercent);
+        }
     }
 
     public String format(double value, boolean isPercent) {
@@ -96,6 +106,10 @@ public enum Attribute {
                 .replace("<symbol>", getSymbol())
                 .replace("<identifier>", getDisplay())
                 .replace("<value>", Utils.formatValue(value, isPercent));
+    }
+
+    public String formatting(double value) {
+        return Utils.format(value, this.onlyPercent);
     }
 
     public String getOrdinaryNode() {
