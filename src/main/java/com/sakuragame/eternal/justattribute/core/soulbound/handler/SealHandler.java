@@ -20,7 +20,7 @@ public class SealHandler extends BoundHandler {
 
     @Override
     public void build(Player player, ItemTag itemTag) {
-        super.build(player, itemTag);
+        itemTag.removeDeep(SoulBound.NBT_ACTION_NODE);
         itemTag.putDeep(SoulBound.NBT_TYPE_NODE, Action.SEAL.getId());
     }
 }
