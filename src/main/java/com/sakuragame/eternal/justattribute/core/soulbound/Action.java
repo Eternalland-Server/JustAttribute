@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public enum Action {
 
-    SEAL(-1, false, false, new SealHandler()),
+    SEAL(-1, false, true, new SealHandler()),
     AUTO_LOCK(0, true, true, new AutoHandler.Lock()),
     USE_LOCK(1, true, false, new UseHandler.Lock()),
     PROP_LOCK(2, true, true, new PropHandler.Lock()),

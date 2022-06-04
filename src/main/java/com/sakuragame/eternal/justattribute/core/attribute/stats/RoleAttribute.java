@@ -159,7 +159,6 @@ public class RoleAttribute implements EntityAttribute {
         else this.source.put(key, source);
 
         this.updateRoleAttribute();
-
         if (second == -1) return;
 
         Scheduler.runLaterAsync(uuid, () -> {
