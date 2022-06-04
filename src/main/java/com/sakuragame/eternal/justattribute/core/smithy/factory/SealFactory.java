@@ -32,7 +32,10 @@ public class SealFactory {
         itemTag.putDeep(SoulBound.NBT_UUID_NODE, player.getUniqueId().toString());
         itemTag.putDeep(SoulBound.NBT_NAME_NODE, player.getName());
 
-        return itemStream.rebuildToItemStack(player);
+        ItemStack resultItem = itemStream.rebuildToItemStack(player);
+        resultItem.setAmount(item.getAmount());
+
+        return resultItem;
     }
 
     public static ItemStack lock(Player player, ItemStack item) {
