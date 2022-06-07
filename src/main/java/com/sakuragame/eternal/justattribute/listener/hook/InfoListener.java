@@ -33,6 +33,7 @@ public class InfoListener implements Listener {
         e.putPlaceholder("target_role_realm", realm);
         e.putPlaceholder("target_role_stage", stage);
         e.putPlaceholder("target_uuid", target.getUniqueId().toString());
+        e.putPlaceholder("target_name", target.getName());
         e.putPlaceholder(ClientPlaceholder.getTargetPlaceholder(target));
     }
 }
