@@ -10,12 +10,12 @@ import org.bukkit.inventory.ItemStack;
 @Getter
 public enum PropQuality {
 
-    Normal(1, "&f普通"),
-    Excellent(2, "&7优良"),
-    Exquisite(3, "&b精致"),
-    Prefect(4, "&9完美"),
-    Epic(5, "&6史诗"),
-    Legend(6, "&c传说");
+    Normal(1, "普通"),
+    Excellent(2, "优良"),
+    Exquisite(3, "精致"),
+    Prefect(4, "完美"),
+    Epic(5, "史诗"),
+    Legend(6, "传说");
 
     private final int id;
     private final String name;

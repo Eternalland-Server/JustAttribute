@@ -6,6 +6,7 @@ import com.sakuragame.eternal.justattribute.api.event.role.RoleConsumeManaEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
+import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Debug;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -150,10 +151,12 @@ public class RoleState {
     }
 
     public double getRestoreHP() {
+        if (ConfigFile.spring) return this.maxHealth * 0.03;
         return restoreHP;
     }
 
     public double getRestoreMP() {
+        if (ConfigFile.spring) return this.maxMana * 0.03;
         return restoreMP;
     }
 

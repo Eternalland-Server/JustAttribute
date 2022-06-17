@@ -16,6 +16,8 @@ public class ConfigFile {
 
     public static int debug;
 
+    public static boolean spring;
+
     public static double damage_immune_limit;
     public static String potency_empty;
 
@@ -68,6 +70,7 @@ public class ConfigFile {
         prefix = getString("prefix");
 
         debug = config.getInt("debug");
+        spring = config.getBoolean("spring", false);
 
         damage_immune_limit = config.getDouble("base.damage-immune-limit");
         potency_empty = getString("base.potency.empty");
