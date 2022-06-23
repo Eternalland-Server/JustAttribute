@@ -29,6 +29,7 @@ public class RoleAttribute implements EntityAttribute {
     @Getter private AttributeSource totalAttribute;
 
     @Getter private int combat;
+    @Getter private int change;
 
     public RoleAttribute(UUID uuid) {
         this.uuid = uuid;
@@ -106,7 +107,7 @@ public class RoleAttribute implements EntityAttribute {
 
         this.totalAttribute = new AttributeSource(ordinary, potency);
         int value = CombatCapacity.get(totalAttribute);
-        int change = value - this.combat;
+        this.change = value - this.combat;
         this.combat = value;
 
         if (combat) Utils.sendCombatChange(player, change);

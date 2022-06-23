@@ -48,9 +48,7 @@ public class CombatHandler {
         RoleState state = JustAttributeAPI.getRoleState(player);
         RoleAttribute attribute = JustAttributeAPI.getRoleAttribute(player);
 
-        double rate = attribute.getValue(Attribute.Vampire_Damage);
-        if (rate <= 0) return;
-
+        double rate = 1 + attribute.getValue(Attribute.Vampire_Damage);
         double value = state.getDamageVampire() * rate;
 
         RoleVampireEvent.Pre preEvent = new RoleVampireEvent.Pre(player, source, value, RoleVampireEvent.Cause.Damage);
@@ -68,9 +66,7 @@ public class CombatHandler {
         RoleState state = JustAttributeAPI.getRoleState(player);
         RoleAttribute attribute = JustAttributeAPI.getRoleAttribute(player);
 
-        double rate = attribute.getValue(Attribute.Vampire_Versatile);
-        if (rate <= 0) return;
-
+        double rate =  1 + attribute.getValue(Attribute.Vampire_Versatile);
         double value = state.getPowerVampire() * rate;
 
         RoleVampireEvent.Pre preEvent = new RoleVampireEvent.Pre(player, source, value, RoleVampireEvent.Cause.Power);
