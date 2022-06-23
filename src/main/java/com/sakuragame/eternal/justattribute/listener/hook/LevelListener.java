@@ -35,9 +35,10 @@ public class LevelListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onStageBreak(PlayerBrokenEvent.Stage e) {
         Player player = e.getPlayer();
-        this.updateChange(player);
 
         RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
+        role.updateDamageUpperLimit();
+        role.update();
         int change = role.getChange();
         e.addMessage((change > 0 ? "&e&l+" : "&c&l-") + Math.abs(change) + "战斗力");
     }
@@ -45,9 +46,10 @@ public class LevelListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onRealmBreak(PlayerBrokenEvent.Realm e) {
         Player player = e.getPlayer();
-        this.updateChange(player);
 
         RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
+        role.updateDamageUpperLimit();
+        role.update();
         int change = role.getChange();
         e.addMessage((change > 0 ? "&e&l+" : "&c&l-") + Math.abs(change) + "战斗力");
     }
