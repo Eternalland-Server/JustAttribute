@@ -40,7 +40,7 @@ public class LevelListener implements Listener {
         role.updateDamageUpperLimit();
         role.update();
         int change = role.getChange();
-        e.addMessage((change > 0 ? "&e&l+" : "&c&l-") + Math.abs(change) + "战斗力");
+        e.addMessage("&a&l战斗力提升➚&8&l[ " + (change > 0 ? "&e&l+" : "&c&l-") + Math.abs(change) + " &8&l]");
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -51,7 +51,7 @@ public class LevelListener implements Listener {
         role.updateDamageUpperLimit();
         role.update();
         int change = role.getChange();
-        e.addMessage((change > 0 ? "&e&l+" : "&c&l-") + Math.abs(change) + "战斗力");
+        e.addMessage("&a&l战斗力提升➚&8&l[ " + (change > 0 ? "&e&l+" : "&c&l-") + Math.abs(change) + " &8&l]");
     }
 
     private void updateChange(Player player) {
