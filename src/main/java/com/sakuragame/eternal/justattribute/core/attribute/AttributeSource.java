@@ -8,13 +8,12 @@ import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import lombok.Getter;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
 @Getter
-public class AttributeSource {
+public class AttributeSource implements Cloneable {
 
     private final HashMap<Attribute, Double> ordinary;
     private final HashMap<Attribute, Double> potency;
@@ -45,11 +44,11 @@ public class AttributeSource {
 
     public static AttributeSource getItemAttribute(ItemStack item, EquipClassify classify) {
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-        if (itemStream.isVanilla()) return new AttributeSource();
+        if (itemStream.isVanilla()) return null;
 
         ItemTag itemTag = itemStream.getZaphkielData();
         EquipClassify equip = EquipClassify.getClassify(itemTag);
-        if (classify != equip || SoulBound.isSeal(itemTag)) return new AttributeSource();
+        if (classify != equip || SoulBound.isSeal(itemTag)) return null;
 
         return new AttributeSource(item);
     }
@@ -62,6 +61,16 @@ public class AttributeSource {
         }
 
         return source;
+    }
+
+    public static AttributeSource diff(AttributeSource a, AttributeSource b) {
+        HashMap<Attribute, Double> ordinary = new HashMap<>(a.getOrdinary());
+        HashMap<Attribute, Double> potency = new HashMap<>(a.getPotency());
+
+        b.getOrdinary().forEach((k, v) -> ordinary.merge(k, v, (o, n) -> o - n));
+        b.getPotency().forEach((k, v) -> potency.merge(k, v, (o, n) -> o - n));
+
+        return new AttributeSource(ordinary, potency);
     }
 
     public AttributeSource addOrdinary(Attribute attribute, double value) {
@@ -79,9 +88,21 @@ public class AttributeSource {
 
         ItemTag itemTag = itemStream.getZaphkielData();
 
+        Action action = SoulBound.getType(itemTag);
+        if (action == Action.SEAL) return;
+
         for (Attribute attr : Attribute.values()) {
             ordinary.put(attr, itemTag.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble());
             potency.put(attr, itemTag.getDeepOrElse(attr.getPotencyNode(), new ItemTagData(0)).asDouble());
+        }
+    }
+
+    @Override
+    public AttributeSource clone() {
+        try {
+            return (AttributeSource) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
         }
     }
 }

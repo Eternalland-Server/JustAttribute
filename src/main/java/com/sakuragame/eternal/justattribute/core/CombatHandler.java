@@ -1,12 +1,12 @@
 package com.sakuragame.eternal.justattribute.core;
 
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
-import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStealEvent;
-import com.sakuragame.eternal.justattribute.api.event.role.RoleHealthStoleEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleVampireEvent;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.EntityAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.MobAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
+import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
 import net.sakuragame.eternal.dragoncore.util.Pair;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -44,33 +44,43 @@ public class CombatHandler {
         return new Pair<>(lastDamage, cd);
     }
 
-    public static void physicalVampire(Player player, LivingEntity source, double damage) {
+    public static void damageVampire(Player player, LivingEntity source) {
+        RoleState state = JustAttributeAPI.getRoleState(player);
         RoleAttribute attribute = JustAttributeAPI.getRoleAttribute(player);
 
-        double damageRate = attribute.getTotalValue(Attribute.Vampire_Damage);
-        double versatileRate = attribute.getTotalValue(Attribute.Vampire_Versatile);
+        double rate = attribute.getValue(Attribute.Vampire_Damage);
+        if (rate <= 0) return;
 
-        if (damageRate + versatileRate <= 0) return;
+        double value = state.getDamageVampire() * rate;
 
-        double damageValue = damage * damageRate;
-        double versatileValue = damage * versatileRate;
+        RoleVampireEvent.Pre preEvent = new RoleVampireEvent.Pre(player, source, value, RoleVampireEvent.Cause.Damage);
+        preEvent.call();
+        if (preEvent.isCancelled()) return;
 
-        RoleHealthStealEvent stealEvent = new RoleHealthStealEvent(player, source, damageValue + versatileValue);
-        stealEvent.call();
-        if (stealEvent.isCancelled()) return;
+        double result = preEvent.getValue();
+        JustAttributeAPI.getRoleState(player).addHealth(result);
 
-        double vampire = stealEvent.getVampire();
-
-        JustAttributeAPI.getRoleState(player).addHealth(vampire);
-
-        RoleHealthStoleEvent stoleEvent = new RoleHealthStoleEvent(player, source, vampire);
-        stoleEvent.call();
+        RoleVampireEvent.Post postEvent = new RoleVampireEvent.Post(player, source, result, RoleVampireEvent.Cause.Damage);
+        postEvent.call();
     }
 
-    private static double getValue(RoleAttribute role, Attribute ident) {
-        if (ident == Attribute.Damage) return role.getActualDamage();
-        if (ident == Attribute.Defence) return role.getActualDefence();
+    public static void powerVampire(Player player, LivingEntity source) {
+        RoleState state = JustAttributeAPI.getRoleState(player);
+        RoleAttribute attribute = JustAttributeAPI.getRoleAttribute(player);
 
-        return ident.calculate(role);
+        double rate = attribute.getValue(Attribute.Vampire_Versatile);
+        if (rate <= 0) return;
+
+        double value = state.getPowerVampire() * rate;
+
+        RoleVampireEvent.Pre preEvent = new RoleVampireEvent.Pre(player, source, value, RoleVampireEvent.Cause.Power);
+        preEvent.call();
+        if (preEvent.isCancelled()) return;
+
+        double result = preEvent.getValue();
+        JustAttributeAPI.getRoleState(player).addHealth(result);
+
+        RoleVampireEvent.Post postEvent = new RoleVampireEvent.Post(player, source, result, RoleVampireEvent.Cause.Power);
+        postEvent.call();
     }
 }

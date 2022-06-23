@@ -36,21 +36,21 @@ public class AttributePlaceholder extends PlaceholderExpansion {
         if (ident == null) return "0";
 
         if (ident == Attribute.Damage) {
-            return String.valueOf(role.getTotalDamage());
+            return String.valueOf(role.getValue(Attribute.Damage));
         }
 
         if (ident == Attribute.Defence) {
-            return String.valueOf(role.getTotalDamage());
+            return String.valueOf(role.getValue(Attribute.Defence));
         }
 
         if (ident == Attribute.Health) {
-            return String.valueOf(role.getTotalHealth());
+            return String.valueOf(role.getValue(Attribute.Health));
         }
 
         if (ident == Attribute.Mana) {
-            return String.valueOf(role.getTotalMana());
+            return String.valueOf(role.getValue(Attribute.Mana));
         }
 
-        return String.valueOf(role.getTotalValue(ident));
+        return String.valueOf(role.getValue(ident));
     }
 }

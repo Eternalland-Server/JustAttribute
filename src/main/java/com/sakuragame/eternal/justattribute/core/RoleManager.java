@@ -49,11 +49,12 @@ public class RoleManager {
 
         AttributeHandler.loadVanillaSlot(player);
         AttributeHandler.loadCustomSlot(player);
-        role.updateRealmAddition();
+        role.updateDamageUpperLimit();
+        role.updateLevelPromote();
 
         removeLoader(uuid);
 
-        role.updateRoleAttribute();
+        role.update();
 
         RoleAccountLoadedEvent event = new RoleAccountLoadedEvent(player);
         event.call();
@@ -124,7 +125,12 @@ public class RoleManager {
 
         AttributeHandler.loadVanillaSlot(player);
         AttributeHandler.loadCustomSlot(player);
-        role.updateRoleAttribute();
+        role.updateDamageUpperLimit();
+        role.updateLevelPromote();
+        role.update();
+
+        RoleAccountLoadedEvent event = new RoleAccountLoadedEvent(player);
+        event.call();
 
         return role;
     }

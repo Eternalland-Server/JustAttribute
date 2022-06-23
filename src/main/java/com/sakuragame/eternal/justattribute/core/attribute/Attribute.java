@@ -10,29 +10,30 @@ import lombok.Getter;
 @Getter
 public enum Attribute {
 
-    Energy("energy", "ㇿ", "气力", 0, false),
-    Stamina("stamina", "ㇾ", "耐力", 0, false),
-    Wisdom("wisdom", "ㇽ", "慧根", 0, false),
-    Technique("technique", "ㇼ", "技巧", 0, false),
-    Damage("damage", "ㇻ", "攻击力", 0, false),
-    Defence("defence", "ㇺ", "防御力", 0, false),
-    Health("health", "ㇹ", "生命值", 0, false),
-    Mana("mana", "ㇸ", "法力值", 0, false),
-    Restore_Health("restore_health", "ㇷ", "生命恢复", 0, true),
-    Restore_Mana("restore_mana", "ㇶ", "法力恢复", 0, true),
-    Vampire_Damage("vampire_damage", "ㇵ", "生命汲取", 0, true),
-    Vampire_Versatile("vampire_versatile", "ㇴ", "全能吸血", 0, true),
-    Defence_Penetration("defence_penetration", "ㇳ", "护甲穿透", 0, true),
-    Damage_Immune("damage_immune", "ㇲ", "伤害免疫", 0, true),
-    Critical_Chance("critical_chance", "ㇱ", "暴击几率", 0, true),
-    Critical_Damage("critical_damage", "ㇰ", "暴击伤害", 1.25, true),
-    EXP_Addition("exp_addition", "け", "经验加成", 0, true),
-    MovementSpeed("movement_speed", "ふ", "移动速度", 0, true);
+    Energy("energy", "ㇿ", "气力", 100, 1, false),
+    Stamina("stamina", "ㇾ", "耐力", 100, 1, false),
+    Wisdom("wisdom", "ㇽ", "慧根", 0,  1, false),
+    Technique("technique", "ㇼ", "技巧", 0, 1, false),
+    Damage("damage", "ㇻ", "攻击力", 10, 8, false),
+    Defence("defence", "ㇺ", "防御力", 8,  8, false),
+    Health("health", "ㇹ", "生命值", 300,  5, false),
+    Mana("mana", "ㇸ", "法力值", 500,  5, false),
+    Restore_Health("restore_health", "ㇷ", "生命恢复", 0, 0, true),
+    Restore_Mana("restore_mana", "ㇶ", "法力恢复", 0, 0,true),
+    Vampire_Damage("vampire_damage", "ㇵ", "生命汲取", 0, 0,true),
+    Vampire_Versatile("vampire_versatile", "ㇴ", "技能吸血", 0, 0,true),
+    Defence_Penetration("defence_penetration", "ㇳ", "护甲穿透", 0, 0,true),
+    Damage_Immune("damage_immune", "ㇲ", "伤害免疫", 0, 0, true),
+    Critical_Chance("critical_chance", "ㇱ", "暴击几率", 0, 0, true),
+    Critical_Damage("critical_damage", "ㇰ", "暴击伤害", 1.25, 0, true),
+    EXP_Addition("exp_addition", "け", "经验加成", 0, 0, true),
+    MovementSpeed("movement_speed", "ふ", "移动速度", 0, 0, true);
 
     private final String id;
     private final String symbol;
     private final String display;
     private final double base;
+    private final int score;
     private final boolean onlyPercent;
 
     public final static String ORDINARY_DISPLAY_NODE = "display.ordinary";
@@ -40,11 +41,12 @@ public enum Attribute {
     public final static String ORDINARY_NBT_NODE = "justattribute.ordinary";
     public final static String POTENCY_NBT_NODE = "justattribute.potency";
 
-    Attribute(String id, String symbol, String display, double base, boolean onlyPercent) {
+    Attribute(String id, String symbol, String display, double base, int score, boolean onlyPercent) {
         this.id = id;
         this.symbol = symbol;
         this.display = display;
         this.base = base;
+        this.score = score;
         this.onlyPercent = onlyPercent;
     }
 

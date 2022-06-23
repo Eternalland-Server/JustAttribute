@@ -67,6 +67,7 @@ public class RoleListener implements Listener {
         if (!(e.getEntity() instanceof Player)) return;
 
         Player player = (Player) e.getEntity();
+        if (!MegumiUtil.isEmpty(player.getInventory().getItemInMainHand())) return;
 
         AttributeHandler.updateVanillaSlot(player, VanillaSlot.MainHand);
     }

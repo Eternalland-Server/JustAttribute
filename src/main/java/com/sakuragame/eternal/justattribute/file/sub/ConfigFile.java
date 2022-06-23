@@ -42,26 +42,6 @@ public class ConfigFile {
         public static String expire;
     }
 
-    public static HashMap<Attribute, Integer> combatCapability;
-
-    public static class RoleBase {
-        public static double health;
-        public static double mana;
-        public static double damage;
-        public static double defence;
-        public static double restoreHP;
-        public static double restoreMP;
-    }
-
-    public static class RolePromote {
-        public static double health;
-        public static double mana;
-        public static double damage;
-        public static double defence;
-        public static double restoreHP;
-        public static double restoreMP;
-    }
-
     public static HashMap<String, Integer> slotSetting;
 
     public static void init() {
@@ -91,22 +71,7 @@ public class ConfigFile {
         format.potency = getString("format.potency");
         format.expire = getString("format.expire");
 
-        RoleBase.health = config.getDouble("role-base.health");
-        RoleBase.mana = config.getDouble("role-base.mana");
-        RoleBase.damage = config.getDouble("role-base.damage");
-        RoleBase.defence = config.getDouble("role-base.defence");
-        RoleBase.restoreHP = config.getDouble("role-base.restore-hp");
-        RoleBase.restoreMP = config.getDouble("role-base.restore-mp");
-
-        RolePromote.health = config.getDouble("role-promote.health");
-        RolePromote.mana = config.getDouble("role-promote.mana");
-        RolePromote.damage = config.getDouble("role-promote.damage");
-        RolePromote.defence = config.getDouble("role-promote.defence");
-        RolePromote.restoreHP = config.getDouble("role-promote.restore-hp");
-        RolePromote.restoreMP = config.getDouble("role-promote.restore-mp");
-
         loadSlotSetting();
-        loadCombatCapability();
     }
 
     private static String getString(String path) {
@@ -126,18 +91,6 @@ public class ConfigFile {
         for (String s : section.getKeys(false)) {
             int type = section.getInt(s);
             slotSetting.put(s, type);
-        }
-    }
-
-    private static void loadCombatCapability() {
-        combatCapability = new HashMap<>();
-
-        ConfigurationSection section = config.getConfigurationSection("combat-capability");
-        if (section == null) return;
-
-        for (String s : section.getKeys(false)) {
-            int value = section.getInt(s);
-            combatCapability.put(Attribute.match(s), value);
         }
     }
 }

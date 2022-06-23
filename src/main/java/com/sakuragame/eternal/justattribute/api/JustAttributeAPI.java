@@ -34,7 +34,7 @@ public class JustAttributeAPI {
         RoleAttribute role = getRoleAttribute(uuid);
         if (role == null) return 0;
 
-        return role.getTotalValue(attribute);
+        return role.getValue(attribute);
     }
 
     public static void addHP(Player player, double value) {

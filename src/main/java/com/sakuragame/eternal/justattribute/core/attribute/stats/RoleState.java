@@ -22,6 +22,8 @@ public class RoleState {
     private double maxMana;
     private double restoreHP;
     private double restoreMP;
+    private double damageVampire;
+    private double powerVampire;
 
     public RoleState(UUID uuid) {
         this.uuid = uuid;
@@ -41,17 +43,17 @@ public class RoleState {
         Player player = this.getBukkitPlayer();
         RoleAttribute role = JustAttributeAPI.getRoleAttribute(uuid);
 
-        double maxHealth = role.getTotalHealth();
-        double maxMana = role.getTotalMana();
+        double maxHealth = role.getValue(Attribute.Health);
+        double maxMana = role.getValue(Attribute.Mana);
 
         double currentHP = player.getHealth();
 
-        Debug.info(Debug.Role, "max hp: " + maxHealth);
-        Debug.info(Debug.Role, "max mp: " + maxMana);
-        Debug.info(Debug.Role, "current hp: " + currentHP);
-        Debug.info(Debug.Role, "current max hp: " + player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-        Debug.info(Debug.Role, "hp: " + health);
-        Debug.info(Debug.Role, "mp: " + mana);
+//        Debug.info(Debug.Role, "max hp: " + maxHealth);
+//        Debug.info(Debug.Role, "max mp: " + maxMana);
+//        Debug.info(Debug.Role, "current hp: " + currentHP);
+//        Debug.info(Debug.Role, "current max hp: " + player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+//        Debug.info(Debug.Role, "hp: " + health);
+//        Debug.info(Debug.Role, "mp: " + mana);
 
         this.setMaxHealth(maxHealth);
         this.setMaxMana(maxMana);
@@ -63,17 +65,19 @@ public class RoleState {
         this.setHealth(health <= 20 ? maxHealth : Math.min(maxHealth, health));
         this.setMana(mana <= 20 ? maxMana : Math.min(maxMana, mana));
 
-        this.setRestoreHP((1 + Attribute.Restore_Health.calculate(role)) * role.getRestoreHP());
-        this.setRestoreMP((1 + Attribute.Restore_Mana.calculate(role)) * role.getRestoreMP());
+        this.setRestoreHP((1 + Attribute.Restore_Health.calculate(role)) * role.getValue(Attribute.Energy) / 100);
+        this.setRestoreMP((1 + Attribute.Restore_Mana.calculate(role)) * role.getValue(Attribute.Stamina) / 100);
+        this.setDamageVampire(role.getValue(Attribute.Wisdom) / 100);
+        this.setPowerVampire(role.getValue(Attribute.Technique) / 100);
 
-        player.setWalkSpeed((float) (0.2 * role.getTotalValue(Attribute.MovementSpeed)));
+        player.setWalkSpeed((float) (0.2 * role.getValue(Attribute.MovementSpeed)));
     }
 
     public void restore() {
         if (health >= getMaxHealth() && mana >= getMaxMana()) return;
 
-        this.health = Math.min(getMaxHealth(), getHealth() + getRestoreHP());
-        this.mana = Math.min(getMaxMana(), getMana() + getRestoreMP());
+        this.health = Math.min(this.getMaxHealth(), this.getHealth() + (ConfigFile.spring ? this.getMaxHealth() * 0.03 : this.getRestoreHP()));
+        this.mana = Math.min(this.getMaxMana(), this.getMana() + (ConfigFile.spring ? this.getMaxMana() * 0.03 : this.getRestoreMP()));
 
         RoleStateUpdateEvent event = new RoleStateUpdateEvent(this.getBukkitPlayer());
         event.call();
@@ -150,14 +154,28 @@ public class RoleState {
         this.restoreMP = restoreMP;
     }
 
+    public void setDamageVampire(double damageVampire) {
+        this.damageVampire = damageVampire;
+    }
+
+    public void setPowerVampire(double powerVampire) {
+        this.powerVampire = powerVampire;
+    }
+
     public double getRestoreHP() {
-        if (ConfigFile.spring) return this.maxHealth * 0.03;
         return restoreHP;
     }
 
     public double getRestoreMP() {
-        if (ConfigFile.spring) return this.maxMana * 0.03;
         return restoreMP;
+    }
+
+    public double getDamageVampire() {
+        return damageVampire;
+    }
+
+    public double getPowerVampire() {
+        return powerVampire;
     }
 
     public void updateHealth(double health) {

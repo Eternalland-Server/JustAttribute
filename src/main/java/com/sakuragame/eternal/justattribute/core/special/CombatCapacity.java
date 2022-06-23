@@ -22,48 +22,21 @@ public class CombatCapacity {
 
     public static int get(AttributeSource data) {
         int combat = 0;
-        double damage = 0d;
 
         for (Attribute ident : Attribute.values()) {
-            if (ident == Attribute.Critical_Chance || ident == Attribute.Critical_Damage) continue;
 
             double value = ident
                     .calculate(
-                            data.getOrdinary().get(ident),
-                            data.getPotency().get(ident)
+                            data.getOrdinary().getOrDefault(ident, 0d),
+                            data.getPotency().getOrDefault(ident, 0d)
                     );
-            if (ident == Attribute.Damage || ident == Attribute.Energy) {
-                damage += value;
-            }
 
-            int source = (int) value * ConfigFile.combatCapability.getOrDefault(ident, 0);
+            int source = (int) value * ident.getScore();
 
-            Debug.info(Debug.CombatCapacity, ident.getId() + ": " + value + " x " + ConfigFile.combatCapability.get(ident) + " = " + source);
+            Debug.info(Debug.CombatCapacity, ident.getId() + ": " + value + " x " + ident.getScore() + " = " + source);
 
             combat += source;
         }
-
-        double cDamage = Math.max(0,
-                Attribute.Critical_Damage
-                        .calculate(
-                            data.getOrdinary().get(Attribute.Critical_Damage),
-                            data.getPotency().get(Attribute.Critical_Damage)
-                        )) * damage;
-        double cChance = Math.min(0,
-                Attribute.Critical_Chance
-                        .calculate(
-                                data.getOrdinary().get(Attribute.Critical_Chance),
-                                data.getPotency().get(Attribute.Critical_Chance)
-                        ) - 1) * cDamage;
-
-        int cdSource = (int) cDamage * ConfigFile.combatCapability.get(Attribute.Critical_Damage);
-        int ccSource = (int) cChance * ConfigFile.combatCapability.get(Attribute.Critical_Chance);
-
-        Debug.info(Debug.CombatCapacity, Attribute.Critical_Damage.getId() + ": " + cDamage + " x " + ConfigFile.combatCapability.get(Attribute.Critical_Damage) + " = " + cdSource);
-        Debug.info(Debug.CombatCapacity, Attribute.Critical_Chance.getId() + ": " + cChance + " x " + ConfigFile.combatCapability.get(Attribute.Critical_Chance) + " = " + ccSource);
-
-        combat += cdSource;
-        combat += ccSource;
 
         Debug.info(Debug.CombatCapacity, "Total Source: " + combat);
 

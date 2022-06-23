@@ -17,6 +17,8 @@ public class ClientPlaceholder {
 
     public final static String RESTORE_HP_PAPI = "attribute_restore_hp";
     public final static String RESTORE_MP_PAPI = "attribute_restore_mp";
+    public final static String VAMPIRE_DAMAGE_PAPI = "vampire_damage_value";
+    public final static String VAMPIRE_POWER_PAPI = "vampire_power_value";
     public final static String DAMAGE_PROMOTE_PAPI = "attribute_damage_promote";
     public final static String DEFENCE_PROMOTE_PAPI = "attribute_defence_promote";
     public final static String ROLE_DAMAGE_PAPI = "attribute_role_damage";
@@ -41,23 +43,7 @@ public class ClientPlaceholder {
         RoleState state = JustAttributeAPI.getRoleState(player);
 
         for (Attribute ident : Attribute.values()) {
-            double value = role.getTotalValue(ident);
-            if (ident == Attribute.Damage) {
-                map.put(ident.getPlaceholder(), ident.formatting(role.getActualDamage()));
-                continue;
-            }
-            if (ident == Attribute.Defence) {
-                map.put(ident.getPlaceholder(), ident.formatting(role.getActualDefence()));
-                continue;
-            }
-            if (ident == Attribute.Health) {
-                map.put(ident.getPlaceholder(), ident.formatting(role.getTotalHealth()));
-                continue;
-            }
-            if (ident == Attribute.Mana) {
-                map.put(ident.getPlaceholder(), ident.formatting(role.getTotalMana()));
-                continue;
-            }
+            double value = role.getValue(ident);
             if (ident == Attribute.EXP_Addition) {
                 double total = JustLevelAPI.getTotalAddition(player);
                 map.put(ident.getPlaceholder(), ident.formatting(value + total));
@@ -68,15 +54,17 @@ public class ClientPlaceholder {
 
         map.put(RESTORE_HP_PAPI, formatRestoreHP(state.getRestoreHP()));
         map.put(RESTORE_MP_PAPI, formatRestoreMP(state.getRestoreMP()));
+        map.put(VAMPIRE_DAMAGE_PAPI, Utils.a.format(state.getDamageVampire()));
+        map.put(VAMPIRE_POWER_PAPI, Utils.a.format(state.getPowerVampire()));
         map.put(DAMAGE_PROMOTE_PAPI, formatPercent(Utils.getRealmDamagePromote(player) - 1));
         map.put(DEFENCE_PROMOTE_PAPI, formatPercent(Utils.getRealmDefencePromote(player) - 1));
-        map.put(ROLE_DAMAGE_PAPI, Attribute.Damage.formatting(role.getTotalDamage()));
-        map.put(ROLE_DEFENCE_PAPI, Attribute.Defence.formatting(role.getTotalDefence()));
+        map.put(ROLE_DAMAGE_PAPI, Attribute.Damage.formatting(role.getValue(Attribute.Damage)));
+        map.put(ROLE_DEFENCE_PAPI, Attribute.Defence.formatting(role.getValue(Attribute.Defence)));
         map.put(ROLE_TOTAL_COMBAT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombat()));
         map.put(ROLE_DAMAGE_UPPER_LIMIT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getDamageUpperLimit()));
 
         map.put(EXP_ADDITION_SUPPORT, formatPercent(JustLevelAPI.getSupportAddition(player)));
-        map.put(EXP_ADDITION_EQUIP, "+" + Attribute.EXP_Addition.formatting(role.getTotalValue(Attribute.EXP_Addition)));
+        map.put(EXP_ADDITION_EQUIP, "+" + Attribute.EXP_Addition.formatting(role.getValue(Attribute.EXP_Addition)));
         map.put(EXP_ADDITION_CARD, formatPercent(JustLevelAPI.getCardAddition(player)));
 
         PacketSender.sendSyncPlaceholder(player, map);
@@ -89,23 +77,7 @@ public class ClientPlaceholder {
         RoleState state = JustAttributeAPI.getRoleState(target);
 
         for (Attribute ident : Attribute.values()) {
-            double value = role.getTotalValue(ident);
-            if (ident == Attribute.Damage) {
-                map.put("target_" + ident.getPlaceholder(), ident.formatting(role.getActualDamage()));
-                continue;
-            }
-            if (ident == Attribute.Defence) {
-                map.put("target_" + ident.getPlaceholder(), ident.formatting(role.getActualDefence()));
-                continue;
-            }
-            if (ident == Attribute.Health) {
-                map.put("target_" + ident.getPlaceholder(), ident.formatting(role.getTotalHealth()));
-                continue;
-            }
-            if (ident == Attribute.Mana) {
-                map.put("target_" + ident.getPlaceholder(), ident.formatting(role.getTotalMana()));
-                continue;
-            }
+            double value = role.getValue(ident);
             if (ident == Attribute.EXP_Addition) {
                 double total = JustLevelAPI.getTotalAddition(target);
                 map.put("target_" + ident.getPlaceholder(), ident.formatting(value + total));
@@ -116,8 +88,8 @@ public class ClientPlaceholder {
 
         map.put("target_" + RESTORE_HP_PAPI, formatRestoreHP(state.getRestoreHP()));
         map.put("target_" + RESTORE_MP_PAPI, formatRestoreMP(state.getRestoreMP()));
-        map.put("target_" + ROLE_DAMAGE_PAPI, Attribute.Damage.formatting(role.getTotalDamage()));
-        map.put("target_" + ROLE_DEFENCE_PAPI, Attribute.Defence.formatting(role.getTotalDefence()));
+        map.put("target_" + ROLE_DAMAGE_PAPI, Attribute.Damage.formatting(role.getValue(Attribute.Damage)));
+        map.put("target_" + ROLE_DEFENCE_PAPI, Attribute.Defence.formatting(role.getValue(Attribute.Defence)));
         map.put("target_" + ROLE_TOTAL_COMBAT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombat()));
 
         return map;
@@ -136,11 +108,11 @@ public class ClientPlaceholder {
     }
 
     public static String formatRestoreHP(double value) {
-        return Utils.a.format(value) + " HP/s";
+        return Utils.a.format(value) + "HP/s";
     }
 
     public static String formatRestoreMP(double value) {
-        return Utils.a.format(value) + " MP/s";
+        return Utils.a.format(value) + "MP/s";
     }
 
     public static String formatPercent(double value) {

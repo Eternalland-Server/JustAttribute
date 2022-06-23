@@ -67,10 +67,11 @@ public class AttributeHandler {
         if (role == null) return;
 
         if (MegumiUtil.isEmpty(item)) {
-            role.putImmediateSource(ident, new AttributeSource());
+            role.putImmediateSource(ident, null, classify != EquipClassify.MainHand);
         }
         else {
-            role.putImmediateSource(ident, AttributeSource.getItemAttribute(item, classify));
+            AttributeSource source = AttributeSource.getItemAttribute(item, classify);
+            role.putImmediateSource(ident, source, classify != EquipClassify.MainHand);
         }
     }
 }

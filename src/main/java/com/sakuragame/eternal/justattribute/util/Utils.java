@@ -6,7 +6,9 @@ import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import net.sakuragame.eternal.justlevel.core.user.PlayerLevelData;
+import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -86,12 +88,17 @@ public class Utils {
     public static double getRealmDamagePromote(Player player) {
         PlayerLevelData data = JustLevelAPI.getUserData(player);
 
-        return ((data.getStage() - 1) * 0.1 + (data.getRealm() - 1) * 0.7) * 0.5 + 1;
+        return (data.getStage() - 1) * 0.1 + (data.getRealm() - 1) + 1;
     }
 
     public static double getRealmDefencePromote(Player player) {
         PlayerLevelData data = JustLevelAPI.getUserData(player);
 
-        return ((data.getStage() - 1) * 0.1 + (data.getRealm() - 1) * 0.7) * 0.38 + 1;
+        return (data.getStage() - 1) * 0.1 + (data.getRealm() - 1) + 1;
+    }
+
+    public static void sendCombatChange(Player player, int value) {
+        MessageAPI.sendActionTip(player, (value > 0 ? "&e&l+" : "&c&l-") + Math.abs(value) + "战斗力");
+        player.playSound(player.getLocation(), value > 0 ? Sound.ENTITY_HORSE_SADDLE : Sound.ENTITY_FIREWORK_BLAST_FAR, 0.5f, 1);
     }
 }

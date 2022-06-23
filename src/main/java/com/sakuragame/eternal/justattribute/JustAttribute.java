@@ -1,7 +1,6 @@
 package com.sakuragame.eternal.justattribute;
 
 import com.sakuragame.eternal.justattribute.commands.MainCommand;
-import com.sakuragame.eternal.justattribute.core.JungleStats;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.file.FileManager;
@@ -55,8 +54,6 @@ public class JustAttribute extends JavaPlugin {
 
         getLogger().info("注册PAPI变量...");
         new AttributePlaceholder().register();
-
-        JungleStats.register();
 
         getLogger().info("注册事件...");
         registerListener(new ZaphkielListener());
