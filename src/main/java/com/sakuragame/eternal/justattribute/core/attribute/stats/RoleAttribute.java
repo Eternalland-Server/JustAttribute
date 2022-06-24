@@ -110,7 +110,7 @@ public class RoleAttribute implements EntityAttribute {
         this.change = value - this.combat;
         this.combat = value;
 
-        if (combat) Utils.sendCombatChange(player, change);
+        if (combat) Utils.sendCombatChange(player, this.change);
 
         RoleAttributeUpdateEvent event = new RoleAttributeUpdateEvent(this.getBukkitPlayer(), this);
         Scheduler.run(event::call);
