@@ -4,7 +4,6 @@ import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleConsumeManaEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;
-import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Debug;

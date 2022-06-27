@@ -80,6 +80,8 @@ public class CombatListener implements Listener {
             return;
         }
 
+        if (e.getDamage() == 10) return;
+
         // mob attack
         if (!(attacker instanceof Player)) {
             if (!(sufferer instanceof Player)) return;
