@@ -137,7 +137,7 @@ public class RoleAttribute implements EntityAttribute {
         }, second * 20L);
     }
 
-    public void putImmediateSource(String key, AttributeSource source, long tick) {
+    public void putImmediateSourceTick(String key, AttributeSource source, long tick) {
         if (source == null) this.source.remove(key);
         else this.source.put(key, source);
 
@@ -182,7 +182,7 @@ public class RoleAttribute implements EntityAttribute {
         }, second * 20L);
     }
 
-    public void putSource(String key, AttributeSource source, long tick) {
+    public void putSourceTick(String key, AttributeSource source, long tick) {
         if (source == null) this.source.remove(key);
         else this.source.put(key, source);
 
