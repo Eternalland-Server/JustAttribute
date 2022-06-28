@@ -67,11 +67,11 @@ public class AttributeHandler {
         if (role == null) return;
 
         if (MegumiUtil.isEmpty(item)) {
-            role.putImmediateSource(ident, null, classify != EquipClassify.MainHand);
+            role.putImmediateSource(ident, null, !(classify == EquipClassify.MainHand || classify == EquipClassify.Potion));
         }
         else {
             AttributeSource source = AttributeSource.getItemAttribute(item, classify);
-            role.putImmediateSource(ident, source, classify != EquipClassify.MainHand);
+            role.putImmediateSource(ident, source, !(classify == EquipClassify.MainHand || classify == EquipClassify.Potion));
         }
     }
 }

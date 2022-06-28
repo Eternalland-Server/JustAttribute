@@ -124,17 +124,17 @@ public class RoleAttribute implements EntityAttribute {
         this.putImmediateSource(key, source, -1);
     }
 
-    public void putImmediateSource(String key, AttributeSource source, int second) {
+    public void putImmediateSource(String key, AttributeSource source, int tick) {
         if (source == null) this.source.remove(key);
         else this.source.put(key, source);
 
         this.update();
-        if (second == -1) return;
+        if (tick == -1) return;
 
         Scheduler.runLaterAsync(uuid, () -> {
             this.source.remove(key);
             this.update();
-        }, second * 20);
+        }, tick);
     }
 
     public void putImmediateSource(String key, AttributeSource source, boolean combat) {
