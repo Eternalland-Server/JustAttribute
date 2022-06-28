@@ -124,12 +124,25 @@ public class RoleAttribute implements EntityAttribute {
         this.putImmediateSource(key, source, -1);
     }
 
-    public void putImmediateSource(String key, AttributeSource source, int tick) {
+    public void putImmediateSource(String key, AttributeSource source, int second) {
         if (source == null) this.source.remove(key);
         else this.source.put(key, source);
 
         this.update();
-        if (tick == -1) return;
+        if (second == -1) return;
+
+        Scheduler.runLaterAsync(uuid, () -> {
+            this.source.remove(key);
+            this.update();
+        }, second * 20L);
+    }
+
+    public void putImmediateSource(String key, AttributeSource source, long tick) {
+        if (source == null) this.source.remove(key);
+        else this.source.put(key, source);
+
+        this.update();
+        if (tick == -1L) return;
 
         Scheduler.runLaterAsync(uuid, () -> {
             this.source.remove(key);
@@ -166,7 +179,19 @@ public class RoleAttribute implements EntityAttribute {
         Scheduler.runLaterAsync(uuid, () -> {
             this.source.remove(key);
             this.update();
-        }, second * 20);
+        }, second * 20L);
+    }
+
+    public void putSource(String key, AttributeSource source, long tick) {
+        if (source == null) this.source.remove(key);
+        else this.source.put(key, source);
+
+        if (tick == -1L) return;
+
+        Scheduler.runLaterAsync(uuid, () -> {
+            this.source.remove(key);
+            this.update();
+        }, tick);
     }
 
     public HashMap<Attribute, Double> getOrdinaryAttributes() {

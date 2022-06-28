@@ -21,11 +21,11 @@ public class Scheduler {
         Bukkit.getScheduler().runTaskLater(JustAttribute.getInstance(), runnable, tick);
     }
 
-    public static void runLaterAsync(Runnable runnable, int tick) {
+    public static void runLaterAsync(Runnable runnable, long tick) {
         Bukkit.getScheduler().runTaskLaterAsynchronously(JustAttribute.getInstance(), runnable, tick);
     }
 
-    public static void runLaterAsync(UUID uuid, Runnable runnable, int tick) {
+    public static void runLaterAsync(UUID uuid, Runnable runnable, long tick) {
         int id = Bukkit.getScheduler().runTaskLaterAsynchronously(JustAttribute.getInstance(), runnable, tick).getTaskId();
         tasks.computeIfAbsent(uuid, v -> new ArrayList<>()).add(id);
     }
