@@ -98,6 +98,7 @@ public class Utils {
     }
 
     public static void sendCombatChange(Player player, int value) {
+        if (value == 0) return;
         MessageAPI.sendActionTip(player, (value > 0 ? "&e&l+" : "&c&l-") + Math.abs(value) + "战斗力");
         player.playSound(player.getLocation(), value > 0 ? Sound.ENTITY_HORSE_SADDLE : Sound.ENTITY_FIREWORK_BLAST_FAR, 0.5f, 1);
     }
