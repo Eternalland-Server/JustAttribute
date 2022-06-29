@@ -75,8 +75,16 @@ public class RoleState {
     public void restore() {
         if (health >= getMaxHealth() && mana >= getMaxMana()) return;
 
-        this.health = Math.min(this.getMaxHealth(), this.getHealth() + (ConfigFile.spring ? this.getMaxHealth() * 0.03 : this.getRestoreHP()));
-        this.mana = Math.min(this.getMaxMana(), this.getMana() + (ConfigFile.spring ? this.getMaxMana() * 0.03 : this.getRestoreMP()));
+        this.health = Math.min(
+                this.getMaxHealth(),
+                this.getHealth() +
+                        (ConfigFile.spring ? Math.max(this.getMaxHealth() * 0.03, this.getRestoreHP()) : this.getRestoreHP())
+        );
+        this.mana = Math.min(
+                this.getMaxMana(),
+                this.getMana() +
+                        (ConfigFile.spring ? Math.max(this.getMaxMana() * 0.03, this.getRestoreMP()) : this.getRestoreMP())
+        );
 
         RoleStateUpdateEvent event = new RoleStateUpdateEvent(this.getBukkitPlayer());
         event.call();
