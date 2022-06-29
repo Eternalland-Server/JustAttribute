@@ -23,7 +23,7 @@ import java.util.UUID;
 
 public class PlayerListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPreLogin(AsyncPlayerPreLoginEvent e) {
         UUID uuid = e.getUniqueId();
         JustAttribute.getRoleManager().putAttributeData(uuid, new RoleAttribute(uuid));
