@@ -103,7 +103,7 @@ public class ZaphkielListener implements Listener {
         String display = e.getItemStream().getZaphkielItem().getDisplay();
         if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;
 
-        int combat = CombatCapacity.get(new AttributeSource(e.getItemStream()));
+        int combat = CombatCapacity.get(new AttributeSource(e.getItemStream(), true));
         e.addLore(CombatCapacity.DISPLAY_NODE, CombatCapacity.format(combat));
     }
 }

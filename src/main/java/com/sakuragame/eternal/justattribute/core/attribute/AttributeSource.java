@@ -24,17 +24,25 @@ public class AttributeSource implements Cloneable {
     }
 
     public AttributeSource(ItemStream itemStream) {
+        this(itemStream, false);
+    }
+
+    public AttributeSource(ItemStream itemStream, boolean ignore) {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
 
-        read(itemStream);
+        read(itemStream, ignore);
     }
 
     public AttributeSource(ItemStack item) {
+        this(item, false);
+    }
+
+    public AttributeSource(ItemStack item, boolean ignore) {
         this.ordinary = new HashMap<>();
         this.potency = new HashMap<>();
 
-        read(ZaphkielAPI.INSTANCE.read(item));
+        read(ZaphkielAPI.INSTANCE.read(item), ignore);
     }
 
     public AttributeSource(HashMap<Attribute, Double> ordinary, HashMap<Attribute, Double> potency) {
@@ -63,16 +71,6 @@ public class AttributeSource implements Cloneable {
         return source;
     }
 
-    public static AttributeSource diff(AttributeSource a, AttributeSource b) {
-        HashMap<Attribute, Double> ordinary = new HashMap<>(a.getOrdinary());
-        HashMap<Attribute, Double> potency = new HashMap<>(a.getPotency());
-
-        b.getOrdinary().forEach((k, v) -> ordinary.merge(k, v, (o, n) -> o - n));
-        b.getPotency().forEach((k, v) -> potency.merge(k, v, (o, n) -> o - n));
-
-        return new AttributeSource(ordinary, potency);
-    }
-
     public AttributeSource addOrdinary(Attribute attribute, double value) {
         ordinary.put(attribute, value);
         return this;
@@ -83,13 +81,15 @@ public class AttributeSource implements Cloneable {
         return this;
     }
 
-    private void read(ItemStream itemStream) {
+    private void read(ItemStream itemStream, boolean ignore) {
         if (itemStream.isVanilla()) return;
 
         ItemTag itemTag = itemStream.getZaphkielData();
 
-        Action action = SoulBound.getType(itemTag);
-        if (action == Action.SEAL) return;
+        if (!ignore) {
+            Action action = SoulBound.getType(itemTag);
+            if (action == Action.SEAL) return;
+        }
 
         for (Attribute attr : Attribute.values()) {
             ordinary.put(attr, itemTag.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble());
