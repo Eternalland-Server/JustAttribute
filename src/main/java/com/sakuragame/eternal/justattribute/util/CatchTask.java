@@ -21,6 +21,7 @@ public class CatchTask extends BukkitRunnable {
         if (count == 10) {
             player.kickPlayer("账户未被正确加载，请重新进入。");
             JustAttribute.getInstance().getLogger().info("玩家 " + player.getName() + " 账户数据载入失败!");
+            cancel();
             return;
         }
 
@@ -28,6 +29,7 @@ public class CatchTask extends BukkitRunnable {
         if (role != null) {
             JustAttribute.getRoleManager().put(this.player.getUniqueId(), role);
             JustAttribute.getRoleManager().init(this.player.getUniqueId());
+            cancel();
             return;
         }
 

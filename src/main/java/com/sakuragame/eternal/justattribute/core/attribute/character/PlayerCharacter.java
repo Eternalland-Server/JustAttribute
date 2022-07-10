@@ -102,7 +102,17 @@ public class PlayerCharacter extends JustCharacter implements IRole {
 
             source.getOrdinary().forEach((k, v) -> ordinary.merge(k, v, Double::sum));
             source.getPotency().forEach((k, v) -> potency.merge(k, v, Double::sum));
+
+//            System.out.println(" === ");
+//            System.out.println(key + " - hp: " + ordinary.getOrDefault(Attribute.Health, 0d));
+//            System.out.println(key + " - mp: " + ordinary.getOrDefault(Attribute.Mana, 0d));
+//            System.out.println(key + " - *hp: " + potency.getOrDefault(Attribute.Health, 0d));
+//            System.out.println(key + " - *mp: " + potency.getOrDefault(Attribute.Mana, 0d));
         });
+
+//        System.out.println(" ==== ");
+//        System.out.println("total hp: " + ordinary.getOrDefault(Attribute.Health, 0d) + " - " + potency.getOrDefault(Attribute.Health, 0d));
+//        System.out.println("total mp: " + ordinary.getOrDefault(Attribute.Mana, 0d) + " - " + potency.getOrDefault(Attribute.Mana, 0d));
 
         ordinary.merge(Attribute.Damage, Utils.getRealmDamagePromote(this.getUUID()), (a, b) -> a * b);
         ordinary.merge(Attribute.Defence, Utils.getRealmDefencePromote(this.getUUID()), (a, b) -> a * b);

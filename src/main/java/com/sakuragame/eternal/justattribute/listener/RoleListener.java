@@ -30,6 +30,7 @@ public class RoleListener implements Listener {
     public void onAttributeUpdate(RoleAttributeUpdateEvent e) {
         Player player = e.getPlayer();
         ClientPlaceholder.sendAttribute(player);
+        ClientPlaceholder.sendState(player);
     }
 
     @EventHandler

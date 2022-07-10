@@ -62,7 +62,7 @@ public abstract class JustCharacter implements ICharacter {
         this.sources.put(key, source);
         this.update();
 
-        Scheduler.runLaterAsync(uuid, () -> {
+        Scheduler.runLater(uuid, () -> {
             this.sources.remove(key);
             this.update();
         }, tick);

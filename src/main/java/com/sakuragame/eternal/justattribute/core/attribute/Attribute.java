@@ -66,7 +66,7 @@ public enum Attribute {
         Map<Attribute, Double> potency = new HashMap<>();
 
         for (Attribute ident : Attribute.values()) {
-            if (ident.isOnlyPercent()) {
+            if (!ident.isOnlyPercent()) {
                 ordinary.put(ident, ident.getBase());
             }
             else {

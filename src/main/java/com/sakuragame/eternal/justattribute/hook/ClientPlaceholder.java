@@ -50,8 +50,8 @@ public class ClientPlaceholder {
             placeholder.put(ident.getPlaceholder(), ident.formatting(value));
         }
 
-        placeholder.put(RESTORE_HP_PER_SEC, "+" + Utils.INTEGRAL.format(role.getRestoreHP()) + "HP/s");
-        placeholder.put(RESTORE_MP_PER_SEC, "+" + Utils.INTEGRAL.format(role.getRestoreMP()) + "MP/s");
+        placeholder.put(RESTORE_HP_PER_SEC, "+" + Utils.INTEGRAL.format(role.getAttributeValue(Attribute.Energy) / 100) + "HP/s");
+        placeholder.put(RESTORE_MP_PER_SEC, "+" + Utils.INTEGRAL.format(role.getAttributeValue(Attribute.Stamina) / 100) + "MP/s");
 
         placeholder.put(DAMAGE_VAMPIRE_PRE_ATTACK, "+" + Utils.INTEGRAL.format(role.getDamageVampire()));
         placeholder.put(SKILL_VAMPIRE_PRE_ATTACK, "+" + Utils.INTEGRAL.format(role.getSkillVampire()));

@@ -70,7 +70,7 @@ public class CombatPower {
         }
 
         public void update(int value) {
-            this.lastTimeChange = this.value - value;
+            this.lastTimeChange = value - this.value;
             this.value = value;
         }
     }

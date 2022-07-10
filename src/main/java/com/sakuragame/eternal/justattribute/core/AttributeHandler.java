@@ -5,6 +5,7 @@ import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
 import com.sakuragame.eternal.justattribute.core.attribute.character.PlayerCharacter;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import net.sakuragame.eternal.dragoncore.api.SlotAPI;
 import net.sakuragame.eternal.dragoncore.config.FileManager;
@@ -66,12 +67,16 @@ public class AttributeHandler {
         PlayerCharacter role = JustAttributeAPI.getRoleCharacter(player);
         if (role == null) return;
 
-        if (MegumiUtil.isEmpty(item)) {
+        AttributeSource source = AttributeSource.getItemAttribute(item, classify);
+        if (source == null) {
             role.removeAttributeSource(ident);
         }
         else {
-            AttributeSource source = AttributeSource.getItemAttribute(item, classify);
             role.putAttributeSource(ident, source, true);
         }
+
+        if (classify == EquipClassify.MainHand) return;
+        int change = role.getCombatLastTimeChange();
+        Utils.sendCombatChange(player, change);
     }
 }

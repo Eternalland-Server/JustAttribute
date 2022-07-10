@@ -17,8 +17,13 @@ public class Scheduler {
         Bukkit.getScheduler().runTaskAsynchronously(JustAttribute.getInstance(), runnable);
     }
 
-    public static void runLater(Runnable runnable, int tick) {
+    public static void runLater(Runnable runnable, long tick) {
         Bukkit.getScheduler().runTaskLater(JustAttribute.getInstance(), runnable, tick);
+    }
+
+    public static void runLater(UUID uuid, Runnable runnable, long tick) {
+        int id = Bukkit.getScheduler().runTaskLater(JustAttribute.getInstance(), runnable, tick).getTaskId();
+        tasks.computeIfAbsent(uuid, v -> new ArrayList<>()).add(id);
     }
 
     public static void runLaterAsync(Runnable runnable, long tick) {

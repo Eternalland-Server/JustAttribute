@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.core.attribute;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
+import com.taylorswiftcn.justwei.util.MegumiUtil;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
@@ -54,6 +55,8 @@ public class AttributeSource implements Cloneable {
     }
 
     public static AttributeSource getItemAttribute(ItemStack item, EquipClassify classify) {
+        if (MegumiUtil.isEmpty(item)) return null;
+
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
         if (itemStream.isVanilla()) return null;
 

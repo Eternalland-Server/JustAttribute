@@ -55,10 +55,14 @@ public class RoleManager {
 
         role.init();
         removeLoader(uuid);
-        role.update();
+        Scheduler.run(() -> {
+            RoleAccountLoadedEvent event = new RoleAccountLoadedEvent(player);
+            event.call();
 
-        RoleAccountLoadedEvent event = new RoleAccountLoadedEvent(player);
-        event.call();
+            role.update();
+        });
+
+
 
         plugin.getLogger().info(" 加载 " + player.getName() + " 角色数据成功！");
     }
