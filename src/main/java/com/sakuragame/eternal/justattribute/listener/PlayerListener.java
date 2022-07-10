@@ -2,7 +2,6 @@ package com.sakuragame.eternal.justattribute.listener;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.util.Loader;
 import com.sakuragame.eternal.justattribute.util.Scheduler;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotLoadedEvent;
@@ -13,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -26,7 +24,6 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPreLogin(AsyncPlayerPreLoginEvent e) {
         UUID uuid = e.getUniqueId();
-        JustAttribute.getRoleManager().putAttributeData(uuid, new RoleAttribute(uuid));
         RoleManager.generateLoader(uuid);
     }
 
@@ -42,14 +39,23 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        Scheduler.runLaterAsync(() -> JustAttribute.getRoleManager().loadStateData(uuid), 6);
-
         player.setHealthScale(20);
         player.setHealthScaled(true);
         player.setFoodLevel(10);
 
+        Scheduler.runLaterAsync(() -> JustAttribute.getRoleManager().load(uuid), 20);
+
         if (player.isOp()) return;
         player.setGameMode(GameMode.ADVENTURE);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        Player player = e.getPlayer();
+        UUID uuid = player.getUniqueId();
+
+        Scheduler.cancel(uuid);
+        Scheduler.runAsync(() -> JustAttribute.getRoleManager().save(uuid));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -67,9 +73,7 @@ public class PlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
 
         Loader loader = RoleManager.getLoader(uuid);
-
-        loader.setJustLevel(true);
-        loader.tryExecute();
+        loader.leave(Loader.Identifier.Level.name());
     }
 
     @EventHandler
@@ -78,27 +82,11 @@ public class PlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
 
         Loader loader = RoleManager.getLoader(uuid);
-
-        loader.setDragonSlot(true);
-        loader.tryExecute();
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        Player player = e.getPlayer();
-        UUID uuid = player.getUniqueId();
-
-        Scheduler.cancel(uuid);
-        Scheduler.runAsync(() -> JustAttribute.getRoleManager().saveData(uuid));
+        loader.leave(Loader.Identifier.Slot.name());
     }
 
     @EventHandler
     public void onFood(FoodLevelChangeEvent e) {
         e.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onDie(PlayerDeathEvent e) {
-        JustAttribute.getInstance().getLogger().info("die!");
     }
 }

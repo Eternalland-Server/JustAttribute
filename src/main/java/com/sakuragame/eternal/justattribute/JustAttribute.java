@@ -43,7 +43,7 @@ public class JustAttribute extends JavaPlugin {
         fileManager.init();
 
         getLogger().info("初始化数据库...");
-        storageManager = new StorageManager(this);
+        storageManager = new StorageManager();
         storageManager.init();
 
         getLogger().info("初始化角色管理...");
@@ -97,7 +97,7 @@ public class JustAttribute extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        roleManager.saveAllRole();
+        roleManager.saveAll();
         Bukkit.getScheduler().cancelTasks(this);
         getLogger().info("卸载成功!");
     }

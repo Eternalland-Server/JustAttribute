@@ -8,7 +8,6 @@ import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
-import net.sakuragame.eternal.dragoncore.util.Pair;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -103,7 +102,7 @@ public class ZaphkielListener implements Listener {
         String display = e.getItemStream().getZaphkielItem().getDisplay();
         if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;
 
-        int combat = CombatCapacity.get(new AttributeSource(e.getItemStream(), true));
-        e.addLore(CombatCapacity.DISPLAY_NODE, CombatCapacity.format(combat));
+        int combat = CombatPower.calculate(new AttributeSource(e.getItemStream(), true));
+        e.addLore(CombatPower.DISPLAY_NODE, CombatPower.format(combat));
     }
 }

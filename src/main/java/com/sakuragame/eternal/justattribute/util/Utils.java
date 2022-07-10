@@ -14,10 +14,11 @@ import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
 import java.util.Random;
+import java.util.UUID;
 
 public class Utils {
 
-    public final static DecimalFormat a = new DecimalFormat("0");
+    public final static DecimalFormat INTEGRAL = new DecimalFormat("0");
     public final static Random RANDOM = new Random();
 
     public static int getRandomInt(int value) {
@@ -41,13 +42,13 @@ public class Utils {
 
     public static String formatValue(double value, boolean isPercent) {
         value = isPercent ? value * 100 : value;
-        String s = value >= 0 ? "+" + a.format(value) : "-" + a.format(value);
+        String s = value >= 0 ? "+" + INTEGRAL.format(value) : "-" + INTEGRAL.format(value);
         return isPercent ? s + "%" : s;
     }
 
     public static String format(double value, boolean isPercent) {
         value = isPercent ? value * 100 : value;
-        String s = a.format(value);
+        String s = INTEGRAL.format(value);
         return isPercent ? s + "%" : s;
     }
 
@@ -85,14 +86,14 @@ public class Utils {
                 .replace("9", "❾");
     }
 
-    public static double getRealmDamagePromote(Player player) {
-        PlayerLevelData data = JustLevelAPI.getUserData(player);
+    public static double getRealmDamagePromote(UUID uuid) {
+        PlayerLevelData data = JustLevelAPI.getUserData(uuid);
 
         return (data.getStage() - 1) * 0.1 + (data.getRealm() - 1) + 1;
     }
 
-    public static double getRealmDefencePromote(Player player) {
-        PlayerLevelData data = JustLevelAPI.getUserData(player);
+    public static double getRealmDefencePromote(UUID uuid) {
+        PlayerLevelData data = JustLevelAPI.getUserData(uuid);
 
         return (data.getStage() - 1) * 0.1 + (data.getRealm() - 1) + 1;
     }

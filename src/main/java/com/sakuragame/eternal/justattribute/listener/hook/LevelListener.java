@@ -2,7 +2,7 @@ package com.sakuragame.eternal.justattribute.listener.hook;
 
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
+import com.sakuragame.eternal.justattribute.core.attribute.character.PlayerCharacter;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import net.sakuragame.eternal.justlevel.api.event.*;
 import org.bukkit.entity.Player;
@@ -15,9 +15,12 @@ public class LevelListener implements Listener {
     @EventHandler
     public void onLevelChange(PlayerLevelChangeEvent e) {
         Player player = e.getPlayer();
-        RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
-        role.updateLevelPromote();
-        role.update(true);
+        PlayerCharacter role = JustAttributeAPI.getRoleCharacter(player);
+        role.updateLevelAddition();
+        role.update();
+
+        int change = role.getCombatLastTimeChange();
+        Utils.sendCombatChange(player, change);
     }
 
     @EventHandler
@@ -36,10 +39,10 @@ public class LevelListener implements Listener {
     public void onStageBreak(PlayerBrokenEvent.Stage e) {
         Player player = e.getPlayer();
 
-        RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
-        role.updateDamageUpperLimit();
+        PlayerCharacter role = JustAttributeAPI.getRoleCharacter(player);
         role.update();
-        int change = role.getChange();
+
+        int change = role.getCombatLastTimeChange();
         e.addMessage("&a&l战斗力提升➚&8&l[ " + (change > 0 ? "&e&l+" : "&c&l-") + Math.abs(change) + " &8&l]");
     }
 
@@ -47,16 +50,15 @@ public class LevelListener implements Listener {
     public void onRealmBreak(PlayerBrokenEvent.Realm e) {
         Player player = e.getPlayer();
 
-        RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
-        role.updateDamageUpperLimit();
+        PlayerCharacter role = JustAttributeAPI.getRoleCharacter(player);
         role.update();
-        int change = role.getChange();
+
+        int change = role.getCombatLastTimeChange();
         e.addMessage("&a&l战斗力提升➚&8&l[ " + (change > 0 ? "&e&l+" : "&c&l-") + Math.abs(change) + " &8&l]");
     }
 
     private void updateChange(Player player) {
-        RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
-        role.updateDamageUpperLimit();
+        PlayerCharacter role = JustAttributeAPI.getRoleCharacter(player);
         role.update();
     }
 
@@ -64,7 +66,7 @@ public class LevelListener implements Listener {
     public void onExpIncrease(PlayerExpIncreaseEvent.Pre e) {
         Player player = e.getPlayer();
         double amount = e.getAmount();
-        double rate = JustAttributeAPI.getRoleAttributeValue(player, Attribute.EXP_Addition);
+        double rate = JustAttributeAPI.getRoleCharacter(player).getAttributeValue(Attribute.EXP_Addition);
 
         double value = amount * rate;
         e.addAddition(value);

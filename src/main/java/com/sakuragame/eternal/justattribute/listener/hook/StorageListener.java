@@ -17,8 +17,6 @@ public class StorageListener implements Listener {
         UUID uuid = player.getUniqueId();
 
         Loader loader = RoleManager.getLoader(uuid);
-
-        loader.setInventory(true);
-        loader.tryExecute();
+        loader.leave(Loader.Identifier.Inventory.name());
     }
 }

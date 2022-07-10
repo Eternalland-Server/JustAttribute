@@ -4,7 +4,7 @@
 
     <groupId>net.sakuragame.eternal</groupId>
     <artifactId>JustAttribute</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>JustAttribute</name>
@@ -119,9 +119,9 @@
         <dependency>
             <groupId>io.lumine.xikage</groupId>
             <artifactId>MythicMobs</artifactId>
-            <version>4.13.1</version>
+            <version>4.11.0</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/.lib/MythicMobs-4.13.1.jar</systemPath>
+            <systemPath>${pom.basedir}/.lib/MythicMobs-4.11.0.jar</systemPath>
         </dependency>
 
         <dependency>

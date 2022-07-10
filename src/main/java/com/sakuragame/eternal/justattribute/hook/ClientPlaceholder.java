@@ -2,8 +2,7 @@ package com.sakuragame.eternal.justattribute.hook;
 
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
+import com.sakuragame.eternal.justattribute.core.attribute.character.PlayerCharacter;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.util.UnitConvert;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
@@ -12,110 +11,98 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class ClientPlaceholder {
 
-    public final static String RESTORE_HP_PAPI = "attribute_restore_hp";
-    public final static String RESTORE_MP_PAPI = "attribute_restore_mp";
-    public final static String VAMPIRE_DAMAGE_PAPI = "vampire_damage_value";
-    public final static String VAMPIRE_POWER_PAPI = "vampire_power_value";
-    public final static String DAMAGE_PROMOTE_PAPI = "attribute_damage_promote";
-    public final static String DEFENCE_PROMOTE_PAPI = "attribute_defence_promote";
-    public final static String ROLE_DAMAGE_PAPI = "attribute_role_damage";
-    public final static String ROLE_DEFENCE_PAPI = "attribute_role_defence";
+    protected final static String RESTORE_HP_PER_SEC = "restore_hp_ps";
+    protected final static String RESTORE_MP_PER_SEC = "restore_mp_ps";
+    protected final static String DAMAGE_VAMPIRE_PRE_ATTACK = "damage_vampire_pa";
+    protected final static String SKILL_VAMPIRE_PRE_ATTACK = "skill_vampire_pa";
+    protected final static String REALM_DAMAGE_PROMOTE = "realm_damage_promote";
+    protected final static String REALM_DEFENCE_PROMOTE = "realm_defence_promote";
+    protected final static String SUPPORT_EXP_ADDITION = "support_exp_addition";
+    protected final static String EQUIP_EXP_ADDITION = "equip_exp_addition";
+    protected final static String CARD_EXP_ADDITION = "card_exp_addition";
+    protected final static String ROLE_COMBAT_POWER = "role_combat_power";
 
-    public final static String ROLE_CURRENT_HEALTH = "attribute_role_current_health";
-    public final static String ROLE_MAX_HEALTH = "attribute_role_max_health";
-    public final static String ROLE_CURRENT_MANA = "attribute_role_current_mana";
-    public final static String ROLE_MAX_MANA = "attribute_role_max_mana";
 
-    public final static String ROLE_TOTAL_COMBAT = "attribute_role_total_combat";
-    public final static String ROLE_DAMAGE_UPPER_LIMIT = "attribute_role_damage_upper_limit";
-
-    public final static String EXP_ADDITION_SUPPORT = "exp_addition_support";
-    public final static String EXP_ADDITION_EQUIP = "exp_addition_equip";
-    public final static String EXP_ADDITION_CARD = "exp_addition_card";
+    protected final static String ROLE_CURRENT_HP = "role_current_hp";
+    protected final static String ROLE_CURRENT_MP = "role_current_mp";
+    protected final static String ROLE_MAX_HP = "role_max_hp";
+    protected final static String ROLE_MAX_MP = "role_max_mp";
 
     public static void sendAttribute(Player player) {
-        HashMap<String, String> map = new HashMap<>();
+        UUID uuid = player.getUniqueId();
+        Map<String, String> placeholder = new HashMap<>();
 
-        RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
-        RoleState state = JustAttributeAPI.getRoleState(player);
-
-        for (Attribute ident : Attribute.values()) {
-            double value = role.getValue(ident);
-            if (ident == Attribute.EXP_Addition) {
-                double total = JustLevelAPI.getTotalAddition(player);
-                map.put(ident.getPlaceholder(), ident.formatting(value + total));
-                continue;
-            }
-            map.put(ident.getPlaceholder(), ident.formatting(value));
-        }
-
-        map.put(RESTORE_HP_PAPI, formatRestoreHP(state.getRestoreHP()));
-        map.put(RESTORE_MP_PAPI, formatRestoreMP(state.getRestoreMP()));
-        map.put(VAMPIRE_DAMAGE_PAPI, Utils.a.format(state.getDamageVampire()));
-        map.put(VAMPIRE_POWER_PAPI, Utils.a.format(state.getPowerVampire()));
-        map.put(DAMAGE_PROMOTE_PAPI, formatPercent(Utils.getRealmDamagePromote(player) - 1));
-        map.put(DEFENCE_PROMOTE_PAPI, formatPercent(Utils.getRealmDefencePromote(player) - 1));
-        map.put(ROLE_DAMAGE_PAPI, Attribute.Damage.formatting(role.getValue(Attribute.Damage)));
-        map.put(ROLE_DEFENCE_PAPI, Attribute.Defence.formatting(role.getValue(Attribute.Defence)));
-        map.put(ROLE_TOTAL_COMBAT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombat()));
-        map.put(ROLE_DAMAGE_UPPER_LIMIT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getDamageUpperLimit()));
-
-        map.put(EXP_ADDITION_SUPPORT, formatPercent(JustLevelAPI.getSupportAddition(player)));
-        map.put(EXP_ADDITION_EQUIP, "+" + Attribute.EXP_Addition.formatting(role.getValue(Attribute.EXP_Addition)));
-        map.put(EXP_ADDITION_CARD, formatPercent(JustLevelAPI.getCardAddition(player)));
-
-        PacketSender.sendSyncPlaceholder(player, map);
-    }
-
-    public static Map<String, String> getTargetPlaceholder(Player target) {
-        HashMap<String, String> map = new HashMap<>();
-
-        RoleAttribute role = JustAttributeAPI.getRoleAttribute(target);
-        RoleState state = JustAttributeAPI.getRoleState(target);
+        PlayerCharacter role = JustAttributeAPI.getRoleCharacter(uuid);
 
         for (Attribute ident : Attribute.values()) {
-            double value = role.getValue(ident);
+            double value = role.getAttributeValue(ident);
+
             if (ident == Attribute.EXP_Addition) {
-                double total = JustLevelAPI.getTotalAddition(target);
-                map.put("target_" + ident.getPlaceholder(), ident.formatting(value + total));
+                double addition = JustLevelAPI.getTotalAddition(uuid);
+                placeholder.put(ident.getPlaceholder(), ident.formatting(value + addition));
                 continue;
             }
-            map.put("target_" + ident.getPlaceholder(), ident.formatting(value));
+
+            placeholder.put(ident.getPlaceholder(), ident.formatting(value));
         }
 
-        map.put("target_" + RESTORE_HP_PAPI, formatRestoreHP(state.getRestoreHP()));
-        map.put("target_" + RESTORE_MP_PAPI, formatRestoreMP(state.getRestoreMP()));
-        map.put("target_" + ROLE_DAMAGE_PAPI, Attribute.Damage.formatting(role.getValue(Attribute.Damage)));
-        map.put("target_" + ROLE_DEFENCE_PAPI, Attribute.Defence.formatting(role.getValue(Attribute.Defence)));
-        map.put("target_" + ROLE_TOTAL_COMBAT, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombat()));
+        placeholder.put(RESTORE_HP_PER_SEC, "+" + Utils.INTEGRAL.format(role.getRestoreHP()) + "HP/s");
+        placeholder.put(RESTORE_MP_PER_SEC, "+" + Utils.INTEGRAL.format(role.getRestoreMP()) + "MP/s");
 
-        return map;
+        placeholder.put(DAMAGE_VAMPIRE_PRE_ATTACK, "+" + Utils.INTEGRAL.format(role.getDamageVampire()));
+        placeholder.put(SKILL_VAMPIRE_PRE_ATTACK, "+" + Utils.INTEGRAL.format(role.getSkillVampire()));
+
+        placeholder.put(REALM_DAMAGE_PROMOTE, "+" + Utils.INTEGRAL.format((Utils.getRealmDamagePromote(uuid) - 1) * 100) + "%");
+        placeholder.put(REALM_DEFENCE_PROMOTE, "+" + Utils.INTEGRAL.format((Utils.getRealmDefencePromote(uuid) - 1) * 100) + "%");
+
+        placeholder.put(SUPPORT_EXP_ADDITION, "+" + Utils.INTEGRAL.format(JustLevelAPI.getSupportAddition(uuid) * 100) + "%");
+        placeholder.put(EQUIP_EXP_ADDITION, "+" + Attribute.EXP_Addition.format(role.getAttributeValue(Attribute.EXP_Addition)));
+        placeholder.put(CARD_EXP_ADDITION, "+" + Utils.INTEGRAL.format(JustLevelAPI.getCardAddition(uuid) * 100) + "%");
+
+        placeholder.put(ROLE_COMBAT_POWER, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombatValue()));
+
+        PacketSender.sendSyncPlaceholder(player, placeholder);
     }
 
     public static void sendState(Player player) {
-        HashMap<String, String> map = new HashMap<>();
+        UUID uuid = player.getUniqueId();
+        Map<String, String> placeholder = new HashMap<>();
 
-        RoleState state = JustAttributeAPI.getRoleState(player.getUniqueId());
-        map.put(ROLE_CURRENT_HEALTH, String.valueOf((int) state.getHealth()));
-        map.put(ROLE_MAX_HEALTH, String.valueOf((int) state.getMaxHealth()));
-        map.put(ROLE_CURRENT_MANA, String.valueOf((int) state.getMana()));
-        map.put(ROLE_MAX_MANA, String.valueOf((int) state.getMaxMana()));
+        PlayerCharacter role = JustAttributeAPI.getRoleCharacter(uuid);
 
-        PacketSender.sendSyncPlaceholder(player, map);
+        placeholder.put(ROLE_CURRENT_HP, (int) role.getHP() + "");
+        placeholder.put(ROLE_CURRENT_MP, (int) role.getMP() + "");
+        placeholder.put(ROLE_MAX_HP, (int) role.getMaxHP() + "");
+        placeholder.put(ROLE_MAX_MP, (int) role.getMaxMP() + "");
+
+        PacketSender.sendSyncPlaceholder(player, placeholder);
     }
 
-    public static String formatRestoreHP(double value) {
-        return Utils.a.format(value) + "HP/s";
-    }
+    public static Map<String, String> getAttribute(Player player) {
+        UUID uuid = player.getUniqueId();
+        Map<String, String> placeholder = new HashMap<>();
 
-    public static String formatRestoreMP(double value) {
-        return Utils.a.format(value) + "MP/s";
-    }
+        PlayerCharacter role = JustAttributeAPI.getRoleCharacter(uuid);
+        if (role == null) return placeholder;
 
-    public static String formatPercent(double value) {
-        return "+" + Utils.a.format(value * 100) + "%";
+        for (Attribute ident : Attribute.values()) {
+            double value = role.getAttributeValue(ident);
+
+            if (ident == Attribute.EXP_Addition) {
+                double addition = JustLevelAPI.getTotalAddition(uuid);
+                placeholder.put("role_" + ident.getPlaceholder(), ident.formatting(value + addition));
+                continue;
+            }
+
+            placeholder.put("role_" + ident.getPlaceholder(), ident.formatting(value));
+        }
+
+        placeholder.put(ROLE_COMBAT_POWER, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombatValue()));
+
+        return placeholder;
     }
 }

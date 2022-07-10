@@ -1,7 +1,6 @@
 package com.sakuragame.eternal.justattribute.storage;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
+import com.sakuragame.eternal.justattribute.core.attribute.character.PlayerCharacter;
 import net.sakuragame.serversystems.manage.api.database.DataManager;
 import net.sakuragame.serversystems.manage.api.database.DatabaseQuery;
 import net.sakuragame.serversystems.manage.client.api.ClientManagerAPI;
@@ -11,11 +10,9 @@ import java.util.UUID;
 
 public class StorageManager {
 
-    private final JustAttribute plugin;
     private final DataManager dataManager;
 
-    public StorageManager(JustAttribute plugin) {
-        this.plugin = plugin;
+    public StorageManager() {
         this.dataManager = ClientManagerAPI.getDataManager();
     }
 
@@ -23,7 +20,7 @@ public class StorageManager {
         AccountTable.JUST_ATTRIBUTE_ROLE.createTable();
     }
 
-    public RoleState loadData(UUID uuid) {
+    public PlayerCharacter loadAccount(UUID uuid) {
         int uid = ClientManagerAPI.getUserID(uuid);
         if (uid == -1) return null;
 
@@ -37,16 +34,16 @@ public class StorageManager {
                 double health = result.getDouble("health");
                 double mana = result.getDouble("mana");
 
-                return new RoleState(uuid, health, mana);
+                return new PlayerCharacter(uuid, health, mana);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return new RoleState(uuid);
+        return new PlayerCharacter(uuid);
     }
 
-    public void saveData(UUID uuid, double health, double mana) {
+    public void saveAccount(UUID uuid, double health, double mana) {
         int uid = ClientManagerAPI.getUserID(uuid);
         if (uid == -1) return;
 

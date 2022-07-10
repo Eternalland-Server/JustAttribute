@@ -1,7 +1,7 @@
 package com.sakuragame.eternal.justattribute.listener.hook;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.MobConfig;
+import com.sakuragame.eternal.justattribute.core.attribute.mob.MobConfig;
 import com.sakuragame.eternal.justattribute.util.Scheduler;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;

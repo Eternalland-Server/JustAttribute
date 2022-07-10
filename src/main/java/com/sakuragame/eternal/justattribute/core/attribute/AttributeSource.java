@@ -8,15 +8,18 @@ import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Getter
+@Setter
 public class AttributeSource implements Cloneable {
 
-    private final HashMap<Attribute, Double> ordinary;
-    private final HashMap<Attribute, Double> potency;
+    private Map<Attribute, Double> ordinary;
+    private Map<Attribute, Double> potency;
 
     public AttributeSource() {
         this.ordinary = new HashMap<>();
@@ -45,7 +48,7 @@ public class AttributeSource implements Cloneable {
         read(ZaphkielAPI.INSTANCE.read(item), ignore);
     }
 
-    public AttributeSource(HashMap<Attribute, Double> ordinary, HashMap<Attribute, Double> potency) {
+    public AttributeSource(Map<Attribute, Double> ordinary, Map<Attribute, Double> potency) {
         this.ordinary = ordinary;
         this.potency = potency;
     }
@@ -59,16 +62,6 @@ public class AttributeSource implements Cloneable {
         if (classify != equip || SoulBound.isSeal(itemTag)) return null;
 
         return new AttributeSource(item);
-    }
-
-    public static AttributeSource getRoleDefault() {
-        AttributeSource source = new AttributeSource();
-        for (Attribute attr : Attribute.values()) {
-            source.addOrdinary(attr, attr.isOnlyPercent() ? 0 : attr.getBase());
-            source.addPotency(attr, attr.isOnlyPercent() ? attr.getBase() : 0);
-        }
-
-        return source;
     }
 
     public AttributeSource addOrdinary(Attribute attribute, double value) {

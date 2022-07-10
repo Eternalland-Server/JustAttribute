@@ -1,7 +1,7 @@
 package com.sakuragame.eternal.justattribute.file;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.MobConfig;
+import com.sakuragame.eternal.justattribute.core.attribute.mob.MobConfig;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.file.sub.MessageFile;
 import com.taylorswiftcn.justwei.file.JustConfiguration;
@@ -22,7 +22,7 @@ public class FileManager extends JustConfiguration {
     @Getter private YamlConfiguration config;
     @Getter private YamlConfiguration message;
 
-    private Map<String, MobConfig> mobConfig;
+    private final Map<String, MobConfig> mobConfig;
 
     public FileManager(JustAttribute plugin) {
         super(plugin);

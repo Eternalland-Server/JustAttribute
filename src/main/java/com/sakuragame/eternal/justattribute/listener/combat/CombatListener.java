@@ -1,15 +1,13 @@
 package com.sakuragame.eternal.justattribute.listener.combat;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleLaunchAttackEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleSkillAttackEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleUnderAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.EntityAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.MobAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleState;
+import com.sakuragame.eternal.justattribute.core.attribute.character.ICharacter;
+import com.sakuragame.eternal.justattribute.core.attribute.character.MobCharacter;
+import com.sakuragame.eternal.justattribute.core.attribute.character.PlayerCharacter;
 import com.sakuragame.eternal.justattribute.hook.DamageModify;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
@@ -34,7 +32,7 @@ import java.util.UUID;
 public class CombatListener implements Listener {
 
     private final MobManager mobManager;
-    private final Map<UUID, MobAttribute> mobs;
+    private final Map<UUID, MobCharacter> mobs;
 
     public CombatListener() {
         this.mobManager = MythicMobs.inst().getMobManager();
@@ -57,8 +55,7 @@ public class CombatListener implements Listener {
 
             if (attacker instanceof Player) {
                 Player player = (Player) attacker;
-                RoleAttribute role = JustAttributeAPI.getRoleAttribute(player);
-                ActiveMob mob = getMob(sufferer.getUniqueId());
+                ActiveMob mob = this.getMob(sufferer.getUniqueId());
                 if (mob == null) return;
 
                 double modify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ABILITY_ATTACK.name(), 1.0);
@@ -68,10 +65,9 @@ public class CombatListener implements Listener {
                 preEvent.call();
                 if (preEvent.isCancelled()) return;
 
-                double lastDamage = Math.min(role.getDamageUpperLimit(), damage);
-                e.setDamage(lastDamage);
+                e.setDamage(preEvent.getDamage());
 
-                RoleSkillAttackEvent.Post postEvent = new RoleSkillAttackEvent.Post(player, sufferer, lastDamage);
+                RoleSkillAttackEvent.Post postEvent = new RoleSkillAttackEvent.Post(player, sufferer, preEvent.getDamage());
                 postEvent.call();
                 return;
             }
@@ -84,13 +80,15 @@ public class CombatListener implements Listener {
 
         // mob attack
         if (!(attacker instanceof Player)) {
+            ICharacter mob = this.getMobAttribute(attacker);
+
+            if (mob == null) return;
             if (!(sufferer instanceof Player)) return;
 
             Player player = (Player) sufferer;
-            EntityAttribute attackAttribute = getMobAttribute(attacker);
-            EntityAttribute sufferAttribute = getPlayerAttribute(player);
+            PlayerCharacter role = this.getPlayerAttribute(player);
 
-            Pair<Double, Double> result = CombatHandler.calculate(attackAttribute, sufferAttribute);
+            Pair<Double, Double> result = CombatHandler.calculate(mob, role);
             RoleUnderAttackEvent.Pre preEvent = new RoleUnderAttackEvent.Pre(player, attacker, result.getKey(), result.getValue(), cause);
             preEvent.call();
             if (preEvent.isCancelled()) {
@@ -104,8 +102,7 @@ public class CombatListener implements Listener {
 
             e.setDamage(totalDamage);
 
-            RoleState state = JustAttributeAPI.getRoleState(player);
-            state.updateHealth(player.getHealth() - totalDamage);
+            role.updateHP(player.getHealth() - totalDamage);
 
             RoleUnderAttackEvent.Post postEvent = new RoleUnderAttackEvent.Post(player, attacker, damage, criticalDamage, cause);
             postEvent.call();
@@ -114,38 +111,54 @@ public class CombatListener implements Listener {
 
         // player attack
         Player player = (Player) attacker;
-        ActiveMob mob = this.getMob(sufferer.getUniqueId());
-
-        if (mob == null) return;
-
-        EntityAttribute attackAttribute = getPlayerAttribute(player);
-        EntityAttribute sufferAttribute = (sufferer instanceof Player) ? getPlayerAttribute((Player) sufferer) : getMobAttribute(sufferer);
-
-        Pair<Double, Double> result = CombatHandler.calculate(attackAttribute, sufferAttribute);
-        double damage = result.getKey();
-        double modify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1.0d);
-        damage = damage * modify;
-
-        RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, damage, result.getValue(), cause);
-        preEvent.call();
-        if (preEvent.isCancelled()) {
-            e.setCancelled(true);
-            return;
-        }
-
-        damage = preEvent.getDamage();
-        double criticalDamage = preEvent.getCriticalDamage();
-        double totalDamage = damage * criticalDamage;
-
-        e.setDamage(totalDamage);
-
+        PlayerCharacter role = this.getPlayerAttribute(player);
         if (sufferer instanceof Player) {
-            RoleState state = JustAttributeAPI.getRoleState(player);
-            state.updateHealth(totalDamage);
-        }
+            PlayerCharacter target = this.getPlayerAttribute((Player) sufferer);
 
-        RoleLaunchAttackEvent.Post postEvent = new RoleLaunchAttackEvent.Post(player, sufferer, damage, criticalDamage, cause);
-        postEvent.call();
+            Pair<Double, Double> result = CombatHandler.calculate(role, target);
+            RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, result.getKey(), result.getValue(), cause);
+            preEvent.call();
+            if (preEvent.isCancelled()) {
+                e.setCancelled(true);
+                return;
+            }
+
+            double damage = preEvent.getDamage();
+            double criticalDamage = preEvent.getCriticalDamage();
+            double totalDamage = damage * criticalDamage;
+
+            e.setDamage(totalDamage);
+
+            target.updateHP(sufferer.getHealth() - totalDamage);
+
+            RoleLaunchAttackEvent.Post postEvent = new RoleLaunchAttackEvent.Post(player, sufferer, damage, criticalDamage, cause);
+            postEvent.call();
+        }
+        else {
+            ActiveMob activeMob = this.getMob(sufferer.getUniqueId());
+            if (activeMob == null) return;
+            MobCharacter mob = this.getMobAttribute(sufferer);
+            if (mob == null) return;
+
+            Pair<Double, Double> result = CombatHandler.calculate(role, mob);
+            double damage = result.getKey() * activeMob.getType().getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1d);
+
+            RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, damage, result.getValue(), cause);
+            preEvent.call();
+            if (preEvent.isCancelled()) {
+                e.setCancelled(true);
+                return;
+            }
+
+            damage = preEvent.getDamage();
+            double criticalDamage = preEvent.getCriticalDamage();
+            double totalDamage = damage * criticalDamage;
+
+            e.setDamage(totalDamage);
+
+            RoleLaunchAttackEvent.Post postEvent = new RoleLaunchAttackEvent.Post(player, sufferer, damage, criticalDamage, cause);
+            postEvent.call();
+        }
     }
 
     @EventHandler
@@ -181,20 +194,17 @@ public class CombatListener implements Listener {
         return null;
     }
 
-    private RoleAttribute getPlayerAttribute(Player target) {
-        RoleAttribute role = JustAttributeAPI.getRoleAttribute(target);
-        if (role == null) {
-            role = JustAttribute.getRoleManager().initRoleAttribute(target);
-        }
-
-        return role;
+    private PlayerCharacter getPlayerAttribute(Player target) {
+        return JustAttributeAPI.getRoleCharacter(target);
     }
 
-    private MobAttribute getMobAttribute(LivingEntity entity) {
+    private MobCharacter getMobAttribute(LivingEntity entity) {
         UUID uuid = entity.getUniqueId();
         ActiveMob mob = getMob(entity.getUniqueId());
-        return mobs.computeIfAbsent(uuid, key -> mob == null ? new MobAttribute(entity) : new MobAttribute(mob));
+        if (mob == null) return null;
+        return mobs.computeIfAbsent(uuid, key -> new MobCharacter(mob));
     }
+
     private ActiveMob getMob(UUID uuid) {
         if (mobManager.isActiveMob(uuid)) {
             Optional<ActiveMob> optional = mobManager.getActiveMob(uuid);

@@ -1,11 +1,12 @@
 package com.sakuragame.eternal.justattribute.core.attribute;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
-import com.sakuragame.eternal.justattribute.core.attribute.stats.RoleAttribute;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import lombok.Getter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public enum Attribute {
@@ -60,8 +61,20 @@ public enum Attribute {
         return null;
     }
 
-    public double calculate(RoleAttribute role) {
-        return calculate(role.getOrdinaryTotalValue(this), role.getPotencyTotalValue(this));
+    public static AttributeSource generateBase() {
+        Map<Attribute, Double> ordinary = new HashMap<>();
+        Map<Attribute, Double> potency = new HashMap<>();
+
+        for (Attribute ident : Attribute.values()) {
+            if (ident.isOnlyPercent()) {
+                ordinary.put(ident, ident.getBase());
+            }
+            else {
+                potency.put(ident, ident.getBase());
+            }
+        }
+
+        return new AttributeSource(ordinary, potency);
     }
 
     public double calculate(double ordinaryValue, double potencyValue) {
