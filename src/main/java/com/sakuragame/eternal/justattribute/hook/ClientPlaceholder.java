@@ -101,7 +101,7 @@ public class ClientPlaceholder {
             placeholder.put("role_" + ident.getPlaceholder(), ident.formatting(value));
         }
 
-        placeholder.put(ROLE_COMBAT_POWER, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombatValue()));
+        placeholder.put("target_" + ROLE_COMBAT_POWER, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombatValue()));
 
         return placeholder;
     }
