@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.listener.hook;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.mob.MobConfig;
 import com.sakuragame.eternal.justattribute.util.Scheduler;
+import com.taylorswiftcn.justwei.util.UnitConvert;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnedEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
@@ -26,10 +27,19 @@ public class MobListener implements Listener {
         LivingEntity entity = (LivingEntity) e.getEntity();
         MythicMob mob = e.getMobType();
 
+        int level = (int) e.getMobLevel();
+        String name = e.getMob().getDisplayName();
+        entity.setCustomName(this.getDisplayName(level, name));
+
         MobConfig config = JustAttribute.getFileManager().getMobConfig(mob.getInternalName());
-        double hp = config.getHealth(e.getMobLevel());
+        double hp = config.getHealth(level);
 
         entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
         entity.setHealth(hp);
+    }
+
+    private String getDisplayName(int level, String name) {
+        String format = "§8[§eLv." + UnitConvert.formatEN(UnitConvert.TenThousand, level) + "§8]";
+        return name.replace("<level>", format);
     }
 }

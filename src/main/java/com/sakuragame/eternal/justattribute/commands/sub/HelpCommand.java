@@ -1,10 +1,20 @@
 package com.sakuragame.eternal.justattribute.commands.sub;
 
-import com.sakuragame.eternal.justattribute.file.sub.MessageFile;
+import com.sakuragame.eternal.justattribute.commands.CommandPerms;
 import com.taylorswiftcn.justwei.commands.sub.SubCommand;
 import org.bukkit.command.CommandSender;
 
 public class HelpCommand extends SubCommand {
+
+    private final String[] commands;
+
+    public HelpCommand() {
+        this.commands = new String[] {
+                " §7/attribute info - 查看角色状态",
+                " §7/attribute spawn <mob> <level> - 召唤怪物",
+                " §7/attribute reload - 重载配置文件"
+        };
+    }
 
     @Override
     public String getIdentifier() {
@@ -13,9 +23,9 @@ public class HelpCommand extends SubCommand {
 
     @Override
     public void perform(CommandSender sender, String[] args) {
-        MessageFile.help.forEach(sender::sendMessage);
-        if (sender.hasPermission("justrpg.admin"))
-            MessageFile.adminHelp.forEach(sender::sendMessage);
+        for (String s : this.commands) {
+            sender.sendMessage(s);
+        }
     }
 
     @Override
@@ -25,6 +35,6 @@ public class HelpCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return null;
+        return CommandPerms.ADMIN.getNode();
     }
 }

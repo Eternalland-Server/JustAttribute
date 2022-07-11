@@ -1,6 +1,7 @@
 package com.sakuragame.eternal.justattribute.commands.sub;
 
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
+import com.sakuragame.eternal.justattribute.commands.CommandPerms;
 import com.sakuragame.eternal.justattribute.core.attribute.character.PlayerCharacter;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.taylorswiftcn.justwei.commands.sub.SubCommand;
@@ -29,6 +30,6 @@ public class InfoCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return null;
+        return CommandPerms.ADMIN.getNode();
     }
 }

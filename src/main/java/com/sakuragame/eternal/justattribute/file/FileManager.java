@@ -3,7 +3,6 @@ package com.sakuragame.eternal.justattribute.file;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.mob.MobConfig;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
-import com.sakuragame.eternal.justattribute.file.sub.MessageFile;
 import com.taylorswiftcn.justwei.file.JustConfiguration;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.io.MythicConfig;
@@ -35,7 +34,6 @@ public class FileManager extends JustConfiguration {
         message = initFile("message.yml");
 
         ConfigFile.init();
-        MessageFile.init();
         initSmithy();
         loadMobConfig();
     }

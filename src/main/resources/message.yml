@@ -1,6 +1,0 @@
-help:
-  - '/attribute'
-admin-help:
-  - '/attribute reload - 重载配置文件'
-message:
-  no-permission: '&3你没有权限: %s%'
