@@ -63,20 +63,31 @@ public class AttributeListener implements Listener {
             potencyDisplay.add("");
         }
 
+        ItemTagData original = tag.getDeep(Attribute.ORIGINAL_NBT_NODE);
+        ItemTagData enhance = tag.getDeep(Attribute.ENHANCE_NBT_NODE);
+
         for (Attribute attr : Attribute.values()) {
             ItemTagData ordinary = tag.getDeep(attr.getOrdinaryNode());
             ItemTagData potency = tag.getDeep(attr.getPotencyNode());
 
             if (ordinary != null) {
-                ordinaryDisplay.add(attr.format(ordinary));
+                double v = ordinary.asDouble();
+                ordinaryDisplay.add(
+                        original == null ? attr.format(v, false) : attr.format(v, v - original.asDouble())
+                );
             }
             if (potency != null && grade != null) {
-                potencyDisplay.add(attr.format(potency.asDouble(), true));
+                double v = potency.asDouble();
+                potencyDisplay.add(attr.format(v, true));
             }
         }
 
         if (grade == PotencyGrade.NONE) {
             potencyDisplay.add(ConfigFile.potency_empty);
+        }
+
+        if (enhance != null) {
+            e.addName(Attribute.ENHANCE_DISPLAY_NODE, "§6§l(+" + enhance.asInt() + ")");
         }
 
         e.addLore(Attribute.ORDINARY_DISPLAY_NODE, ordinaryDisplay);

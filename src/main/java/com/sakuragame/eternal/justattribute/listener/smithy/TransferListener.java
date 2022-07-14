@@ -107,7 +107,6 @@ public class TransferListener implements Listener {
         UUID uuid = player.getUniqueId();
 
         if (!e.getScreenID().equals(TransferFactory.SCREEN_ID)) return;
-        if (e.getParams().getParamI(0) != 1) return;
 
         if (SmithyManager.getSlot(uuid, TransferFactory.RESULT_SLOT) != null) {
             MessageAPI.sendActionTip(player, "&a&l请取走已转移属性的道具");

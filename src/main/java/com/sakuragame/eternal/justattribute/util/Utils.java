@@ -37,13 +37,7 @@ public class Utils {
 
     public static String getZapID(ItemStack item) {
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-        return itemStream.getZaphkielItem().getId();
-    }
-
-    public static String formatValue(double value, boolean isPercent) {
-        value = isPercent ? value * 100 : value;
-        String s = value >= 0 ? "+" + INTEGRAL.format(value) : "-" + INTEGRAL.format(value);
-        return isPercent ? s + "%" : s;
+        return itemStream.getZaphkielName();
     }
 
     public static String format(double value, boolean isPercent) {

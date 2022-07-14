@@ -145,7 +145,6 @@ public class IdentifyListener implements Listener {
         UUID uuid = player.getUniqueId();
 
         if (!e.getScreenID().equals(IdentifyFactory.SCREEN_ID)) return;
-        if (e.getParams().getParamI(0) != 1) return;
 
         if (SmithyManager.getSlot(uuid, IdentifyFactory.RESULT_SLOT) != null) {
             MessageAPI.sendActionTip(player, "&a&l鉴定前请取走已鉴定完的装备");

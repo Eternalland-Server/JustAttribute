@@ -39,8 +39,12 @@ public enum Attribute {
 
     public final static String ORDINARY_DISPLAY_NODE = "display.ordinary";
     public final static String POTENCY_DISPLAY_NODE = "display.potency";
+    public final static String ENHANCE_DISPLAY_NODE = "display.enhance";
     public final static String ORDINARY_NBT_NODE = "justattribute.ordinary";
     public final static String POTENCY_NBT_NODE = "justattribute.potency";
+
+    public final static String ORIGINAL_NBT_NODE = ORDINARY_NBT_NODE + "._original_";
+    public final static String ENHANCE_NBT_NODE = ORDINARY_NBT_NODE + "._enhance_";
 
     Attribute(String id, String symbol, String display, double base, int score, boolean onlyPercent) {
         this.id = id;
@@ -103,24 +107,26 @@ public enum Attribute {
         return format(value, this.onlyPercent);
     }
 
-    public String format(ItemTagData data) {
-        String s = data.asString();
-        if (s.contains("-")) {
-            return ConfigFile.format.attribute
-                    .replace("<symbol>", getSymbol())
-                    .replace("<identifier>", getDisplay())
-                    .replace("<value>", s);
-        }
-        else {
-            return format(data.asDouble(), this.onlyPercent);
-        }
-    }
+    public String format(double origin, double enhance) {
+        String v1 = (origin >= 0 ? "+" : "-") + Utils.INTEGRAL.format(origin);
+        String v2 = (enhance >= 0 ? "+" : "-") + Utils.INTEGRAL.format(enhance);
+        String v3 = v1 + "§a(" + v2 + ")";
 
-    public String format(double value, boolean isPercent) {
         return ConfigFile.format.attribute
                 .replace("<symbol>", getSymbol())
                 .replace("<identifier>", getDisplay())
-                .replace("<value>", Utils.formatValue(value, isPercent));
+                .replace("<value>", v3);
+    }
+
+    public String format(double value, boolean isPercent) {
+        value = isPercent ? value * 100 : value;
+        String str = (value >= 0 ? "+" : "-") + Utils.INTEGRAL.format(value);
+        str = isPercent ? str + "%" : str;
+
+        return ConfigFile.format.attribute
+                .replace("<symbol>", getSymbol())
+                .replace("<identifier>", getDisplay())
+                .replace("<value>", str);
     }
 
     public String formatting(double value) {
