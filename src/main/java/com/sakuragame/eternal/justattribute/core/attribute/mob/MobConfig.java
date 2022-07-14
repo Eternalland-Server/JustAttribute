@@ -10,12 +10,14 @@ public class MobConfig {
 
     private final String ID;
     private final Map<Attribute, Double> attributes;
-    private final double additions;
+    private final Map<Attribute, Double> additions;
+    private final double promote;
 
     public MobConfig(String ID, MythicConfig config) {
         this.ID = ID;
         this.attributes = new HashMap<>();
-        this.additions = config.getDouble("eternal.additions", 0.01);
+        this.additions = new HashMap<>();
+        this.promote = config.getDouble("eternal.promote", 0.01);
 
         if (config.isConfigurationSection("eternal.attribute")) {
             for (String key : config.getKeys("eternal.attribute")) {
@@ -23,6 +25,15 @@ public class MobConfig {
                 if (key == null) return;
                 double value = config.getDouble("eternal.attribute." + key);
                 this.attributes.put(attribute, value);
+            }
+        }
+
+        if (config.isConfigurationSection("eternal.additions")) {
+            for (String key : config.getKeys("eternal.additions")) {
+                Attribute attribute = Attribute.match(key);
+                if (key == null) return;
+                double value = config.getDouble("eternal.additions." + key);
+                this.additions.put(attribute, value);
             }
         }
     }
@@ -37,6 +48,7 @@ public class MobConfig {
 
     public double getAttributeValue(Attribute attribute, double level) {
         double value = this.attributes.getOrDefault(attribute, 0d);
-        return value * (1 + (level - 1) * this.additions);
+        double additions = this.additions.getOrDefault(attribute, -1d);
+        return (additions == -1) ? (value * (1 + (level - 1) * this.promote)) : (value + (level - 1) * additions);
     }
 }

@@ -83,8 +83,8 @@ public class PlayerCharacter extends JustCharacter implements IRole {
         source
                 .addOrdinary(Attribute.Health, 4 * totalLevel)
                 .addOrdinary(Attribute.Mana, 4 * totalLevel)
-                .addOrdinary(Attribute.Damage, totalLevel)
-                .addOrdinary(Attribute.Defence, totalLevel)
+                .addOrdinary(Attribute.Damage, totalLevel * 0.33)
+                .addOrdinary(Attribute.Defence, totalLevel * 0.33)
                 .addOrdinary(Attribute.Energy, totalLevel)
                 .addOrdinary(Attribute.Stamina, totalLevel)
                 .addOrdinary(Attribute.Wisdom, totalLevel)
