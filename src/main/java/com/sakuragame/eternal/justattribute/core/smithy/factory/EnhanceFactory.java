@@ -79,4 +79,17 @@ public class EnhanceFactory {
 
         return new Pair<>(true, itemStream.rebuildToItemStack(player));
     }
+
+    public static double calculate(double original, int level) {
+        level = Math.min(level, 21);
+        double from = original * 0.6 / MAX;
+        double to = original * 1.4 / MAX;
+
+        double value = original;
+        for (int i = 0; i < level; i++) {
+            value += new BigDecimal(from + Math.random() * (to - from)).setScale(1, RoundingMode.HALF_UP).doubleValue();
+        }
+
+        return value;
+    }
 }

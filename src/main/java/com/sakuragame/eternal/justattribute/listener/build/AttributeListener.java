@@ -24,25 +24,17 @@ public class AttributeListener implements Listener {
         if (e.getPlayer() == null) return;
 
         ItemTag tag = e.getItemStream().getZaphkielData();
+        ItemTagData autoEnhance = tag.getDeep(Attribute.NBT_NODE_ORDINARY + "._auto_enhance_");
+        if (autoEnhance == null) return;
 
-        for (Attribute attr :Attribute.values()) {
-            ItemTagData ordinary = tag.getDeep(attr.getOrdinaryNode());
-            ItemTagData potency = tag.getDeep(attr.getPotencyNode());
+        double original = tag.getDeep(EnhanceFactory.NBT_NODE_ORIGINAL).asDouble();
+        int level = autoEnhance.asInt();
 
-            if (ordinary != null) {
-                String s = ordinary.asString();
-                if (s.contains("-")) {
-                    int random = Utils.getRangeValue(s);
-                    tag.putDeep(attr.getOrdinaryNode(), random);
-                }
-            }
-            if (potency != null) {
-                String s = potency.asString();
-                if (s.contains("-")) {
-                    double random = Utils.getRangeValue(s);
-                    tag.putDeep(attr.getPotencyNode(), random);
-                }
-            }
+        tag.removeDeep(Attribute.NBT_NODE_ORDINARY + "._auto_enhance_");
+        tag.putDeep(EnhanceFactory.NBT_NODE_ENHANCE, level);
+
+        for (Attribute ident : EnhanceFactory.ATTRIBUTES) {
+            tag.putDeep(ident.getOrdinaryNode(), EnhanceFactory.calculate(original, level));
         }
     }
 
