@@ -42,20 +42,11 @@ public class FileManager extends JustConfiguration {
         initFile("smithy/identify.yml");
         initFile("smithy/seal.yml");
         initFile("smithy/transfer.yml");
+        initFile("smithy/enhance.yml");
     }
 
-    public YamlConfiguration getIdentifyConfig() {
-        File file = new File(this.plugin.getDataFolder(), "smithy/identify.yml");
-        return YamlConfiguration.loadConfiguration(file);
-    }
-
-    public YamlConfiguration getSealConfig() {
-        File file = new File(this.plugin.getDataFolder(), "smithy/seal.yml");
-        return YamlConfiguration.loadConfiguration(file);
-    }
-
-    public YamlConfiguration getTransferConfig() {
-        File file = new File(this.plugin.getDataFolder(), "smithy/transfer.yml");
+    public YamlConfiguration getSmithyConfig(String name) {
+        File file = new File(this.plugin.getDataFolder(), "smithy/" + name + ".yml");
         return YamlConfiguration.loadConfiguration(file);
     }
 

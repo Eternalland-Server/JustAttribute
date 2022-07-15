@@ -18,7 +18,7 @@ public class SealFactory {
     public final static String RESULT_SLOT = "seal_result";
 
     public static void init() {
-        price = JustAttribute.getFileManager().getSealConfig().getInt("price");
+        price = JustAttribute.getFileManager().getSmithyConfig("seal").getInt("price");
     }
 
     public static ItemStack unlock(Player player, ItemStack item) {

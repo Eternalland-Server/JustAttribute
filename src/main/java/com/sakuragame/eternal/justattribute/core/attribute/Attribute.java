@@ -2,7 +2,6 @@ package com.sakuragame.eternal.justattribute.core.attribute;
 
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Utils;
-import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -37,14 +36,11 @@ public enum Attribute {
     private final int score;
     private final boolean onlyPercent;
 
-    public final static String ORDINARY_DISPLAY_NODE = "display.ordinary";
+    public final static String DISPLAY_NODE_ORDINARY = "display.ordinary";
     public final static String POTENCY_DISPLAY_NODE = "display.potency";
-    public final static String ENHANCE_DISPLAY_NODE = "display.enhance";
-    public final static String ORDINARY_NBT_NODE = "justattribute.ordinary";
-    public final static String POTENCY_NBT_NODE = "justattribute.potency";
-
-    public final static String ORIGINAL_NBT_NODE = ORDINARY_NBT_NODE + "._original_";
-    public final static String ENHANCE_NBT_NODE = ORDINARY_NBT_NODE + "._enhance_";
+    public final static String DISPLAY_NODE_ENHANCE = "display.enhance";
+    public final static String NBT_NODE_ORDINARY = "justattribute.ordinary";
+    public final static String NBT_NODE_POTENCY = "justattribute.potency";
 
     Attribute(String id, String symbol, String display, double base, int score, boolean onlyPercent) {
         this.id = id;
@@ -134,10 +130,10 @@ public enum Attribute {
     }
 
     public String getOrdinaryNode() {
-        return (ORDINARY_NBT_NODE + "." + getId()).toLowerCase();
+        return (NBT_NODE_ORDINARY + "." + getId()).toLowerCase();
     }
 
     public String getPotencyNode() {
-        return (POTENCY_NBT_NODE + "." + getId()).toLowerCase();
+        return (NBT_NODE_POTENCY + "." + getId()).toLowerCase();
     }
 }

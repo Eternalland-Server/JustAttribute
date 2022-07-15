@@ -62,7 +62,7 @@ public class SealListener implements Listener {
 
         if (ident.equals(SealFactory.RESULT_SLOT)) {
             if (!MegumiUtil.isEmpty(handItem)) {
-                MessageAPI.sendActionTip(player, "&c&l该槽位不能放入物品");
+                player.sendMessage(ConfigFile.prefix + "该槽位不能放入物品");
                 e.setCancelled(true);
                 return;
             }
@@ -82,13 +82,10 @@ public class SealListener implements Listener {
                 ItemTag itemTag = itemStream.getZaphkielData();
                 Action action = SoulBound.getType(itemTag);
                 if (action == null || action.isLock() || action == Action.SEAL) {
-                    MessageAPI.sendActionTip(player, "&a&l这个道具无法被封印");
+                    player.sendMessage(ConfigFile.prefix + "这个道具无法被封印");
                     e.setCancelled(true);
                     return;
                 }
-
-                e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
-                return;
             }
 
             e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
@@ -103,19 +100,22 @@ public class SealListener implements Listener {
         if (!e.getScreenID().equals(SealFactory.SCREEN_ID)) return;
 
         if (SmithyManager.getSlot(uuid, SealFactory.RESULT_SLOT) != null) {
-            MessageAPI.sendActionTip(player, "&a&l请先取走封印后的道具");
+            player.sendMessage(ConfigFile.prefix + "请先取走封印后的道具");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
 
         ItemStack prop = SmithyManager.getSlot(uuid, SealFactory.PROP_SLOT);
 
         if (MegumiUtil.isEmpty(prop) || prop.getType() == Material.AIR) {
-            MessageAPI.sendActionTip(player, "&c&l请放入需要封印的道具");
+            player.sendMessage(ConfigFile.prefix + "请放入需要封印的道具");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
 
         if (GemsEconomyAPI.getBalance(uuid, EternalCurrency.Points) < SealFactory.price) {
-            MessageAPI.sendActionTip(player, "&c&l你没有足够的神石");
+            player.sendMessage(ConfigFile.prefix + "你没有足够的神石");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
 

@@ -18,7 +18,7 @@ public class TransferFactory {
     public final static String RESULT_SLOT = "transfer_result";
 
     public static void init() {
-        price = JustAttribute.getFileManager().getTransferConfig().getInt("price");
+        price = JustAttribute.getFileManager().getSmithyConfig("transfer").getInt("price");
     }
 
     public static ItemStack machining(Player player, ItemStack equip, ItemStack prop) {
@@ -29,8 +29,8 @@ public class TransferFactory {
         ItemTag equipTag = equipStream.getZaphkielData();
         ItemTag propTag = propStream.getZaphkielData();
 
-        equipTag.removeDeep(Attribute.ORDINARY_NBT_NODE);
-        equipTag.putDeep(Attribute.ORDINARY_NBT_NODE, propTag.getDeep(Attribute.ORDINARY_NBT_NODE));
+        equipTag.removeDeep(Attribute.NBT_NODE_ORDINARY);
+        equipTag.putDeep(Attribute.NBT_NODE_ORDINARY, propTag.getDeep(Attribute.NBT_NODE_ORDINARY));
 
         return equipStream.rebuildToItemStack(player);
     }

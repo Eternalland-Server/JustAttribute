@@ -18,6 +18,7 @@ import net.sakuragame.eternal.gemseconomy.api.GemsEconomyAPI;
 import net.sakuragame.eternal.gemseconomy.currency.EternalCurrency;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -62,7 +63,7 @@ public class TransferListener implements Listener {
 
         if (ident.equals(TransferFactory.RESULT_SLOT)) {
             if (!MegumiUtil.isEmpty(handItem)) {
-                MessageAPI.sendActionTip(player, "&c&l该槽位不能放入物品");
+                player.sendMessage(ConfigFile.prefix + "该槽位不能放入物品");
                 e.setCancelled(true);
                 return;
             }
@@ -82,13 +83,13 @@ public class TransferListener implements Listener {
                 ItemTag itemTag = itemStream.getZaphkielData();
                 EquipClassify classify = EquipClassify.getClassify(itemTag);
                 if (classify == null) {
-                    MessageAPI.sendActionTip(player, "&a&l该道具无法转移属性");
+                    player.sendMessage(ConfigFile.prefix + "该道具无法转移属性");
                     e.setCancelled(true);
                     return;
                 }
 
                 if (SoulBound.isSeal(itemTag)) {
-                    MessageAPI.sendActionTip(player, "&c&l该物品已被封印");
+                    player.sendMessage(ConfigFile.prefix + "该物品已被封印");
                     e.setCancelled(true);
                     return;
                 }
@@ -109,7 +110,8 @@ public class TransferListener implements Listener {
         if (!e.getScreenID().equals(TransferFactory.SCREEN_ID)) return;
 
         if (SmithyManager.getSlot(uuid, TransferFactory.RESULT_SLOT) != null) {
-            MessageAPI.sendActionTip(player, "&a&l请取走已转移属性的道具");
+            player.sendMessage(ConfigFile.prefix + "请取走已转移属性的道具");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
 
@@ -117,17 +119,20 @@ public class TransferListener implements Listener {
         ItemStack prop = SmithyManager.getSlot(uuid, TransferFactory.PROP_SLOT);
 
         if (MegumiUtil.isEmpty(equip) || equip.getType() == Material.AIR) {
-            MessageAPI.sendActionTip(player, "&c&l请放入主道具");
+            player.sendMessage(ConfigFile.prefix + "请放入主道具");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
 
-        if (MegumiUtil.isEmpty(prop) || equip.getType() == Material.AIR) {
-            MessageAPI.sendActionTip(player, "&c&l请放入副道具");
+        if (MegumiUtil.isEmpty(prop) || prop.getType() == Material.AIR) {
+            player.sendMessage(ConfigFile.prefix + "请放入副道具");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
 
         if (GemsEconomyAPI.getBalance(uuid, EternalCurrency.Points) < TransferFactory.price) {
-            MessageAPI.sendActionTip(player, "&c&l你没有足够的神石");
+            player.sendMessage(ConfigFile.prefix + "你没有足够的神石");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
 

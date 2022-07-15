@@ -25,6 +25,10 @@ public class Utils {
         return RANDOM.nextInt(value);
     }
 
+    public static double getRandomDouble(double value) {
+        return RANDOM.nextDouble() * value;
+    }
+
     public static int getRangeValue(String s) {
         if (!s.contains("-")) return Integer.parseInt(s);
 

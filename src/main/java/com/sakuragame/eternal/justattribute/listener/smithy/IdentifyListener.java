@@ -30,11 +30,11 @@ import java.util.*;
 
 public class IdentifyListener implements Listener {
 
-    private final List<String> scroll = new ArrayList<String>() {{
-        add("normal_potency_identify_scroll");
-        add("normal_potency_reset_scroll");
-        add("advanced_potency_reset_scroll");
-    }};
+    private final List<String> scroll = Arrays.asList(
+            "normal_potency_identify_scroll",
+            "normal_potency_reset_scroll",
+            "advanced_potency_reset_scroll"
+    );
 
     private final List<Pair<Double, PotencyGrade>> scrollWeight = new LinkedList<Pair<Double, PotencyGrade>>() {{
         add(new Pair<>(0.05d, PotencyGrade.SSS));
@@ -77,7 +77,7 @@ public class IdentifyListener implements Listener {
 
         if (ident.equals(IdentifyFactory.RESULT_SLOT)) {
             if (!MegumiUtil.isEmpty(handItem)) {
-                MessageAPI.sendActionTip(player, "&c&l该槽位不能放入物品");
+                player.sendMessage(ConfigFile.prefix + "该槽位不能放入物品");
                 e.setCancelled(true);
                 return;
             }
@@ -95,21 +95,19 @@ public class IdentifyListener implements Listener {
                 }
 
                 ItemTag itemTag = itemStream.getZaphkielData();
-                ItemTagData data = itemTag.getDeep(PotencyGrade.NBT_TAG);
-                if (data == null) {
-                    MessageAPI.sendActionTip(player, "&c&l该物品不能鉴定");
-                    e.setCancelled(true);
-                    return;
-                }
 
                 if (SoulBound.isSeal(itemTag)) {
-                    MessageAPI.sendActionTip(player, "&c&l该物品已被封印");
+                    player.sendMessage(ConfigFile.prefix + "该物品已被封印");
                     e.setCancelled(true);
                     return;
                 }
 
-                e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
-                return;
+                ItemTagData data = itemTag.getDeep(PotencyGrade.NBT_TAG);
+                if (data == null) {
+                    player.sendMessage(ConfigFile.prefix + "该物品不能被鉴定");
+                    e.setCancelled(true);
+                    return;
+                }
             }
 
             e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
@@ -125,14 +123,11 @@ public class IdentifyListener implements Listener {
                 }
 
                 String zapID = itemStream.getZaphkielItem().getId();
-                if (!scroll.contains(zapID)) {
-                    MessageAPI.sendActionTip(player, "&c&l该槽位只能放入鉴定卷轴!");
+                if (!this.scroll.contains(zapID)) {
+                    player.sendMessage(ConfigFile.prefix + "该槽位只能放入鉴定卷轴!");
                     e.setCancelled(true);
                     return;
                 }
-
-                e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
-                return;
             }
 
             e.setSlotItem(SmithyManager.removeSlot(uuid, ident));
@@ -147,7 +142,8 @@ public class IdentifyListener implements Listener {
         if (!e.getScreenID().equals(IdentifyFactory.SCREEN_ID)) return;
 
         if (SmithyManager.getSlot(uuid, IdentifyFactory.RESULT_SLOT) != null) {
-            MessageAPI.sendActionTip(player, "&a&l鉴定前请取走已鉴定完的装备");
+            player.sendMessage(ConfigFile.prefix + "鉴定前请取走已鉴定完的装备");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
 
@@ -155,12 +151,14 @@ public class IdentifyListener implements Listener {
         ItemStack prop = SmithyManager.getSlot(uuid, IdentifyFactory.PROP_SLOT);
 
         if (MegumiUtil.isEmpty(equip) || equip.getType() == Material.AIR) {
-            MessageAPI.sendActionTip(player, "&c&l请放入主道具");
+            player.sendMessage(ConfigFile.prefix + "请放入需要鉴定的装备");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
 
-        if (MegumiUtil.isEmpty(prop) || equip.getType() == Material.AIR) {
-            MessageAPI.sendActionTip(player, "&c&l请放入鉴定卷轴");
+        if (MegumiUtil.isEmpty(prop) || prop.getType() == Material.AIR) {
+            player.sendMessage(ConfigFile.prefix + "请放入鉴定卷轴");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
 
@@ -168,7 +166,8 @@ public class IdentifyListener implements Listener {
         String propID = Utils.getZapID(prop);
         if (currentGrade == PotencyGrade.NONE) {
             if (!propID.equals("normal_potency_identify_scroll")) {
-                MessageAPI.sendActionTip(player, "&c&l该装备还未被鉴定，不能使用重置卷轴");
+                player.sendMessage(ConfigFile.prefix + "该装备还未被鉴定，不能使用重置卷轴");
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
                 return;
             }
 
@@ -185,14 +184,15 @@ public class IdentifyListener implements Listener {
 
             MessageAPI.sendActionTip(player, "&a&l鉴定成功!");
             player.sendMessage(ConfigFile.prefix + "§7鉴定成功，装备获得了 §3" + grade.getName() + " §7级潜能");
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.6f, 1f);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 1f);
 
             SmithyIdentifyEvent event = new SmithyIdentifyEvent(player, grade, item.clone());
             event.call();
         }
         else {
             if (propID.equals("normal_potency_identify_scroll")) {
-                MessageAPI.sendActionTip(player, "&c&l该装备已经被鉴定过了，请使用重置卷轴");
+                player.sendMessage(ConfigFile.prefix + "该装备已经被鉴定过了，请使用重置卷轴");
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
                 return;
             }
 
@@ -211,7 +211,7 @@ public class IdentifyListener implements Listener {
 
             MessageAPI.sendActionTip(player, "&a&l潜能重置成功!");
             player.sendMessage(ConfigFile.prefix + "§7潜能重置成功，装备新的潜能等级为 §3" + grade.getName() + " §7级");
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.6f, 1f);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 1f);
 
             SmithyIdentifyEvent event = new SmithyIdentifyEvent(player, grade, item.clone());
             event.call();

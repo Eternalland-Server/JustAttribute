@@ -53,7 +53,7 @@ public class IdentifyFactory {
         Map<Attribute, String> potency = result.getValue();
 
         itemTag.putDeep(PotencyGrade.NBT_TAG, grade.getId());
-        itemTag.removeDeep(Attribute.POTENCY_NBT_NODE);
+        itemTag.removeDeep(Attribute.NBT_NODE_POTENCY);
         for (Attribute key : potency.keySet()) {
             String s = potency.get(key);
             double value = Utils.getRangeValue(s) / 100d;
@@ -72,7 +72,7 @@ public class IdentifyFactory {
     }
 
     private static void loadConfig() {
-        YamlConfiguration yaml = JustAttribute.getFileManager().getIdentifyConfig();
+        YamlConfiguration yaml = JustAttribute.getFileManager().getSmithyConfig("identify");
 
         ConfigurationSection weapon = yaml.getConfigurationSection("weapon");
         ConfigurationSection equip = yaml.getConfigurationSection("equip");

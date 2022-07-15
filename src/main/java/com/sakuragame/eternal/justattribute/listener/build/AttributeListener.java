@@ -1,6 +1,7 @@
 package com.sakuragame.eternal.justattribute.listener.build;
 
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
+import com.sakuragame.eternal.justattribute.core.smithy.factory.EnhanceFactory;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Utils;
@@ -8,7 +9,6 @@ import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -63,8 +63,8 @@ public class AttributeListener implements Listener {
             potencyDisplay.add("");
         }
 
-        ItemTagData original = tag.getDeep(Attribute.ORIGINAL_NBT_NODE);
-        ItemTagData enhance = tag.getDeep(Attribute.ENHANCE_NBT_NODE);
+        ItemTagData original = tag.getDeep(EnhanceFactory.NBT_NODE_ORIGINAL);
+        ItemTagData enhance = tag.getDeep(EnhanceFactory.NBT_NODE_ENHANCE);
 
         for (Attribute attr : Attribute.values()) {
             ItemTagData ordinary = tag.getDeep(attr.getOrdinaryNode());
@@ -73,7 +73,7 @@ public class AttributeListener implements Listener {
             if (ordinary != null) {
                 double v = ordinary.asDouble();
                 ordinaryDisplay.add(
-                        original == null ? attr.format(v, false) : attr.format(v, v - original.asDouble())
+                        original == null ? attr.format(v, false) : attr.format(original.asDouble(), v - original.asDouble())
                 );
             }
             if (potency != null && grade != null) {
@@ -87,10 +87,10 @@ public class AttributeListener implements Listener {
         }
 
         if (enhance != null) {
-            e.addName(Attribute.ENHANCE_DISPLAY_NODE, "§6§l(+" + enhance.asInt() + ")");
+            e.addName(Attribute.DISPLAY_NODE_ENHANCE, "§6§l(+" + enhance.asInt() + ")");
         }
 
-        e.addLore(Attribute.ORDINARY_DISPLAY_NODE, ordinaryDisplay);
+        e.addLore(Attribute.DISPLAY_NODE_ORDINARY, ordinaryDisplay);
         e.addLore(Attribute.POTENCY_DISPLAY_NODE, potencyDisplay);
     }
 
