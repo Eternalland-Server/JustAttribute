@@ -30,9 +30,9 @@ public class EnhanceListener implements Listener {
     private final DecimalFormat format = new DecimalFormat("0.00");
 
     private final Map<String, Integer> crystal = new HashMap<String, Integer>() {{
-        put("enhance_v1_crystal", 10);
-        put("enhance_v2_crystal", 18);
-        put("enhance_v3_crystal", 21);
+        put("enhance_v1_stone", 10);
+        put("enhance_v2_stone", 18);
+        put("enhance_v3_stone", 21);
     }};
 
     @EventHandler

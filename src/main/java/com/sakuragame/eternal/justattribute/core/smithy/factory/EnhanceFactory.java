@@ -82,8 +82,8 @@ public class EnhanceFactory {
 
     public static double calculate(double original, int level) {
         level = Math.min(level, 21);
-        double from = original * 0.6 / MAX;
-        double to = original * 1.4 / MAX;
+        double from = original * 0.618 / MAX;
+        double to = original * 1.707 / MAX;
 
         double value = original;
         for (int i = 0; i < level; i++) {
