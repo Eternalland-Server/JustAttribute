@@ -65,8 +65,8 @@ public class EnhanceFactory {
         if (ratio < Math.random()) return new Pair<>(false, equip);
 
         double original = itemTag.getDeep(NBT_NODE_ORIGINAL).asDouble();
-        double from = original * 0.6 / MAX;
-        double to = original * 1.4 / MAX;
+        double from = original * 0.707 / MAX;
+        double to = original * 1.618 / MAX;
 
         for (Attribute identifier : ATTRIBUTES) {
             double random = new BigDecimal(from + Math.random() * (to - from)).setScale(1, RoundingMode.HALF_UP).doubleValue();
@@ -82,8 +82,8 @@ public class EnhanceFactory {
 
     public static double calculate(double original, int level) {
         level = Math.min(level, 21);
-        double from = original * 0.618 / MAX;
-        double to = original * 1.707 / MAX;
+        double from = original * 0.707 / MAX;
+        double to = original * 1.618 / MAX;
 
         double value = original;
         for (int i = 0; i < level; i++) {

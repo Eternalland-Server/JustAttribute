@@ -10,9 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RoleManager {
@@ -27,6 +25,10 @@ public class RoleManager {
         this.plugin = plugin;
         this.roles = new ConcurrentHashMap<>();
         this.start();
+    }
+
+    public Collection<PlayerCharacter> getAllRole() {
+        return this.roles.values();
     }
 
     public void load(UUID uuid) {
