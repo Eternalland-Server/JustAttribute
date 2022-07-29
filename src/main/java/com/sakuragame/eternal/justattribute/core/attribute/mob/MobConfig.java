@@ -19,6 +19,7 @@ public class MobConfig {
         this.additions = new HashMap<>();
         this.promote = config.getDouble("eternal.promote", 0.01);
 
+        this.attributes.put(Attribute.Health, config.getDouble("Health"));
         if (config.isConfigurationSection("eternal.attribute")) {
             for (String key : config.getKeys("eternal.attribute")) {
                 Attribute attribute = Attribute.match(key);

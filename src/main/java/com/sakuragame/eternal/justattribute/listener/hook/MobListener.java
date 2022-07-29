@@ -2,9 +2,7 @@ package com.sakuragame.eternal.justattribute.listener.hook;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.mob.MobConfig;
-import com.sakuragame.eternal.justattribute.util.Scheduler;
 import com.taylorswiftcn.justwei.util.UnitConvert;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnedEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
@@ -39,7 +37,7 @@ public class MobListener implements Listener {
     }
 
     private String getDisplayName(int level, String name) {
-        String format = "§8[§eLv." + UnitConvert.formatEN(UnitConvert.TenThousand, level) + "§8]";
+        String format = "§3§l⊰§eLv." + UnitConvert.formatEN(UnitConvert.TenThousand, level) + "§3§l⊱";
         return name.replace("<level>", format);
     }
 }
