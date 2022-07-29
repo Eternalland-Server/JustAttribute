@@ -4,7 +4,6 @@ import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.EnhanceFactory;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
-import com.sakuragame.eternal.justattribute.util.Utils;
 import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
@@ -65,7 +64,7 @@ public class AttributeListener implements Listener {
             if (ordinary != null) {
                 double v = ordinary.asDouble();
                 ordinaryDisplay.add(
-                        original == null ? attr.format(v, false) : attr.format(original.asDouble(), v - original.asDouble())
+                        original == null ? attr.format(v, attr.isOnlyPercent()) : attr.format(original.asDouble(), v - original.asDouble())
                 );
             }
             if (potency != null && grade != null) {

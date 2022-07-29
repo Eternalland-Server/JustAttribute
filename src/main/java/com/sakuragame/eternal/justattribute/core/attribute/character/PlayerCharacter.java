@@ -77,7 +77,7 @@ public class PlayerCharacter extends JustCharacter implements IRole {
     }
 
     public void updateLevelAddition() {
-        int totalLevel = JustLevelAPI.getTotalLevel(this.getUUID());
+        int totalLevel = JustLevelAPI.getTotalLevel(this.getUUID()) - 1;
         AttributeSource source = new AttributeSource();
 
         source

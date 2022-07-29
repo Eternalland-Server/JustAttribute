@@ -27,7 +27,8 @@ public enum Attribute {
     Critical_Chance("critical_chance", "ㇱ", "暴击几率", 0, 0, true),
     Critical_Damage("critical_damage", "ㇰ", "暴击伤害", 1.25, 0, true),
     EXP_Addition("exp_addition", "け", "经验加成", 0, 0, true),
-    MovementSpeed("movement_speed", "ふ", "移动速度", 0, 0, true);
+    MovementSpeed("movement_speed", "ふ", "移动速度", 0, 0, true),
+    AttackSpeed("attack_speed", "ぶ", "攻击速度", 0, 0, true);
 
     private final String id;
     private final String symbol;

@@ -9,10 +9,12 @@ import com.sakuragame.eternal.justattribute.core.attribute.character.ICharacter;
 import com.sakuragame.eternal.justattribute.core.attribute.character.MobCharacter;
 import com.sakuragame.eternal.justattribute.core.attribute.character.PlayerCharacter;
 import com.sakuragame.eternal.justattribute.hook.DamageModify;
+import com.taylorswiftcn.justwei.util.MegumiUtil;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import net.sakuragame.eternal.dragoncore.util.Pair;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -23,6 +25,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -111,12 +114,19 @@ public class CombatListener implements Listener {
 
         // player attack
         Player player = (Player) attacker;
+        ItemStack hand = player.getInventory().getItemInMainHand();
+        boolean weapon = !MegumiUtil.isEmpty(hand) && hand.getType() == Material.IRON_SWORD;
+
         PlayerCharacter role = this.getPlayerAttribute(player);
         if (sufferer instanceof Player) {
             PlayerCharacter target = this.getPlayerAttribute((Player) sufferer);
 
             Pair<Double, Double> result = CombatHandler.calculate(role, target);
-            RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, result.getKey(), result.getValue(), cause);
+            double charge = weapon ? (e.getDamage() / 6d) : 1;
+            double key = result.getKey() * charge;
+            double value = result.getValue();
+
+            RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, key, value, cause);
             preEvent.call();
             if (preEvent.isCancelled()) {
                 e.setCancelled(true);
@@ -128,7 +138,6 @@ public class CombatListener implements Listener {
             double totalDamage = damage * criticalDamage;
 
             e.setDamage(totalDamage);
-
             target.updateHP(sufferer.getHealth() - totalDamage);
 
             RoleLaunchAttackEvent.Post postEvent = new RoleLaunchAttackEvent.Post(player, sufferer, damage, criticalDamage, cause);
@@ -141,16 +150,18 @@ public class CombatListener implements Listener {
             if (mob == null) return;
 
             Pair<Double, Double> result = CombatHandler.calculate(role, mob);
-            double damage = result.getKey() * activeMob.getType().getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1d);
+            double charge = weapon ? (e.getDamage() / 6d) : 1;
+            double key = result.getKey() * charge * activeMob.getType().getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1d);
+            double value = result.getValue();
 
-            RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, damage, result.getValue(), cause);
+            RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, key, value, cause);
             preEvent.call();
             if (preEvent.isCancelled()) {
                 e.setCancelled(true);
                 return;
             }
 
-            damage = preEvent.getDamage();
+            double damage = preEvent.getDamage();
             double criticalDamage = preEvent.getCriticalDamage();
             double totalDamage = damage * criticalDamage;
 

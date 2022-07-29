@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.commands.sub;
 
 import com.sakuragame.eternal.justattribute.commands.CommandPerms;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.commands.sub.SubCommand;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -24,7 +25,7 @@ public class SpawnCommand extends SubCommand {
 
         if (!MegumiUtil.isNumber(s)) return;
 
-        int level = Integer.parseInt(s);
+        int level = Utils.getRangeValue(s);
 
         Player player = this.getPlayer();
         try {
