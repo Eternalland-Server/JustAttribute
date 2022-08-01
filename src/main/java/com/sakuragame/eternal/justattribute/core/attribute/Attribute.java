@@ -38,7 +38,7 @@ public enum Attribute {
     private final boolean onlyPercent;
 
     public final static String DISPLAY_NODE_ORDINARY = "display.ordinary";
-    public final static String POTENCY_DISPLAY_NODE = "display.potency";
+    public final static String DISPLAY_NODE_POTENCY = "display.potency";
     public final static String DISPLAY_NODE_ENHANCE = "display.enhance";
     public final static String NBT_NODE_ORDINARY = "justattribute.ordinary";
     public final static String NBT_NODE_POTENCY = "justattribute.potency";

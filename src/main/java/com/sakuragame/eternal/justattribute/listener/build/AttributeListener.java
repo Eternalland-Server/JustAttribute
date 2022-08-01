@@ -19,7 +19,7 @@ public class AttributeListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBuild(ItemBuildEvent.Pre e) {
         String display = e.getItemStream().getZaphkielItem().getDisplay();
-        if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;
+        if (!display.equals("EQUIP_COMMON_DISPLAY")) return;
         if (e.getPlayer() == null) return;
 
         ItemTag tag = e.getItemStream().getZaphkielData();
@@ -40,7 +40,7 @@ public class AttributeListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDisplay(ItemReleaseEvent.Display e) {
         String display = e.getItemStream().getZaphkielItem().getDisplay();
-        if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;
+        if (!display.equals("EQUIP_COMMON_DISPLAY")) return;
 
         ItemTag tag = e.getItemStream().getZaphkielData();
 
@@ -64,9 +64,12 @@ public class AttributeListener implements Listener {
             if (ordinary != null) {
                 double v = ordinary.asDouble();
                 ordinaryDisplay.add(
-                        original == null ? attr.format(v, attr.isOnlyPercent()) : attr.format(original.asDouble(), v - original.asDouble())
+                        original == null ?
+                                attr.format(v, attr.isOnlyPercent()) :
+                                attr.format(original.asDouble(), v - original.asDouble())
                 );
             }
+
             if (potency != null && grade != null) {
                 double v = potency.asDouble();
                 potencyDisplay.add(attr.format(v, true));
@@ -82,7 +85,7 @@ public class AttributeListener implements Listener {
         }
 
         e.addLore(Attribute.DISPLAY_NODE_ORDINARY, ordinaryDisplay);
-        e.addLore(Attribute.POTENCY_DISPLAY_NODE, potencyDisplay);
+        e.addLore(Attribute.DISPLAY_NODE_POTENCY, potencyDisplay);
     }
 
 }
