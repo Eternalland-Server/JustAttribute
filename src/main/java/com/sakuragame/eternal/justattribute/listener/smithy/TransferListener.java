@@ -82,7 +82,7 @@ public class TransferListener implements Listener {
 
                 ItemTag itemTag = itemStream.getZaphkielData();
                 EquipClassify classify = EquipClassify.getClassify(itemTag);
-                if (classify == null) {
+                if (classify == null || classify.getId() > 8) {
                     player.sendMessage(ConfigFile.prefix + "该道具无法转移属性");
                     e.setCancelled(true);
                     return;
@@ -151,6 +151,7 @@ public class TransferListener implements Listener {
 
         MessageAPI.sendActionTip(player, "&a&l转移成功!");
         player.sendMessage(ConfigFile.prefix + "§7转移属性成功!你花费了 §a" + TransferFactory.price + " §7神石");
+        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 1f);
 
         SmithyTransferEvent event = new SmithyTransferEvent(player, transfer, result.clone());
         event.call();

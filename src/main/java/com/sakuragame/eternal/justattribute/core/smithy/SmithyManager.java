@@ -81,10 +81,8 @@ public class SmithyManager {
     }
 
     public static void clearSlot(Player player) {
-        clearSlot(player.getUniqueId());
-    }
-
-    public static void clearSlot(UUID uuid) {
-        slotCache.remove(uuid);
+        UUID uuid = player.getUniqueId();
+        Map<String, ItemStack> cache = slotCache.remove(uuid);
+        cache.values().forEach(item -> player.getInventory().addItem(item));
     }
 }

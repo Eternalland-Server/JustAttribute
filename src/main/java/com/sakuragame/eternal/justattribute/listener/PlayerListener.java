@@ -13,7 +13,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -56,15 +55,6 @@ public class PlayerListener implements Listener {
 
         Scheduler.cancel(uuid);
         Scheduler.runAsync(() -> JustAttribute.getRoleManager().save(uuid));
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onGameModeChange(PlayerGameModeChangeEvent e) {
-        Player player = e.getPlayer();
-        if (player.isOp()) return;
-        if (e.getNewGameMode() == GameMode.ADVENTURE || e.getNewGameMode() == GameMode.SPECTATOR) return;
-
-        e.setCancelled(true);
     }
 
     @EventHandler

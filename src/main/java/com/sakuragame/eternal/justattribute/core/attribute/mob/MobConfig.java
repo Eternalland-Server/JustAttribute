@@ -44,9 +44,7 @@ public class MobConfig {
     }
 
     public double getHealth(int level) {
-        double value = this.attributes.getOrDefault(Attribute.Health, 0d);
-        double additions = this.additions.getOrDefault(Attribute.Health, -1d);
-        return (additions == -1) ? (value * (1 + (level - 1) * this.promote)) : (value + (level - 1) * additions);
+        return this.getAttributeValue(Attribute.Health, level);
     }
 
     public double getAttributeValue(Attribute attribute, double level) {

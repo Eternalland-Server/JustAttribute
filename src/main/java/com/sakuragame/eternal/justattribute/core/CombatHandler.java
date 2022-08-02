@@ -32,6 +32,8 @@ public class CombatHandler {
     }
 
     public static void damageVampire(Player player, LivingEntity source) {
+        if (player.isDead()) return;
+
         PlayerCharacter role = JustAttributeAPI.getRoleCharacter(player);
 
         double rate = 1 + role.getAttributeValue(Attribute.Vampire_Damage);
@@ -49,6 +51,8 @@ public class CombatHandler {
     }
 
     public static void powerVampire(Player player, LivingEntity source) {
+        if (player.isDead()) return;
+
         PlayerCharacter role = JustAttributeAPI.getRoleCharacter(player);
 
         double rate =  1 + role.getAttributeValue(Attribute.Vampire_Versatile);
