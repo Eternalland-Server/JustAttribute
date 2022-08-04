@@ -154,7 +154,7 @@ public class PlayerCharacter extends JustCharacter implements IRole {
     public void setMP(double value) {
         Player player = this.getPlayer();
 
-        this.mana = Math.max(0, Math.min(value, this.getMaxHP()));
+        this.mana = Math.max(0, Math.min(value, this.getMaxMP()));
 
         RoleStateUpdateEvent event = new RoleStateUpdateEvent(player);
         event.call();
