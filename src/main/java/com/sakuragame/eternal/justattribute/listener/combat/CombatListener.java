@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.listener.combat;
 
 import com.sakuragame.eternal.justattribute.api.JustAttributeAPI;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleLaunchAttackEvent;
+import com.sakuragame.eternal.justattribute.api.event.role.RoleNearDeathEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleSkillAttackEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleUnderAttackEvent;
 import com.sakuragame.eternal.justattribute.core.CombatHandler;
@@ -103,9 +104,16 @@ public class CombatListener implements Listener {
             double criticalDamage = preEvent.getCriticalDamage();
             double totalDamage = damage * criticalDamage;
 
+            if (player.getHealth() - totalDamage <= 0) {
+                RoleNearDeathEvent dieEvent = new RoleNearDeathEvent(player, attacker, totalDamage, cause);
+                dieEvent.call();
+
+                totalDamage = dieEvent.getFinalDamage();
+            }
+
             e.setDamage(totalDamage);
 
-            role.updateHP(player.getHealth() - totalDamage);
+            role.updateHP(Math.max(0, player.getHealth() - totalDamage));
 
             RoleUnderAttackEvent.Post postEvent = new RoleUnderAttackEvent.Post(player, attacker, damage, criticalDamage, cause);
             postEvent.call();

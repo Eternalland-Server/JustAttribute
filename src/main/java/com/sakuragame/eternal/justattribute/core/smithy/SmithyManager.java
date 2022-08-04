@@ -83,6 +83,7 @@ public class SmithyManager {
     public static void clearSlot(Player player) {
         UUID uuid = player.getUniqueId();
         Map<String, ItemStack> cache = slotCache.remove(uuid);
+        if (cache == null) return;
         cache.values().forEach(item -> player.getInventory().addItem(item));
     }
 }
