@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.core.attribute.character;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.attribute.mob.MobConfig;
+import com.sakuragame.eternal.justattribute.core.special.CombatPower;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 
 public class MobCharacter extends JustCharacter {
@@ -23,7 +24,9 @@ public class MobCharacter extends JustCharacter {
 
     @Override
     public void update() {
-
+        MobConfig config = JustAttribute.getFileManager().getMobConfig(this.ID);
+        int value = CombatPower.calculate(config.getAttributeSource(this.mob.getLevel()));
+        this.getCombatPower().update(value);
     }
 
     @Override

@@ -19,7 +19,6 @@ public class FileManager extends JustConfiguration {
 
     private final JustAttribute plugin;
     @Getter private YamlConfiguration config;
-    @Getter private YamlConfiguration message;
 
     private final Map<String, MobConfig> mobConfig;
 
@@ -31,7 +30,6 @@ public class FileManager extends JustConfiguration {
 
     public void init() {
         config = initFile("config.yml");
-        message = initFile("message.yml");
 
         ConfigFile.init();
         initSmithy();

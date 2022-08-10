@@ -1,6 +1,7 @@
 package com.sakuragame.eternal.justattribute.core.attribute.mob;
 
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
+import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
 import io.lumine.xikage.mythicmobs.io.MythicConfig;
 
 import java.util.HashMap;
@@ -53,5 +54,14 @@ public class MobConfig {
 
         double additions = this.additions.getOrDefault(attribute, -1d);
         return (additions == -1) ? (value * (1 + level * this.promote)) : (value + level * additions);
+    }
+
+    public AttributeSource getAttributeSource(double level) {
+        AttributeSource source = new AttributeSource();
+        Map<Attribute, Double> map = new HashMap<>();
+        attributes.keySet().forEach(k -> map.put(k, this.getAttributeValue(k, level)));
+        source.setOrdinary(map);
+
+        return source;
     }
 }

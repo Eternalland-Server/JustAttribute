@@ -1,12 +1,15 @@
 package com.sakuragame.eternal.justattribute.commands.sub;
 
 import com.sakuragame.eternal.justattribute.commands.CommandPerms;
+import com.sakuragame.eternal.justattribute.core.attribute.character.MobCharacter;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import com.taylorswiftcn.justwei.commands.sub.SubCommand;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class SpawnCommand extends SubCommand {
@@ -29,7 +32,13 @@ public class SpawnCommand extends SubCommand {
 
         Player player = this.getPlayer();
         try {
-            MythicMobs.inst().getAPIHelper().spawnMythicMob(id, player.getLocation(), level);
+            Entity entity = MythicMobs.inst().getAPIHelper().spawnMythicMob(id, player.getLocation(), level);
+            if (entity == null) return;
+
+            ActiveMob am = MythicMobs.inst().getMobManager().getActiveMob(entity.getUniqueId()).get();
+            MobCharacter mob = new MobCharacter(am);
+            mob.update();
+            sender.sendMessage(ConfigFile.prefix + "怪物战斗力: §f" + mob.getCombatValue());
         }
         catch (Exception e) {
             e.printStackTrace();
