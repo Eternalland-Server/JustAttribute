@@ -131,10 +131,10 @@ public class CombatListener implements Listener {
 
             Pair<Double, Double> result = CombatHandler.calculate(role, target);
             double charge = weapon ? (e.getDamage() / 6d) : 1;
-            double key = result.getKey() * charge;
+            double key = result.getKey();
             double value = result.getValue();
 
-            RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, key, value, cause);
+            RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, key, value, charge, cause);
             preEvent.call();
             if (preEvent.isCancelled()) {
                 e.setCancelled(true);
@@ -148,7 +148,7 @@ public class CombatListener implements Listener {
             e.setDamage(totalDamage);
             target.updateHP(sufferer.getHealth() - totalDamage);
 
-            RoleLaunchAttackEvent.Post postEvent = new RoleLaunchAttackEvent.Post(player, sufferer, damage, criticalDamage, cause);
+            RoleLaunchAttackEvent.Post postEvent = new RoleLaunchAttackEvent.Post(player, sufferer, damage, criticalDamage, charge, cause);
             postEvent.call();
         }
         else {
@@ -159,10 +159,10 @@ public class CombatListener implements Listener {
 
             Pair<Double, Double> result = CombatHandler.calculate(role, mob);
             double charge = weapon ? (e.getDamage() / 6d) : 1;
-            double key = result.getKey() * charge * activeMob.getType().getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1d);
+            double key = result.getKey() * activeMob.getType().getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1d);
             double value = result.getValue();
 
-            RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, key, value, cause);
+            RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, key, value, charge, cause);
             preEvent.call();
             if (preEvent.isCancelled()) {
                 e.setCancelled(true);
@@ -175,7 +175,7 @@ public class CombatListener implements Listener {
 
             e.setDamage(totalDamage);
 
-            RoleLaunchAttackEvent.Post postEvent = new RoleLaunchAttackEvent.Post(player, sufferer, damage, criticalDamage, cause);
+            RoleLaunchAttackEvent.Post postEvent = new RoleLaunchAttackEvent.Post(player, sufferer, damage, criticalDamage, charge, cause);
             postEvent.call();
         }
     }

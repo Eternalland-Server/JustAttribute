@@ -31,13 +31,13 @@ public class CombatHandler {
         return new Pair<>(result, cd);
     }
 
-    public static void damageVampire(Player player, LivingEntity source) {
+    public static void damageVampire(Player player, LivingEntity source, double yield) {
         if (player.isDead()) return;
 
         PlayerCharacter role = JustAttributeAPI.getRoleCharacter(player);
 
         double rate = 1 + role.getAttributeValue(Attribute.Vampire_Damage);
-        double value = role.getDamageVampire() * rate;
+        double value = role.getDamageVampire() * yield * rate;
 
         RoleVampireEvent.Pre preEvent = new RoleVampireEvent.Pre(player, source, value, RoleVampireEvent.Cause.Damage);
         preEvent.call();

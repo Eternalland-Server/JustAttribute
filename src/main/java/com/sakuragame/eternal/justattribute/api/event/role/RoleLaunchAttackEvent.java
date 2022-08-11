@@ -14,13 +14,15 @@ public class RoleLaunchAttackEvent {
         private final LivingEntity victim;
         private double damage;
         private double criticalDamage;
+        private final double charge;
         private final EntityDamageEvent.DamageCause cause;
 
-        public Pre(Player who, LivingEntity victim, double damage, double criticalDamage, EntityDamageEvent.DamageCause cause) {
+        public Pre(Player who, LivingEntity victim, double damage, double criticalDamage, double charge, EntityDamageEvent.DamageCause cause) {
             super(who);
             this.victim = victim;
             this.damage = damage;
             this.criticalDamage = criticalDamage;
+            this.charge = charge;
             this.cause = cause;
         }
 
@@ -39,13 +41,15 @@ public class RoleLaunchAttackEvent {
         private final LivingEntity victim;
         private final double damage;
         private final double criticalDamage;
+        private final double charge;
         private final EntityDamageEvent.DamageCause cause;
 
-        public Post(Player who, LivingEntity victim, double damage, double criticalDamage, EntityDamageEvent.DamageCause cause) {
+        public Post(Player who, LivingEntity victim, double damage, double criticalDamage, double charge, EntityDamageEvent.DamageCause cause) {
             super(who);
             this.victim = victim;
             this.damage = damage;
             this.criticalDamage = criticalDamage;
+            this.charge = charge;
             this.cause = cause;
         }
 

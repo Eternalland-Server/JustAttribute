@@ -13,7 +13,7 @@ public class VampireListener implements Listener {
     public void onDamage(RoleLaunchAttackEvent.Post e) {
         Player player = e.getPlayer();
 
-        CombatHandler.damageVampire(player, e.getVictim());
+        CombatHandler.damageVampire(player, e.getVictim(), e.getCharge());
     }
 
     @EventHandler
