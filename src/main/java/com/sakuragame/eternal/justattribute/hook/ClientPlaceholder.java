@@ -60,7 +60,7 @@ public class ClientPlaceholder {
         placeholder.put(REALM_DEFENCE_PROMOTE, "+" + Utils.INTEGRAL.format((Utils.getRealmDefencePromote(uuid) - 1) * 100) + "%");
 
         placeholder.put(SUPPORT_EXP_ADDITION, "+" + Utils.INTEGRAL.format(JustLevelAPI.getSupportAddition(uuid) * 100) + "%");
-        placeholder.put(EQUIP_EXP_ADDITION, "+" + Attribute.EXP_Addition.format(role.getAttributeValue(Attribute.EXP_Addition)));
+        placeholder.put(EQUIP_EXP_ADDITION, "+" + Utils.INTEGRAL.format(role.getAttributeValue(Attribute.EXP_Addition) * 100) + "%");
         placeholder.put(CARD_EXP_ADDITION, "+" + Utils.INTEGRAL.format(JustLevelAPI.getCardAddition(uuid) * 100) + "%");
 
         placeholder.put(ROLE_COMBAT_POWER, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombatValue()));
