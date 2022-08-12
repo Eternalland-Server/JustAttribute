@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.core.smithy.factory;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import ink.ptms.zaphkiel.ZaphkielAPI;
+import ink.ptms.zaphkiel.api.Item;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import net.sakuragame.eternal.dragoncore.util.Pair;
@@ -24,8 +25,6 @@ public class EnhanceFactory {
 
     public final static String EQUIP_SLOT = "enhance_equip";
     public final static String PROP_SLOT = "enhance_prop";
-
-    public final static String NBT_NODE_ORIGINAL = Attribute.NBT_NODE_ORDINARY + "._original_";
     public final static String NBT_NODE_ENHANCE = Attribute.NBT_NODE_ORDINARY + "._enhance_";
 
     public final static int MAX = 21;
@@ -56,6 +55,7 @@ public class EnhanceFactory {
 
     public static Pair<Boolean, ItemStack> machining(Player player, ItemStack equip) {
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(equip);
+        Item item = itemStream.getZaphkielItem();
         ItemTag itemTag = itemStream.getZaphkielData();
 
         int count = itemTag.getDeep(NBT_NODE_ENHANCE).asInt();
@@ -64,11 +64,13 @@ public class EnhanceFactory {
         double ratio = chance.get(count + 1);
         if (ratio < Math.random()) return new Pair<>(false, equip);
 
-        double original = itemTag.getDeep(NBT_NODE_ORIGINAL).asDouble();
-        double from = original * 0.707 / MAX;
-        double to = original * 1.618 / MAX;
-
         for (Attribute identifier : ATTRIBUTES) {
+            double original = item.getData().getDouble(identifier.getOrdinaryNode(), -1);
+            if (original == -1) continue;
+
+            double from = original * 0.707 / MAX;
+            double to = original * 1.618 / MAX;
+
             double random = new BigDecimal(from + Math.random() * (to - from)).setScale(1, RoundingMode.HALF_UP).doubleValue();
             double current = itemTag.getDeep(identifier.getOrdinaryNode()).asDouble();
 
