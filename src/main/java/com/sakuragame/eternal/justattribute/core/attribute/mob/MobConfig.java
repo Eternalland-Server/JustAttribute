@@ -50,9 +50,12 @@ public class MobConfig {
 
     public double getAttributeValue(Attribute attribute, double level) {
         double value = this.attributes.getOrDefault(attribute, 0d);
-        if (attribute.isOnlyPercent()) return value;
-
         double additions = this.additions.getOrDefault(attribute, -1d);
+
+        if (attribute.isOnlyPercent()) {
+            return (additions == -1) ? value : (value + Math.min(value, level * additions));
+        }
+
         return (additions == -1) ? (value * (1 + level * this.promote)) : (value + level * additions);
     }
 
