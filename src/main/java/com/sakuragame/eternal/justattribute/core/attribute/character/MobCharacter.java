@@ -38,6 +38,6 @@ public class MobCharacter extends JustCharacter {
 
     public double getSkillDefense() {
         double defense = this.getAttributeValue(Attribute.Defence);
-        return defense * 0.382;
+        return defense * 0.618;
     }
 }
