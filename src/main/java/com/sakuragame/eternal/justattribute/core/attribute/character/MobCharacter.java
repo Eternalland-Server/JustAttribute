@@ -35,4 +35,9 @@ public class MobCharacter extends JustCharacter {
         if (config == null) return 1d;
         return config.getAttributeValue(identifier, this.mob.getLevel());
     }
+
+    public double getSkillDefense() {
+        double defense = this.getAttributeValue(Attribute.Defence);
+        return defense * 0.382;
+    }
 }

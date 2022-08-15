@@ -12,6 +12,7 @@ import com.sakuragame.eternal.justattribute.core.attribute.character.PlayerChara
 import com.sakuragame.eternal.justattribute.hook.DamageModify;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import net.sakuragame.eternal.dragoncore.util.Pair;
@@ -25,7 +26,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -59,11 +59,11 @@ public class CombatListener implements Listener {
 
             if (attacker instanceof Player) {
                 Player player = (Player) attacker;
-                ActiveMob mob = this.getMob(sufferer.getUniqueId());
+                MobCharacter mob = this.getMobCharacter(sufferer);
                 if (mob == null) return;
 
-                double modify = mob.getType().getDamageModifiers().getOrDefault(DamageModify.ABILITY_ATTACK.name(), 1.0);
-                damage = damage * modify;
+                double defense = mob.getSkillDefense();
+                damage = damage - defense;
 
                 RoleSkillAttackEvent.Pre preEvent = new RoleSkillAttackEvent.Pre(player, sufferer, damage);
                 preEvent.call();
@@ -84,13 +84,13 @@ public class CombatListener implements Listener {
 
         // mob attack
         if (!(attacker instanceof Player)) {
-            ICharacter mob = this.getMobAttribute(attacker);
+            ICharacter mob = this.getMobCharacter(attacker);
 
             if (mob == null) return;
             if (!(sufferer instanceof Player)) return;
 
             Player player = (Player) sufferer;
-            PlayerCharacter role = this.getPlayerAttribute(player);
+            PlayerCharacter role = this.getPlayerCharacter(player);
 
             Pair<Double, Double> result = CombatHandler.calculate(mob, role);
             RoleUnderAttackEvent.Pre preEvent = new RoleUnderAttackEvent.Pre(player, attacker, result.getKey(), result.getValue(), cause);
@@ -125,9 +125,9 @@ public class CombatListener implements Listener {
         ItemStack hand = player.getInventory().getItemInMainHand();
         boolean weapon = !MegumiUtil.isEmpty(hand) && hand.getType() == Material.IRON_SWORD;
 
-        PlayerCharacter role = this.getPlayerAttribute(player);
+        PlayerCharacter role = this.getPlayerCharacter(player);
         if (sufferer instanceof Player) {
-            PlayerCharacter target = this.getPlayerAttribute((Player) sufferer);
+            PlayerCharacter target = this.getPlayerCharacter((Player) sufferer);
 
             Pair<Double, Double> result = CombatHandler.calculate(role, target);
             double charge = weapon ? (e.getDamage() / 6d) : 1;
@@ -154,12 +154,12 @@ public class CombatListener implements Listener {
         else {
             ActiveMob activeMob = this.getMob(sufferer.getUniqueId());
             if (activeMob == null) return;
-            MobCharacter mob = this.getMobAttribute(sufferer);
+            MobCharacter mob = this.getMobCharacter(sufferer);
             if (mob == null) return;
 
             Pair<Double, Double> result = CombatHandler.calculate(role, mob);
             double charge = weapon ? (e.getDamage() / 6d) : 1;
-            double key = result.getKey() * activeMob.getType().getDamageModifiers().getOrDefault(DamageModify.ATTRIBUTE_ATTACK.name(), 1d);
+            double key = result.getKey();
             double value = result.getValue();
 
             RoleLaunchAttackEvent.Pre preEvent = new RoleLaunchAttackEvent.Pre(player, sufferer, key, value, charge, cause);
@@ -181,10 +181,8 @@ public class CombatListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent e) {
-        LivingEntity entity = e.getEntity();
-        if (entity instanceof Player) return;
-
+    public void onEntityDeath(MythicMobDeathEvent e) {
+        Entity entity = e.getEntity();
         mobs.remove(entity.getUniqueId());
     }
 
@@ -213,20 +211,27 @@ public class CombatListener implements Listener {
         return null;
     }
 
-    private PlayerCharacter getPlayerAttribute(Player target) {
+    private PlayerCharacter getPlayerCharacter(Player target) {
         return JustAttributeAPI.getRoleCharacter(target);
     }
 
-    private MobCharacter getMobAttribute(LivingEntity entity) {
+    private MobCharacter getMobCharacter(LivingEntity entity) {
         UUID uuid = entity.getUniqueId();
         ActiveMob mob = getMob(entity.getUniqueId());
         if (mob == null) return null;
-        return mobs.computeIfAbsent(uuid, key -> new MobCharacter(mob));
+
+        MobCharacter mobCharacter = this.mobs.get(uuid);
+        if (mobCharacter == null) {
+            mobCharacter = new MobCharacter(mob);
+            this.mobs.put(uuid, mobCharacter);
+        }
+
+        return mobCharacter;
     }
 
     private ActiveMob getMob(UUID uuid) {
-        if (mobManager.isActiveMob(uuid)) {
-            Optional<ActiveMob> optional = mobManager.getActiveMob(uuid);
+        if (this.mobManager.isActiveMob(uuid)) {
+            Optional<ActiveMob> optional = this.mobManager.getActiveMob(uuid);
             if (optional.isPresent()) {
                 return optional.get();
             }
