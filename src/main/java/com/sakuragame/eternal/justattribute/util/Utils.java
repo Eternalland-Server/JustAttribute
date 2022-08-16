@@ -87,13 +87,13 @@ public class Utils {
     public static double getRealmDamagePromote(UUID uuid) {
         PlayerLevelData data = JustLevelAPI.getUserData(uuid);
 
-        return (data.getStage() - 1) * 0.01 + (data.getRealm() - 1) * 0.1 + 1;
+        return (data.getStage() - 1) * 0.02 + (data.getRealm() - 1) * 0.2 + 1;
     }
 
     public static double getRealmDefencePromote(UUID uuid) {
         PlayerLevelData data = JustLevelAPI.getUserData(uuid);
 
-        return (data.getStage() - 1) * 0.01 + (data.getRealm() - 1) * 0.1 + 1;
+        return (data.getStage() - 1) * 0.02 + (data.getRealm() - 1) * 0.2 + 1;
     }
 
     public static void sendCombatChange(Player player, int value) {
