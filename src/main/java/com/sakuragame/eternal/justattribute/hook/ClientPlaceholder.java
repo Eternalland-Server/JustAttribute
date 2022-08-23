@@ -63,7 +63,8 @@ public class ClientPlaceholder {
         placeholder.put(EQUIP_EXP_ADDITION, "+" + Utils.INTEGRAL.format(role.getAttributeValue(Attribute.EXP_Addition) * 100) + "%");
         placeholder.put(CARD_EXP_ADDITION, "+" + Utils.INTEGRAL.format(JustLevelAPI.getCardAddition(uuid) * 100) + "%");
 
-        placeholder.put(ROLE_COMBAT_POWER, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombatValue()));
+        int combat = role.getCombatValue();
+        placeholder.put(ROLE_COMBAT_POWER, combat < 100000 ? combat + "" : UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombatValue()));
 
         PacketSender.sendSyncPlaceholder(player, placeholder);
     }
@@ -101,7 +102,8 @@ public class ClientPlaceholder {
             placeholder.put("role_" + ident.getPlaceholder(), ident.formatting(value));
         }
 
-        placeholder.put("target_" + ROLE_COMBAT_POWER, UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombatValue()));
+        int combat = role.getCombatValue();
+        placeholder.put("target_" + ROLE_COMBAT_POWER, combat < 100000 ? combat + "" : UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombatValue()));
 
         return placeholder;
     }

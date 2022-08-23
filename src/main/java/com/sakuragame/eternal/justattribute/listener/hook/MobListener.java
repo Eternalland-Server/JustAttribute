@@ -5,6 +5,7 @@ import com.sakuragame.eternal.justattribute.core.attribute.mob.MobConfig;
 import com.taylorswiftcn.justwei.util.UnitConvert;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnedEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
+import io.lumine.xikage.mythicmobs.io.MythicConfig;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
@@ -24,10 +25,12 @@ public class MobListener implements Listener {
         if (!(e.getEntity() instanceof LivingEntity)) return;
         LivingEntity entity = (LivingEntity) e.getEntity();
         MythicMob mob = e.getMobType();
+        MythicConfig mythicConfig = mob.getConfig();
+        boolean prefix = mythicConfig.getBoolean("eternal.prefix", false);
 
         int level = (int) e.getMobLevel();
         String name = e.getMob().getDisplayName();
-        entity.setCustomName(this.getDisplayName(level, name));
+        if (prefix) entity.setCustomName(this.getDisplayName(level, name));
 
         MobConfig config = JustAttribute.getFileManager().getMobConfig(mob.getInternalName());
         double hp = config.getHealth(level);
@@ -38,6 +41,6 @@ public class MobListener implements Listener {
 
     private String getDisplayName(int level, String name) {
         String format = "§3§l⊰§eLv." + UnitConvert.formatEN(UnitConvert.TenThousand, level) + "§3§l⊱";
-        return name.replace("<level>", format);
+        return format + " " + name;
     }
 }
