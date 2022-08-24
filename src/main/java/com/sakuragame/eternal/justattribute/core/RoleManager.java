@@ -73,11 +73,11 @@ public class RoleManager {
         removeLoader(uuid);
         PlayerCharacter role = this.roles.remove(uuid);
         if (role == null) return;
-        JustAttribute.getStorageManager().saveAccount(uuid, role.getHP(), role.getMP());
+        JustAttribute.getStorageManager().saveAccount(uuid, role.getHP(), role.getMP(), role.getCombatValue());
     }
 
     public void saveAll() {
-        this.roles.values().forEach(role -> JustAttribute.getStorageManager().saveAccount(role.getUUID(), role.getHP(), role.getMP()));
+        this.roles.values().forEach(role -> JustAttribute.getStorageManager().saveAccount(role.getUUID(), role.getHP(), role.getMP(), role.getCombatValue()));
     }
 
     public PlayerCharacter get(UUID uuid) {

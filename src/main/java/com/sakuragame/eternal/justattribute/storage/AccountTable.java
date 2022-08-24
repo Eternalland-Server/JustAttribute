@@ -10,6 +10,7 @@ public enum AccountTable {
                     "`uid` int NOT NULL PRIMARY KEY",
                     "`health` double(16,1) DEFAULT 20",
                     "`mana` double(16,1) DEFAULT 20",
+                    "`combat` int DEFAULT 0"
             }));
 
     private final DatabaseTable table;

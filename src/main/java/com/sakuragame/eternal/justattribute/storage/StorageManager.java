@@ -6,6 +6,8 @@ import net.sakuragame.serversystems.manage.api.database.DatabaseQuery;
 import net.sakuragame.serversystems.manage.client.api.ClientManagerAPI;
 
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class StorageManager {
@@ -43,7 +45,7 @@ public class StorageManager {
         return new PlayerCharacter(uuid);
     }
 
-    public void saveAccount(UUID uuid, double health, double mana) {
+    public void saveAccount(UUID uuid, double health, double mana, int combatPower) {
         int uid = ClientManagerAPI.getUserID(uuid);
         if (uid == -1) return;
 
@@ -52,5 +54,23 @@ public class StorageManager {
                 new String[] {"uid", "health", "mana"},
                 new Object[] {uid, health, mana}
         );
+    }
+
+    public Map<Integer, Integer> getAllPlayerCombatPower() {
+        Map<Integer, Integer> map = new HashMap<>();
+
+        try (DatabaseQuery query = this.dataManager.createQuery("SELECT * FROM " + AccountTable.JUST_ATTRIBUTE_ROLE.getTableName())) {
+            ResultSet result = query.getResultSet();
+            while (result.next()) {
+                int uid = result.getInt("uid");
+                int combat = result.getInt("combat");
+                map.put(uid, combat);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return map;
     }
 }
