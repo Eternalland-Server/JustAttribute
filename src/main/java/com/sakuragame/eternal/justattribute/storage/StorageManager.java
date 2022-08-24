@@ -51,8 +51,8 @@ public class StorageManager {
 
         dataManager.executeReplace(
                 AccountTable.JUST_ATTRIBUTE_ROLE.getTableName(),
-                new String[] {"uid", "health", "mana"},
-                new Object[] {uid, health, mana}
+                new String[] {"uid", "health", "mana", "combat"},
+                new Object[] {uid, health, mana, combatPower}
         );
     }
 

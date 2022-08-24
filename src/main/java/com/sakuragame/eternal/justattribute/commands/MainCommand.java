@@ -10,6 +10,7 @@ public class MainCommand extends JustCommand {
         super(new HelpCommand());
         this.register(new InfoCommand());
         this.register(new SpawnCommand());
+        this.register(new ItemCommand());
         this.register(new ReloadCommand());
     }
 }
