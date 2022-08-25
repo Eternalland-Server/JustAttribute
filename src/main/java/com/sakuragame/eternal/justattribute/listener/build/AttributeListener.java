@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.listener.build;
 
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.EnhanceFactory;
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import ink.ptms.zaphkiel.api.Item;
@@ -25,6 +26,10 @@ public class AttributeListener implements Listener {
 
         Item item = e.getItem();
         ItemTag tag = e.getItemStream().getZaphkielData();
+
+        EquipClassify classify = EquipClassify.getClassify(tag);
+        if (classify == null) return;
+
         ItemTagData autoEnhance = tag.getDeep(Attribute.NBT_NODE_ORDINARY + "._auto_enhance_");
         if (autoEnhance == null) return;
 
@@ -36,7 +41,7 @@ public class AttributeListener implements Listener {
         for (Attribute ident : EnhanceFactory.ATTRIBUTES) {
             double original = item.getData().getDouble(ident.getOrdinaryNode(), -1);
             if (original == -1) continue;
-            tag.putDeep(ident.getOrdinaryNode(), EnhanceFactory.calculate(original, level));
+            tag.putDeep(ident.getOrdinaryNode(), EnhanceFactory.calculate(classify, original, level));
         }
     }
 

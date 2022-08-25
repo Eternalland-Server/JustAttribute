@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.core.smithy.factory;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.Item;
 import ink.ptms.zaphkiel.api.ItemStream;
@@ -58,6 +59,9 @@ public class EnhanceFactory {
         Item item = itemStream.getZaphkielItem();
         ItemTag itemTag = itemStream.getZaphkielData();
 
+        EquipClassify classify = EquipClassify.getClassify(itemTag);
+        if (classify == null) return new Pair<>(false, equip);
+
         int count = itemTag.getDeep(NBT_NODE_ENHANCE).asInt();
         if (count == MAX) return new Pair<>(false, equip);
 
@@ -68,8 +72,8 @@ public class EnhanceFactory {
             double original = item.getData().getDouble(identifier.getOrdinaryNode(), -1);
             if (original == -1) continue;
 
-            double from = original * 0.707 / MAX;
-            double to = original * 1.618 / MAX;
+            double from = original * (classify.getId() <= 5 ? 0.707 : 0.382) / MAX;
+            double to = original * (classify.getId() <= 5 ? 1.618 : 0.66) / MAX;
 
             double random = new BigDecimal(from + Math.random() * (to - from)).setScale(1, RoundingMode.HALF_UP).doubleValue();
             double current = itemTag.getDeep(identifier.getOrdinaryNode()).asDouble();
@@ -82,10 +86,10 @@ public class EnhanceFactory {
         return new Pair<>(true, itemStream.rebuildToItemStack(player));
     }
 
-    public static double calculate(double original, int level) {
+    public static double calculate(EquipClassify classify, double original, int level) {
         level = Math.min(level, 21);
-        double from = original * 0.707 / MAX;
-        double to = original * 1.618 / MAX;
+        double from = original * (classify.getId() <= 5 ? 0.707 : 0.382) / MAX;
+        double to = original * (classify.getId() <= 5 ? 1.618 : 0.66) / MAX;
 
         double value = original;
         for (int i = 0; i < level; i++) {
