@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.listener.smithy;
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.EnhanceFactory;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
+import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import com.taylorswiftcn.megumi.uifactory.event.comp.UIFCompSubmitEvent;
@@ -63,7 +64,7 @@ public class EnhanceListener implements Listener {
             }
             else {
                 ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-                int count = itemStream.getZaphkielData().getDeep(EnhanceFactory.NBT_NODE_ENHANCE).asInt();
+                int count = itemStream.getZaphkielData().getDeepOrElse(EnhanceFactory.NBT_NODE_ENHANCE, new ItemTagData(0)).asInt();
                 placeholder.put("enhance_chance", format.format(EnhanceFactory.chance.getOrDefault(count + 1, 0d) * 100) + "%");
             }
             PacketSender.sendSyncPlaceholder(player, placeholder);
@@ -91,18 +92,20 @@ public class EnhanceListener implements Listener {
 
                 ItemTag itemTag = itemStream.getZaphkielData();
 
+                EquipClassify classify = EquipClassify.getClassify(itemTag);
+                if (classify == null || !classify.isEnhance()) {
+                    player.sendMessage(ConfigFile.prefix + "该物品不能被强化");
+                    e.setCancelled(true);
+                    return;
+                }
+
                 if (SoulBound.isSeal(itemTag)) {
                     player.sendMessage(ConfigFile.prefix + "该物品已被封印");
                     e.setCancelled(true);
                     return;
                 }
 
-                ItemTagData enhance = itemTag.getDeep(EnhanceFactory.NBT_NODE_ENHANCE);
-                if (enhance == null) {
-                    player.sendMessage(ConfigFile.prefix + "该物品不能被强化");
-                    e.setCancelled(true);
-                    return;
-                }
+                ItemTagData enhance = itemTag.getDeepOrElse(EnhanceFactory.NBT_NODE_ENHANCE, new ItemTagData(0));
 
                 if (enhance.asInt() >= EnhanceFactory.MAX) {
                     player.sendMessage(ConfigFile.prefix + "该物品已被强化至最高等级");
