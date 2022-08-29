@@ -64,7 +64,8 @@ public class EnhanceFactory {
 
         ItemTagData extend = tag.getDeep(TransferFactory.NBT_NODE_EXTENDS);
         if (extend != null) {
-            Item exItem = ZaphkielAPI.INSTANCE.getRegisteredItem().get(extend.asString());
+            String id = new StringBuilder(extend.asString()).reverse().toString();
+            Item exItem = ZaphkielAPI.INSTANCE.getRegisteredItem().get(id);
             if (exItem != null) item = exItem;
         }
 

@@ -6,6 +6,7 @@ import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
+import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,7 +18,7 @@ public class TransferFactory {
     public final static String EQUIP_SLOT = "transfer_equip";
     public final static String PROP_SLOT = "transfer_prop";
     public final static String RESULT_SLOT = "transfer_result";
-
+    public final static String DISPLAY_NODE_EXTENDS = "display.extends";
     public final static String NBT_NODE_EXTENDS = "justattribute.extends";
 
     public static void init() {
@@ -35,7 +36,7 @@ public class TransferFactory {
         acceptTag.removeDeep(Attribute.NBT_NODE_ORDINARY);
         acceptTag.putDeep(Attribute.NBT_NODE_ORDINARY, consumeTag.getDeep(Attribute.NBT_NODE_ORDINARY));
         acceptTag.putDeep(EnhanceFactory.NBT_NODE_ENHANCE, consumeTag.getDeepOrElse(EnhanceFactory.NBT_NODE_ENHANCE, new ItemTagData(0)));
-        acceptTag.putDeep(NBT_NODE_EXTENDS, consumeStream.getZaphkielName());
+        acceptTag.putDeep(NBT_NODE_EXTENDS, new StrBuilder(consumeStream.getZaphkielName()).reverse().toString());
 
         return acceptStream.rebuildToItemStack(player);
     }
