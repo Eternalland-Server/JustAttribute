@@ -104,8 +104,8 @@ public enum Attribute {
     }
 
     public String format(double origin, double enhance) {
-        String v1 = (origin >= 0 ? "+" : "") + Utils.INTEGRAL.format(origin);
-        String v2 = (enhance >= 0 ? "+" : "") + Utils.INTEGRAL.format(enhance);
+        String v1 = (origin >= 0 ? "+" : "") + Utils.FORMAT_A.format(origin);
+        String v2 = (enhance >= 0 ? "+" : "") + Utils.FORMAT_A.format(enhance);
         String v3 = v1 + "§a(" + v2 + ")";
 
         return ConfigFile.format.attribute
@@ -116,7 +116,7 @@ public enum Attribute {
 
     public String format(double value, boolean isPercent) {
         value = isPercent ? value * 100 : value;
-        String str = (value >= 0 ? "+" : "") + Utils.INTEGRAL.format(value);
+        String str = (value >= 0 ? "+" : "") + Utils.FORMAT_A.format(value);
         str = isPercent ? str + "%" : str;
 
         return ConfigFile.format.attribute

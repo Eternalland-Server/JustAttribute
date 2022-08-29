@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.core.smithy.factory;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
+import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.Item;
@@ -16,9 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class EnhanceFactory {
@@ -32,16 +31,6 @@ public class EnhanceFactory {
     public final static String NBT_NODE_PRE_ENHANCE = "justattribute._enhance_";
 
     public final static int MAX = 21;
-    public final static List<Attribute> ATTRIBUTES = Arrays.asList(
-            Attribute.Energy,
-            Attribute.Stamina,
-            Attribute.Wisdom,
-            Attribute.Technique,
-            Attribute.Damage,
-            Attribute.Defence,
-            Attribute.Health,
-            Attribute.Mana
-    );
 
     public final static Map<Integer, Double> chance = new HashMap<>();
 
@@ -64,7 +53,8 @@ public class EnhanceFactory {
 
         ItemTagData extend = tag.getDeep(TransferFactory.NBT_NODE_EXTENDS);
         if (extend != null) {
-            Item exItem = ZaphkielAPI.INSTANCE.getRegisteredItem().get(extend.asString());
+            String id = new StringBuilder(extend.asString()).reverse().toString();
+            Item exItem = ZaphkielAPI.INSTANCE.getRegisteredItem().get(id);
             if (exItem != null) item = exItem;
         }
 
@@ -77,7 +67,7 @@ public class EnhanceFactory {
         double ratio = chance.get(count + 1);
         if (ratio < Math.random()) return new Pair<>(false, equip);
 
-        for (Attribute identifier : ATTRIBUTES) {
+        for (Attribute identifier : SmithyManager.ATTRIBUTES) {
             double original = item.getData().getDouble(identifier.getOrdinaryNode(), -1);
             if (original == -1) continue;
 

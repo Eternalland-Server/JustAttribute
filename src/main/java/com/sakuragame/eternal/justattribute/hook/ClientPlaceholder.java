@@ -50,18 +50,18 @@ public class ClientPlaceholder {
             placeholder.put(ident.getPlaceholder(), ident.formatting(value));
         }
 
-        placeholder.put(RESTORE_HP_PER_SEC, "+" + Utils.INTEGRAL.format(role.getAttributeValue(Attribute.Energy) / 100) + "HP/s");
-        placeholder.put(RESTORE_MP_PER_SEC, "+" + Utils.INTEGRAL.format(role.getAttributeValue(Attribute.Stamina) / 100) + "MP/s");
+        placeholder.put(RESTORE_HP_PER_SEC, "+" + Utils.FORMAT_A.format(role.getAttributeValue(Attribute.Energy) / 100) + "HP/s");
+        placeholder.put(RESTORE_MP_PER_SEC, "+" + Utils.FORMAT_A.format(role.getAttributeValue(Attribute.Stamina) / 100) + "MP/s");
 
-        placeholder.put(DAMAGE_VAMPIRE_PRE_ATTACK, "+" + Utils.INTEGRAL.format(role.getDamageVampire()));
-        placeholder.put(SKILL_VAMPIRE_PRE_ATTACK, "+" + Utils.INTEGRAL.format(role.getSkillVampire()));
+        placeholder.put(DAMAGE_VAMPIRE_PRE_ATTACK, "+" + Utils.FORMAT_A.format(role.getDamageVampire()));
+        placeholder.put(SKILL_VAMPIRE_PRE_ATTACK, "+" + Utils.FORMAT_A.format(role.getSkillVampire()));
 
-        placeholder.put(REALM_DAMAGE_PROMOTE, "+" + Utils.INTEGRAL.format((Utils.getRealmDamagePromote(uuid) - 1) * 100) + "%");
-        placeholder.put(REALM_DEFENCE_PROMOTE, "+" + Utils.INTEGRAL.format((Utils.getRealmDefencePromote(uuid) - 1) * 100) + "%");
+        placeholder.put(REALM_DAMAGE_PROMOTE, "+" + Utils.FORMAT_B.format((Utils.getRealmDamagePromote(uuid) - 1) * 100) + "%");
+        placeholder.put(REALM_DEFENCE_PROMOTE, "+" + Utils.FORMAT_B.format((Utils.getRealmDefencePromote(uuid) - 1) * 100) + "%");
 
-        placeholder.put(SUPPORT_EXP_ADDITION, "+" + Utils.INTEGRAL.format(JustLevelAPI.getSupportAddition(uuid) * 100) + "%");
-        placeholder.put(EQUIP_EXP_ADDITION, "+" + Utils.INTEGRAL.format(role.getAttributeValue(Attribute.EXP_Addition) * 100) + "%");
-        placeholder.put(CARD_EXP_ADDITION, "+" + Utils.INTEGRAL.format(JustLevelAPI.getCardAddition(uuid) * 100) + "%");
+        placeholder.put(SUPPORT_EXP_ADDITION, "+" + Utils.FORMAT_A.format(JustLevelAPI.getSupportAddition(uuid) * 100) + "%");
+        placeholder.put(EQUIP_EXP_ADDITION, "+" + Utils.FORMAT_A.format(role.getAttributeValue(Attribute.EXP_Addition) * 100) + "%");
+        placeholder.put(CARD_EXP_ADDITION, "+" + Utils.FORMAT_A.format(JustLevelAPI.getCardAddition(uuid) * 100) + "%");
 
         int combat = role.getCombatValue();
         placeholder.put(ROLE_COMBAT_POWER, combat < 100000 ? combat + "" : UnitConvert.formatCN(UnitConvert.TenThousand, role.getCombatValue()));

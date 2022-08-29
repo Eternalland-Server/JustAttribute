@@ -18,7 +18,8 @@ import java.util.UUID;
 
 public class Utils {
 
-    public final static DecimalFormat INTEGRAL = new DecimalFormat("0");
+    public final static DecimalFormat FORMAT_A = new DecimalFormat("0");
+    public final static DecimalFormat FORMAT_B = new DecimalFormat("0.00");
     public final static Random RANDOM = new Random();
 
     public static int getRandomInt(int value) {
@@ -46,7 +47,7 @@ public class Utils {
 
     public static String format(double value, boolean isPercent) {
         value = isPercent ? value * 100 : value;
-        String s = INTEGRAL.format(value);
+        String s = FORMAT_A.format(value);
         return isPercent ? s + "%" : s;
     }
 
@@ -87,13 +88,13 @@ public class Utils {
     public static double getRealmDamagePromote(UUID uuid) {
         PlayerLevelData data = JustLevelAPI.getUserData(uuid);
 
-        return (data.getStage() - 1) * 0.01 + (data.getRealm() - 1) * 0.1 + 1;
+        return (data.getStage() - 1) * 0.0066 + (data.getRealm() - 1) * 0.066 + 1;
     }
 
     public static double getRealmDefencePromote(UUID uuid) {
         PlayerLevelData data = JustLevelAPI.getUserData(uuid);
 
-        return (data.getStage() - 1) * 0.01 + (data.getRealm() - 1) * 0.1 + 1;
+        return (data.getStage() - 1) * 0.00618 + (data.getRealm() - 1) * 0.0618 + 1;
     }
 
     public static void sendCombatChange(Player player, int value) {

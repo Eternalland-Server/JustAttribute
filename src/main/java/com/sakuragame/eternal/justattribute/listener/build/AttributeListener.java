@@ -1,17 +1,20 @@
 package com.sakuragame.eternal.justattribute.listener.build;
 
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
+import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.EnhanceFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.TransferFactory;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.taylorswiftcn.justwei.util.MegumiUtil;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.Item;
 import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -40,7 +43,7 @@ public class AttributeListener implements Listener {
         tag.removeDeep(EnhanceFactory.NBT_NODE_PRE_ENHANCE);
         tag.putDeep(EnhanceFactory.NBT_NODE_ENHANCE, level);
 
-        for (Attribute ident : EnhanceFactory.ATTRIBUTES) {
+        for (Attribute ident : SmithyManager.ATTRIBUTES) {
             double original = item.getData().getDouble(ident.getOrdinaryNode(), -1);
             if (original == -1) continue;
             tag.putDeep(ident.getOrdinaryNode(), EnhanceFactory.calculate(classify, original, level));
@@ -57,8 +60,12 @@ public class AttributeListener implements Listener {
 
         ItemTagData extend = tag.getDeep(TransferFactory.NBT_NODE_EXTENDS);
         if (extend != null) {
-            Item exItem = ZaphkielAPI.INSTANCE.getRegisteredItem().get(extend.asString());
-            if (exItem != null) item = exItem;
+            String id = new StringBuilder(extend.asString()).reverse().toString();
+            Item exItem = ZaphkielAPI.INSTANCE.getRegisteredItem().get(id);
+            if (exItem != null) {
+                item = exItem;
+                e.addLore(TransferFactory.DISPLAY_NODE_EXTENDS, "   &3已继承: &f" + ChatColor.stripColor(MegumiUtil.onReplace(exItem.getName().get("NAME"))));
+            }
         }
 
         LinkedList<String> ordinaryDisplay = new LinkedList<>();

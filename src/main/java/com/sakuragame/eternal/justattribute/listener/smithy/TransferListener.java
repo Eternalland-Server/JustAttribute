@@ -82,7 +82,7 @@ public class TransferListener implements Listener {
 
                 ItemTag itemTag = itemStream.getZaphkielData();
                 EquipClassify classify = EquipClassify.getClassify(itemTag);
-                if (classify == null || classify.getId() > 8) {
+                if (classify == null || !classify.isTransfer()) {
                     player.sendMessage(ConfigFile.prefix + "该道具无法转移属性");
                     e.setCancelled(true);
                     return;
@@ -115,17 +115,26 @@ public class TransferListener implements Listener {
             return;
         }
 
-        ItemStack equip = SmithyManager.getSlot(uuid, TransferFactory.EQUIP_SLOT);
-        ItemStack prop = SmithyManager.getSlot(uuid, TransferFactory.PROP_SLOT);
+        ItemStack accept = SmithyManager.getSlot(uuid, TransferFactory.EQUIP_SLOT);
+        ItemStack consume = SmithyManager.getSlot(uuid, TransferFactory.PROP_SLOT);
 
-        if (MegumiUtil.isEmpty(equip) || equip.getType() == Material.AIR) {
-            player.sendMessage(ConfigFile.prefix + "请放入主道具");
+        if (MegumiUtil.isEmpty(accept) || accept.getType() == Material.AIR) {
+            player.sendMessage(ConfigFile.prefix + "请放入受益装备");
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
 
-        if (MegumiUtil.isEmpty(prop) || prop.getType() == Material.AIR) {
-            player.sendMessage(ConfigFile.prefix + "请放入副道具");
+        if (MegumiUtil.isEmpty(consume) || consume.getType() == Material.AIR) {
+            player.sendMessage(ConfigFile.prefix + "请放入被吸收装备");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
+            return;
+        }
+
+        EquipClassify a = EquipClassify.getClassify(accept);
+        EquipClassify b = EquipClassify.getClassify(consume);
+
+        if (b != EquipClassify.Unknown && a != b) {
+            player.sendMessage(ConfigFile.prefix + "只有相类型装备才能属性转移");
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
         }
@@ -138,15 +147,15 @@ public class TransferListener implements Listener {
 
         GemsEconomyAPI.withdraw(uuid, TransferFactory.price, EternalCurrency.Points, "属性转移");
 
-        ItemStack result = TransferFactory.machining(player, equip.clone(), prop.clone());
-        ItemStack transfer = prop.clone();
+        ItemStack result = TransferFactory.machining(player, accept.clone(), consume.clone());
+        ItemStack transfer = consume.clone();
         transfer.setAmount(1);
 
-        equip.setAmount(equip.getAmount() - 1);
-        prop.setAmount(prop.getAmount() - 1);
+        accept.setAmount(accept.getAmount() - 1);
+        consume.setAmount(consume.getAmount() - 1);
 
-        SmithyManager.putSlot(player, TransferFactory.EQUIP_SLOT, equip, true);
-        SmithyManager.putSlot(player, TransferFactory.PROP_SLOT, prop, true);
+        SmithyManager.putSlot(player, TransferFactory.EQUIP_SLOT, accept, true);
+        SmithyManager.putSlot(player, TransferFactory.PROP_SLOT, consume, true);
         SmithyManager.putSlot(player, TransferFactory.RESULT_SLOT, result, true);
 
         MessageAPI.sendActionTip(player, "&a&l转移成功!");

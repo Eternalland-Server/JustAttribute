@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.smithy;
 
+import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.EnhanceFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.IdentifyFactory;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.SealFactory;
@@ -10,13 +11,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class SmithyManager {
 
     private final static Map<UUID, Map<String, ItemStack>> slotCache = new HashMap<>();
+    public final static List<Attribute> ATTRIBUTES = Arrays.asList(
+            Attribute.Energy,
+            Attribute.Stamina,
+            Attribute.Wisdom,
+            Attribute.Technique,
+            Attribute.Damage,
+            Attribute.Defence,
+            Attribute.Health,
+            Attribute.Mana
+    );
 
     public static void init() {
         IdentifyFactory.init();
