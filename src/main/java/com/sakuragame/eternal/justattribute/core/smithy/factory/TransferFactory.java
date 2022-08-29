@@ -5,6 +5,7 @@ import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
+import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,7 +34,7 @@ public class TransferFactory {
 
         acceptTag.removeDeep(Attribute.NBT_NODE_ORDINARY);
         acceptTag.putDeep(Attribute.NBT_NODE_ORDINARY, consumeTag.getDeep(Attribute.NBT_NODE_ORDINARY));
-        acceptTag.putDeep(EnhanceFactory.NBT_NODE_ENHANCE, consumeTag.getDeep(EnhanceFactory.NBT_NODE_ENHANCE));
+        acceptTag.putDeep(EnhanceFactory.NBT_NODE_ENHANCE, consumeTag.getDeepOrElse(EnhanceFactory.NBT_NODE_ENHANCE, new ItemTagData(0)));
         acceptTag.putDeep(NBT_NODE_EXTENDS, consumeStream.getZaphkielName());
 
         return acceptStream.rebuildToItemStack(player);

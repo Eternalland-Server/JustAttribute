@@ -84,10 +84,10 @@ public class EnhanceFactory {
             double from = original * (classify.getId() <= 5 ? 0.707 : 0.382) / MAX;
             double to = original * (classify.getId() <= 5 ? 1.618 : 0.66) / MAX;
 
-            double random = new BigDecimal(from + Math.random() * (to - from)).setScale(1, RoundingMode.HALF_UP).doubleValue();
+            double random = from + Math.random() * (to - from);
             double current = tag.getDeep(identifier.getOrdinaryNode()).asDouble();
 
-            tag.putDeep(identifier.getOrdinaryNode(), current + random);
+            tag.putDeep(identifier.getOrdinaryNode(), new BigDecimal(current + random).setScale(2, RoundingMode.HALF_UP).doubleValue());
         }
 
         tag.putDeep(NBT_NODE_ENHANCE, count + 1);
@@ -102,9 +102,9 @@ public class EnhanceFactory {
 
         double value = original;
         for (int i = 0; i < level; i++) {
-            value += new BigDecimal(from + Math.random() * (to - from)).setScale(1, RoundingMode.HALF_UP).doubleValue();
+            value += from + Math.random() * (to - from);
         }
 
-        return value;
+        return new BigDecimal(value).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }

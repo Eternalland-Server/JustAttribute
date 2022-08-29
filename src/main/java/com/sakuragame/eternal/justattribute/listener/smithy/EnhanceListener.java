@@ -163,7 +163,7 @@ public class EnhanceListener implements Listener {
         ItemStream equipStream = ZaphkielAPI.INSTANCE.read(equip);
         ItemStream propStream = ZaphkielAPI.INSTANCE.read(prop);
 
-        int level = equipStream.getZaphkielData().getDeep(EnhanceFactory.NBT_NODE_ENHANCE).asInt() + 1;
+        int level = equipStream.getZaphkielData().getDeepOrElse(EnhanceFactory.NBT_NODE_ENHANCE, new ItemTagData(0)).asInt() + 1;
         int max = this.crystal.get(propStream.getZaphkielName());
 
         if (max < level) {
