@@ -2,9 +2,11 @@ package com.sakuragame.eternal.justattribute.listener.build;
 
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.EnhanceFactory;
+import com.sakuragame.eternal.justattribute.core.smithy.factory.TransferFactory;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.Item;
 import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
@@ -30,12 +32,12 @@ public class AttributeListener implements Listener {
         EquipClassify classify = EquipClassify.getClassify(tag);
         if (classify == null) return;
 
-        ItemTagData autoEnhance = tag.getDeep(Attribute.NBT_NODE_ORDINARY + "._auto_enhance_");
+        ItemTagData autoEnhance = tag.getDeep(EnhanceFactory.NBT_NODE_PRE_ENHANCE);
         if (autoEnhance == null) return;
 
         int level = autoEnhance.asInt();
 
-        tag.removeDeep(Attribute.NBT_NODE_ORDINARY + "._auto_enhance_");
+        tag.removeDeep(EnhanceFactory.NBT_NODE_PRE_ENHANCE);
         tag.putDeep(EnhanceFactory.NBT_NODE_ENHANCE, level);
 
         for (Attribute ident : EnhanceFactory.ATTRIBUTES) {
@@ -53,6 +55,12 @@ public class AttributeListener implements Listener {
         Item item = e.getItemStream().getZaphkielItem();
         ItemTag tag = e.getItemStream().getZaphkielData();
 
+        ItemTagData extend = tag.getDeep(TransferFactory.NBT_NODE_EXTENDS);
+        if (extend != null) {
+            Item exItem = ZaphkielAPI.INSTANCE.getRegisteredItem().get(extend.asString());
+            if (exItem != null) item = exItem;
+        }
+
         LinkedList<String> ordinaryDisplay = new LinkedList<>();
         LinkedList<String> potencyDisplay = new LinkedList<>();
 
@@ -63,7 +71,7 @@ public class AttributeListener implements Listener {
             potencyDisplay.add("");
         }
 
-        ItemTagData enhance = tag.getDeep(EnhanceFactory.NBT_NODE_ENHANCE);
+        ItemTagData enhance = tag.getDeepOrElse(EnhanceFactory.NBT_NODE_ENHANCE, new ItemTagData(0));
 
         for (Attribute attr : Attribute.values()) {
             ItemTagData ordinary = tag.getDeep(attr.getOrdinaryNode());
@@ -90,7 +98,7 @@ public class AttributeListener implements Listener {
         }
 
         if (enhance != null) {
-            e.addName(Attribute.DISPLAY_NODE_ENHANCE, "§6§l(+" + enhance.asInt() + ")");
+            e.addName(EnhanceFactory.DISPLAY_NODE_ENHANCE, "§6§l(+" + enhance.asInt() + ")");
         }
 
         e.addLore(Attribute.DISPLAY_NODE_ORDINARY, ordinaryDisplay);

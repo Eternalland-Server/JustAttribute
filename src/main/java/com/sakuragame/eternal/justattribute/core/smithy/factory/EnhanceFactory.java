@@ -7,6 +7,7 @@ import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.Item;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
+import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import net.sakuragame.eternal.dragoncore.util.Pair;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,7 +27,9 @@ public class EnhanceFactory {
 
     public final static String EQUIP_SLOT = "enhance_equip";
     public final static String PROP_SLOT = "enhance_prop";
-    public final static String NBT_NODE_ENHANCE = Attribute.NBT_NODE_ORDINARY + "._enhance_";
+    public final static String DISPLAY_NODE_ENHANCE = "display.enhance";
+    public final static String NBT_NODE_ENHANCE = "justattribute.enhance";
+    public final static String NBT_NODE_PRE_ENHANCE = "justattribute._enhance_";
 
     public final static int MAX = 21;
     public final static List<Attribute> ATTRIBUTES = Arrays.asList(
@@ -57,12 +60,18 @@ public class EnhanceFactory {
     public static Pair<Boolean, ItemStack> machining(Player player, ItemStack equip) {
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(equip);
         Item item = itemStream.getZaphkielItem();
-        ItemTag itemTag = itemStream.getZaphkielData();
+        ItemTag tag = itemStream.getZaphkielData();
 
-        EquipClassify classify = EquipClassify.getClassify(itemTag);
+        ItemTagData extend = tag.getDeep(TransferFactory.NBT_NODE_EXTENDS);
+        if (extend != null) {
+            Item exItem = ZaphkielAPI.INSTANCE.getRegisteredItem().get(extend.asString());
+            if (exItem != null) item = exItem;
+        }
+
+        EquipClassify classify = EquipClassify.getClassify(tag);
         if (classify == null) return new Pair<>(false, equip);
 
-        int count = itemTag.getDeep(NBT_NODE_ENHANCE).asInt();
+        int count = tag.getDeepOrElse(NBT_NODE_ENHANCE, new ItemTagData(0)).asInt();
         if (count == MAX) return new Pair<>(false, equip);
 
         double ratio = chance.get(count + 1);
@@ -76,12 +85,12 @@ public class EnhanceFactory {
             double to = original * (classify.getId() <= 5 ? 1.618 : 0.66) / MAX;
 
             double random = new BigDecimal(from + Math.random() * (to - from)).setScale(1, RoundingMode.HALF_UP).doubleValue();
-            double current = itemTag.getDeep(identifier.getOrdinaryNode()).asDouble();
+            double current = tag.getDeep(identifier.getOrdinaryNode()).asDouble();
 
-            itemTag.putDeep(identifier.getOrdinaryNode(), current + random);
+            tag.putDeep(identifier.getOrdinaryNode(), current + random);
         }
 
-        itemTag.putDeep(NBT_NODE_ENHANCE, count + 1);
+        tag.putDeep(NBT_NODE_ENHANCE, count + 1);
 
         return new Pair<>(true, itemStream.rebuildToItemStack(player));
     }

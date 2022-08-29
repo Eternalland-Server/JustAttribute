@@ -17,21 +17,25 @@ public class TransferFactory {
     public final static String PROP_SLOT = "transfer_prop";
     public final static String RESULT_SLOT = "transfer_result";
 
+    public final static String NBT_NODE_EXTENDS = "justattribute.extends";
+
     public static void init() {
         price = JustAttribute.getFileManager().getSmithyConfig("transfer").getInt("price");
     }
 
-    public static ItemStack machining(Player player, ItemStack equip, ItemStack prop) {
-        equip.setAmount(1);
+    public static ItemStack machining(Player player, ItemStack accept, ItemStack consume) {
+        accept.setAmount(1);
 
-        ItemStream equipStream = ZaphkielAPI.INSTANCE.read(equip);
-        ItemStream propStream = ZaphkielAPI.INSTANCE.read(prop);
-        ItemTag equipTag = equipStream.getZaphkielData();
-        ItemTag propTag = propStream.getZaphkielData();
+        ItemStream acceptStream = ZaphkielAPI.INSTANCE.read(accept);
+        ItemStream consumeStream = ZaphkielAPI.INSTANCE.read(consume);
+        ItemTag acceptTag = acceptStream.getZaphkielData();
+        ItemTag consumeTag = consumeStream.getZaphkielData();
 
-        equipTag.removeDeep(Attribute.NBT_NODE_ORDINARY);
-        equipTag.putDeep(Attribute.NBT_NODE_ORDINARY, propTag.getDeep(Attribute.NBT_NODE_ORDINARY));
+        acceptTag.removeDeep(Attribute.NBT_NODE_ORDINARY);
+        acceptTag.putDeep(Attribute.NBT_NODE_ORDINARY, consumeTag.getDeep(Attribute.NBT_NODE_ORDINARY));
+        acceptTag.putDeep(EnhanceFactory.NBT_NODE_ENHANCE, consumeTag.getDeep(EnhanceFactory.NBT_NODE_ENHANCE));
+        acceptTag.putDeep(NBT_NODE_EXTENDS, consumeStream.getZaphkielName());
 
-        return equipStream.rebuildToItemStack(player);
+        return acceptStream.rebuildToItemStack(player);
     }
 }
