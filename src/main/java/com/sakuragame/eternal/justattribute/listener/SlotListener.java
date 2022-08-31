@@ -7,6 +7,7 @@ import com.sakuragame.eternal.justattribute.core.soulbound.Owner;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.sakuragame.eternal.justattribute.util.ItemUtil;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
@@ -19,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -41,11 +43,25 @@ public class SlotListener implements Listener {
         if (index == -1) return;
 
         VanillaSlot slot = player.getInventory().getHeldItemSlot() == e.getSlot() ? VanillaSlot.MainHand : VanillaSlot.getSlot(index);
-        if (slot == null) return;
+        ItemStack switchItem = e.getCursor();
 
-        ItemStack handItem = e.getCursor();
-        if (!MegumiUtil.isEmpty(handItem) && slot != VanillaSlot.MainHand) {
-            ItemStream itemStream = ZaphkielAPI.INSTANCE.read(handItem);
+        if (slot == null) {
+            ItemStack item = e.getCurrentItem();
+            Material type = item.getType();
+            InventoryAction action = e.getAction();
+            if (action != InventoryAction.MOVE_TO_OTHER_INVENTORY) return;
+            if (!(ItemUtil.isArmor(type) || ItemUtil.isShield(type))) return;
+
+            VanillaSlot itemSlot = VanillaSlot.getSlot(type);
+            if (itemSlot == null) return;
+            if (!MegumiUtil.isEmpty(itemSlot.getItem(player))) return;
+
+            slot = itemSlot;
+            switchItem = item;
+        }
+
+        if (!MegumiUtil.isEmpty(switchItem) && slot != VanillaSlot.MainHand) {
+            ItemStream itemStream = ZaphkielAPI.INSTANCE.read(switchItem);
             if (itemStream.isVanilla()) return;
             ItemTag itemTag = itemStream.getZaphkielData();
 
@@ -69,12 +85,11 @@ public class SlotListener implements Listener {
             }
         }
 
-        ItemStack cursor = player.getItemOnCursor();
-        if (MegumiUtil.isEmpty(cursor)) {
+        if (MegumiUtil.isEmpty(switchItem)) {
             AttributeHandler.updateVanillaSlot(player, slot, new ItemStack(Material.AIR));
         }
         else {
-            AttributeHandler.updateVanillaSlot(player, slot, cursor);
+            AttributeHandler.updateVanillaSlot(player, slot, switchItem);
         }
     }
 

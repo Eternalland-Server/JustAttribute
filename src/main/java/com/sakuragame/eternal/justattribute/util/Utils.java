@@ -7,7 +7,6 @@ import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import net.sakuragame.eternal.justlevel.core.user.PlayerLevelData;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -24,10 +23,6 @@ public class Utils {
 
     public static int getRandomInt(int value) {
         return RANDOM.nextInt(value);
-    }
-
-    public static double getRandomDouble(double value) {
-        return RANDOM.nextDouble() * value;
     }
 
     public static int getRangeValue(String s) {
@@ -49,25 +44,6 @@ public class Utils {
         value = isPercent ? value * 100 : value;
         String s = FORMAT_A.format(value);
         return isPercent ? s + "%" : s;
-    }
-
-    public static boolean isWeaponClassify(ItemStack item) {
-        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-        if (itemStream.isVanilla()) return false;
-
-        ItemTagData data = itemStream.getZaphkielData().getDeep(EquipClassify.NBT_NODE);
-        if (data == null) return false;
-
-        int i = data.asInt();
-        return i <= 1;
-    }
-
-    public static boolean isArmor(Material material) {
-        String name = material.name();
-        return name.contains("HELMET") ||
-                name.contains("CHESTPLATE") ||
-                name.contains("LEGGINGS") ||
-                name.contains("BOOTS");
     }
 
     public static String getSource(int i) {

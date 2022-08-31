@@ -1,13 +1,12 @@
 package com.sakuragame.eternal.justattribute.listener;
 
-import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeUpdateEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;
 import com.sakuragame.eternal.justattribute.core.AttributeHandler;
 import com.sakuragame.eternal.justattribute.core.RoleManager;
 import com.sakuragame.eternal.justattribute.core.VanillaSlot;
 import com.sakuragame.eternal.justattribute.hook.ClientPlaceholder;
-import com.sakuragame.eternal.justattribute.util.Utils;
+import com.sakuragame.eternal.justattribute.util.ItemUtil;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -76,12 +75,13 @@ public class RoleListener implements Listener {
 
         ItemStack item = e.getItem();
         if (MegumiUtil.isEmpty(item)) return;
-        if (!Utils.isArmor(item.getType())) return;
+        if (!ItemUtil.isArmor(item.getType())) return;
 
         VanillaSlot slot = VanillaSlot.getSlot(item.getType());
         if (slot == null) return;
+        if (!MegumiUtil.isEmpty(slot.getItem(player))) return;
 
-        AttributeHandler.updateVanillaSlot(player, slot);
+        AttributeHandler.updateVanillaSlot(player, slot, item);
     }
 
     @EventHandler

@@ -37,6 +37,8 @@ public enum VanillaSlot {
     }
 
     public static VanillaSlot getSlot(Material material) {
+        if (material == Material.SHIELD) return OffHand;
+
         for (VanillaSlot slot : values()) {
             if (material.name().contains(slot.getIdent().toUpperCase())) {
                 return slot;
