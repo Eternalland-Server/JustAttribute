@@ -1,9 +1,7 @@
 package com.sakuragame.eternal.justattribute.util;
 
-import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
-import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import net.sakuragame.eternal.justlevel.api.JustLevelAPI;
 import net.sakuragame.eternal.justlevel.core.user.PlayerLevelData;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;

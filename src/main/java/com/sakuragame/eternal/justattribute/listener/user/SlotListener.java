@@ -1,8 +1,8 @@
-package com.sakuragame.eternal.justattribute.listener;
+package com.sakuragame.eternal.justattribute.listener.user;
 
 import com.sakuragame.eternal.justattribute.core.AttributeHandler;
+import com.sakuragame.eternal.justattribute.core.PetHandler;
 import com.sakuragame.eternal.justattribute.core.VanillaSlot;
-import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.Owner;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
@@ -12,6 +12,7 @@ import com.taylorswiftcn.justwei.util.MegumiUtil;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
+import net.sakuragame.eternal.dragoncore.api.SlotAPI;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotHandleEvent;
 import net.sakuragame.eternal.dragoncore.api.event.PlayerSlotUpdateEvent;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
@@ -23,8 +24,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -100,12 +99,14 @@ public class SlotListener implements Listener {
         ItemStack item = e.getItemStack();
 
         if (!ConfigFile.slotSetting.containsKey(ident)) return;
+        int id = ConfigFile.slotSetting.get(ident);
+        if (id > 21 && id < 26) return;
 
         AttributeHandler.updateCustomSlot(player, ident, item);
     }
 
     @EventHandler
-    public void onHandle(PlayerSlotHandleEvent e) {
+    public void onSlotHandle(PlayerSlotHandleEvent e) {
         Player player = e.getPlayer();
         String ident = e.getIdentifier();
         ItemStack item = e.getHandItem();
@@ -144,53 +145,60 @@ public class SlotListener implements Listener {
             MessageAPI.sendActionTip(player, "§c§l这件装备绑定的是其他人");
             e.setCancelled(true);
         }
-        else {
-            Action action = SoulBound.getAction(itemTag);
-            if (action == null) return;
+//        else {
+//            Action action = SoulBound.getAction(itemTag);
+//            if (action == null) return;
+//
+//            if (action == Action.USE || action == Action.USE_LOCK) {
+//                e.setHandItem(SoulBound.binding(player, itemStream, action));
+//            }
+//        }
 
-            if (action == Action.USE || action == Action.USE_LOCK) {
-                e.setHandItem(SoulBound.binding(player, itemStream, action));
-            }
+        if (!(id > 21 && id < 26)) return;
+        ItemStack petEgg = SlotAPI.getCacheSlotItem(player, PetHandler.EGG_SLOT);
+        if (petEgg == null) {
+            MessageAPI.sendActionTip(player, "&c&l你还没有使用宠物");
+            e.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onInteract(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        ItemStack item = player.getInventory().getItemInMainHand();
+//    @EventHandler(priority = EventPriority.HIGH)
+//    public void onInteract(PlayerInteractEvent e) {
+//        Player player = e.getPlayer();
+//        ItemStack item = player.getInventory().getItemInMainHand();
+//
+//        if (MegumiUtil.isEmpty(item)) return;
+//
+//        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
+//        if (itemStream.isVanilla()) return;
+//
+//        Action action = SoulBound.getAction(itemStream.getZaphkielData());
+//        if (action == null) return;
+//
+//        if (action == Action.USE || action == Action.USE_LOCK) {
+//            player.getInventory().setItemInMainHand(SoulBound.binding(player, itemStream, action));
+//            AttributeHandler.updateVanillaSlot(player, VanillaSlot.MainHand);
+//        }
+//    }
 
-        if (MegumiUtil.isEmpty(item)) return;
-
-        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-        if (itemStream.isVanilla()) return;
-
-        Action action = SoulBound.getAction(itemStream.getZaphkielData());
-        if (action == null) return;
-
-        if (action == Action.USE || action == Action.USE_LOCK) {
-            player.getInventory().setItemInMainHand(SoulBound.binding(player, itemStream, action));
-            AttributeHandler.updateVanillaSlot(player, VanillaSlot.MainHand);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onSwap(PlayerSwapHandItemsEvent e) {
-        if (e.isCancelled()) return;
-
-        Player player = e.getPlayer();
-        ItemStack item = e.getOffHandItem();
-
-        if (MegumiUtil.isEmpty(item)) return;
-
-        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-        if (itemStream.isVanilla()) return;
-
-        Action action = SoulBound.getAction(itemStream.getZaphkielData());
-        if (action == null) return;
-
-        if (action == Action.USE || action == Action.USE_LOCK) {
-            player.getInventory().setItemInMainHand(SoulBound.binding(player, itemStream, action));
-            AttributeHandler.updateVanillaSlot(player, VanillaSlot.OffHand);
-        }
-    }
+//    @EventHandler(priority = EventPriority.HIGH)
+//    public void onSwap(PlayerSwapHandItemsEvent e) {
+//        if (e.isCancelled()) return;
+//
+//        Player player = e.getPlayer();
+//        ItemStack item = e.getOffHandItem();
+//
+//        if (MegumiUtil.isEmpty(item)) return;
+//
+//        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
+//        if (itemStream.isVanilla()) return;
+//
+//        Action action = SoulBound.getAction(itemStream.getZaphkielData());
+//        if (action == null) return;
+//
+//        if (action == Action.USE || action == Action.USE_LOCK) {
+//            player.getInventory().setItemInMainHand(SoulBound.binding(player, itemStream, action));
+//            AttributeHandler.updateVanillaSlot(player, VanillaSlot.OffHand);
+//        }
+//    }
 }

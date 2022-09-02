@@ -20,6 +20,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class AttributeListener implements Listener {
 
@@ -53,7 +54,7 @@ public class AttributeListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDisplay(ItemReleaseEvent.Display e) {
         String display = e.getItemStream().getZaphkielItem().getDisplay();
-        if (!display.equals("EQUIP_COMMON_DISPLAY")) return;
+        if (!display.endsWith("EQUIP_COMMON_DISPLAY")) return;
 
         Item item = e.getItemStream().getZaphkielItem();
         ItemTag tag = e.getItemStream().getZaphkielData();
@@ -68,8 +69,8 @@ public class AttributeListener implements Listener {
             }
         }
 
-        LinkedList<String> ordinaryDisplay = new LinkedList<>();
-        LinkedList<String> potencyDisplay = new LinkedList<>();
+        List<String> ordinaryDisplay = new LinkedList<>();
+        List<String> potencyDisplay = new LinkedList<>();
 
         ItemTagData gradeData = tag.getDeep(PotencyGrade.NBT_TAG);
         PotencyGrade grade = gradeData == null ? null : PotencyGrade.match(gradeData.asInt());

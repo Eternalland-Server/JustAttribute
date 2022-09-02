@@ -27,19 +27,12 @@ public class AttributeSource implements Cloneable {
         this.potency = new HashMap<>();
     }
 
-    public AttributeSource(ItemStream itemStream) {
-        this(itemStream, false);
-    }
-
-    public AttributeSource(ItemStream itemStream, boolean ignore) {
-        this.ordinary = new HashMap<>();
-        this.potency = new HashMap<>();
-
-        read(itemStream, ignore);
-    }
-
     public AttributeSource(ItemStack item) {
         this(item, false);
+    }
+
+    public AttributeSource(ItemStream itemStream) {
+        this(itemStream, false);
     }
 
     public AttributeSource(ItemStack item, boolean ignore) {
@@ -49,22 +42,16 @@ public class AttributeSource implements Cloneable {
         read(ZaphkielAPI.INSTANCE.read(item), ignore);
     }
 
+    public AttributeSource(ItemStream itemStream, boolean ignore) {
+        this.ordinary = new HashMap<>();
+        this.potency = new HashMap<>();
+
+        read(itemStream, ignore);
+    }
+
     public AttributeSource(Map<Attribute, Double> ordinary, Map<Attribute, Double> potency) {
         this.ordinary = ordinary;
         this.potency = potency;
-    }
-
-    public static AttributeSource getItemAttribute(ItemStack item, EquipClassify classify) {
-        if (MegumiUtil.isEmpty(item)) return null;
-
-        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-        if (itemStream.isVanilla()) return null;
-
-        ItemTag itemTag = itemStream.getZaphkielData();
-        EquipClassify equip = EquipClassify.getClassify(itemTag);
-        if (classify != equip || SoulBound.isSeal(itemTag)) return null;
-
-        return new AttributeSource(item);
     }
 
     public AttributeSource addOrdinary(Attribute attribute, double value) {
@@ -80,17 +67,37 @@ public class AttributeSource implements Cloneable {
     private void read(ItemStream itemStream, boolean ignore) {
         if (itemStream.isVanilla()) return;
 
-        ItemTag itemTag = itemStream.getZaphkielData();
+        ItemTag tag = itemStream.getZaphkielData();
 
         if (!ignore) {
-            Action action = SoulBound.getType(itemTag);
+            Action action = SoulBound.getType(tag);
             if (action == Action.SEAL) return;
         }
 
-        for (Attribute attr : Attribute.values()) {
-            ordinary.put(attr, itemTag.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble());
-            potency.put(attr, itemTag.getDeepOrElse(attr.getPotencyNode(), new ItemTagData(0)).asDouble());
+        EquipClassify classify = EquipClassify.getClassify(tag);
+
+        if (classify == EquipClassify.Pet_Egg) {
+
         }
+        else {
+            for (Attribute attr : Attribute.values()) {
+                ordinary.put(attr, tag.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble());
+                potency.put(attr, tag.getDeepOrElse(attr.getPotencyNode(), new ItemTagData(0)).asDouble());
+            }
+        }
+    }
+
+    public static AttributeSource getItemAttribute(ItemStack item, EquipClassify classify) {
+        if (MegumiUtil.isEmpty(item)) return null;
+
+        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
+        if (itemStream.isVanilla()) return null;
+
+        ItemTag itemTag = itemStream.getZaphkielData();
+        EquipClassify equip = EquipClassify.getClassify(itemTag);
+        if (classify != equip || SoulBound.isSeal(itemTag)) return null;
+
+        return new AttributeSource(item);
     }
 
     @Override

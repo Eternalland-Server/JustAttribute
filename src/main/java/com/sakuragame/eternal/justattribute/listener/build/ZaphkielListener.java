@@ -4,6 +4,8 @@ import com.sakuragame.eternal.justattribute.core.attribute.AttributeSource;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.*;
+import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.sakuragame.eternal.justattribute.util.Utils;
 import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
@@ -12,6 +14,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ZaphkielListener implements Listener {
 
@@ -100,7 +105,14 @@ public class ZaphkielListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onCombat(ItemReleaseEvent.Display e) {
         String display = e.getItemStream().getZaphkielItem().getDisplay();
-        if (!(display.equals("EQUIP_COMMON_DISPLAY") || display.equals("SKIN_COMMON_DISPLAY"))) return;
+
+        if (display.equals("PET_COMMON_DISPLAY")) {
+            List<String> cp = new ArrayList<>();
+            ConfigFile.format.combat.forEach(s -> cp.add(s.replace("<combat>", "¿¿¿")));
+            e.addLore(CombatPower.DISPLAY_NODE, cp);
+            return;
+        }
+        if (!display.endsWith("_COMMON_DISPLAY")) return;
 
         int combat = CombatPower.calculate(new AttributeSource(e.getItemStream(), true));
         e.addLore(CombatPower.DISPLAY_NODE, CombatPower.format(combat));

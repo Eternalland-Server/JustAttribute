@@ -18,10 +18,9 @@ format:
   bound: '&a已绑定: &7<owner>'
   bound_lock: '☏&a已绑定: &7<owner>'
   classify: '&f装备分类: &7<classify>'
-  skin: '&f时装分类: %7<skin-type>'
   quality: '&f<name> &7(<desc>&7)'
   combat:
-    - '  &7装备评分'
+    - '  &7战斗力评分'
     - '<combat>'
   potency: ' <symbol> <desc>'
   expire: '&c将在 <expire> 前过期'

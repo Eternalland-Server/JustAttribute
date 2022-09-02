@@ -1,4 +1,4 @@
-package com.sakuragame.eternal.justattribute.listener;
+package com.sakuragame.eternal.justattribute.listener.user;
 
 import com.sakuragame.eternal.justattribute.api.event.role.RoleAttributeUpdateEvent;
 import com.sakuragame.eternal.justattribute.api.event.role.RoleStateUpdateEvent;

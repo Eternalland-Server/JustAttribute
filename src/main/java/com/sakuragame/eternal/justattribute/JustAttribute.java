@@ -6,17 +6,8 @@ import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.file.FileManager;
 import com.sakuragame.eternal.justattribute.hook.AttributePlaceholder;
 import com.sakuragame.eternal.justattribute.listener.*;
-import com.sakuragame.eternal.justattribute.listener.build.AttributeListener;
-import com.sakuragame.eternal.justattribute.listener.build.ExpireListener;
-import com.sakuragame.eternal.justattribute.listener.build.SkinListener;
-import com.sakuragame.eternal.justattribute.listener.build.ZaphkielListener;
-import com.sakuragame.eternal.justattribute.listener.combat.CombatListener;
-import com.sakuragame.eternal.justattribute.listener.combat.VampireListener;
-import com.sakuragame.eternal.justattribute.listener.hook.InfoListener;
-import com.sakuragame.eternal.justattribute.listener.hook.LevelListener;
-import com.sakuragame.eternal.justattribute.listener.hook.MobListener;
 import com.sakuragame.eternal.justattribute.listener.hook.StorageListener;
-import com.sakuragame.eternal.justattribute.listener.smithy.*;
+import com.sakuragame.eternal.justattribute.listener.pet.PetListener;
 import com.sakuragame.eternal.justattribute.storage.StorageManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -56,27 +47,12 @@ public class JustAttribute extends JavaPlugin {
         new AttributePlaceholder().register();
 
         getLogger().info("注册事件...");
-        registerListener(new ZaphkielListener());
-        registerListener(new SkinListener());
-        registerListener(new AttributeListener());
-        registerListener(new ExpireListener());
-
-        registerListener(new UIListener());
-        registerListener(new IdentifyListener());
-        registerListener(new SealListener());
-        registerListener(new TransferListener());
-        registerListener(new EnhanceListener());
-        registerListener(new CommonListener());
-
-        registerListener(new PlayerListener());
-        registerListener(new RoleListener());
-        registerListener(new SlotListener());
-        registerListener(new CombatListener());
-        registerListener(new VampireListener());
-        registerListener(new SoulBoundListener());
-        registerListener(new LevelListener());
-        registerListener(new MobListener());
-        registerListener(new InfoListener());
+        new UserRegister();
+        new BuildRegister();
+        new CombatRegister();
+        new HookRegister();
+        new SmithyRegister();
+        this.registerListener(new PetListener());
 
         if (Bukkit.getPluginManager().getPlugin("PlayerSQL") != null) {
             PLAYER_SQL = true;
