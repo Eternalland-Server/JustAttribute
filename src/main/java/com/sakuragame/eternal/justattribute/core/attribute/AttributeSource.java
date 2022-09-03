@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.core.attribute;
 
+import com.sakuragame.eternal.justattribute.core.PetHandler;
 import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
@@ -77,12 +78,29 @@ public class AttributeSource implements Cloneable {
         EquipClassify classify = EquipClassify.getClassify(tag);
 
         if (classify == EquipClassify.Pet_Egg) {
+            for (int level : PetHandler.stage) {
+                ItemTagData data = tag.getDeep(PetHandler.NBT_NODE_CAPACITY + "." + level);
+                if (data == null) continue;
+                String[] args = data.asString().split("\\|", 2);
+                Attribute ident = Attribute.match(args[0]);
+                if (ident == null) continue;
+                double value = Double.parseDouble(args[1]);
+                potency.merge(ident, value, Double::sum);
+            }
 
+            PetHandler.NBT_NODE_EQUIP.values().forEach(key -> {
+                String node = key.getValue();
+                ItemTagData data = tag.getDeep(node);
+                if (data != null) {
+                    ItemStream equip = ZaphkielAPI.INSTANCE.getRegisteredItem().get(data.asString()).build(null);
+                    this.read(equip, false);
+                }
+            });
         }
         else {
             for (Attribute attr : Attribute.values()) {
-                ordinary.put(attr, tag.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble());
-                potency.put(attr, tag.getDeepOrElse(attr.getPotencyNode(), new ItemTagData(0)).asDouble());
+                ordinary.merge(attr, tag.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble(), Double::sum);
+                potency.merge(attr, tag.getDeepOrElse(attr.getPotencyNode(), new ItemTagData(0)).asDouble(), Double::sum);
             }
         }
     }
