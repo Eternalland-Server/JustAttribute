@@ -31,18 +31,12 @@ public class PetListener implements Listener {
 
         Player player = e.getPlayer();
         String ident = e.getData().get(0);
-        if (!PetHandler.NBT_NODE_EQUIP.containsKey(ident)) return;
+        if (ident.equals(PetHandler.EGG_SLOT)) return;
 
         ItemStack egg = SlotAPI.getCacheSlotItem(player, PetHandler.EGG_SLOT);
         if (MegumiUtil.isEmpty(egg)) return;
 
-        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(egg);
-        ItemTag tag = itemStream.getZaphkielData();
-        ItemTagData data = tag.getDeep(PetHandler.NBT_NODE_EQUIP.get(ident).getValue());
-        if (data == null) return;
-
-        Item item = ZaphkielAPI.INSTANCE.getRegisteredItem().get(data.asString());
-        PacketSender.putClientSlotItem(e.getPlayer(), ident, item.buildItemStack(player));
+        this.loadEgg(player, egg);
     }
 
     @EventHandler

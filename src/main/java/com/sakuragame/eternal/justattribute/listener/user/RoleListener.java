@@ -35,7 +35,6 @@ public class RoleListener implements Listener {
     @EventHandler
     public void onStateUpdate(RoleStateUpdateEvent e) {
         Player player = e.getPlayer();
-        UUID uuid = player.getUniqueId();
 
         ClientPlaceholder.sendState(player);
     }
