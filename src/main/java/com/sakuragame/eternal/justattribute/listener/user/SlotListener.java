@@ -46,6 +46,7 @@ public class SlotListener implements Listener {
 
         if (slot == null) {
             ItemStack item = e.getCurrentItem();
+            if (MegumiUtil.isEmpty(item)) return;
             Material type = item.getType();
             InventoryAction action = e.getAction();
             if (action != InventoryAction.MOVE_TO_OTHER_INVENTORY) return;
