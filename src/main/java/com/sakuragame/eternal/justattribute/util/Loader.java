@@ -1,6 +1,7 @@
 package com.sakuragame.eternal.justattribute.util;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ public class Loader {
         this.depend = new ArrayList<>();
 
         for (Identifier ident : Identifier.values()) {
+            if (ident == Identifier.Inventory && Bukkit.getPluginManager().getPlugin("PlayerSQL") == null) return;
             this.depend.add(ident.name());
         }
     }
