@@ -30,10 +30,10 @@ public class PetListener implements Listener {
 
         List<String> infoDisplay = new LinkedList<>();
         int level = tag.getDeepOrElse(PetHandler.NBT_NODE_LEVEL, new ItemTagData(0)).asInt();
-        int intimacy = tag.getDeepOrElse(PetHandler.NBT_NODE_INTIMACY, new ItemTagData(0)).asInt();
+        String showName = tag.getDeepOrElse(PetHandler.NBT_NODE_NAME, new ItemTagData("")).asString();
         int saddle = tag.getDeepOrElse(PetHandler.NBT_NODE_SADDLE, new ItemTagData(0)).asInt();
         infoDisplay.add("   ⓞ &3宠物等级: &f" + level + (level == PetHandler.MAX_LEVEL ? "&e(MAX)" : ""));
-        infoDisplay.add("   ⓥ &3亲密度： &f" + intimacy + "/100");
+        infoDisplay.add("   ⓥ &3宠物名称： &f" + (showName.isEmpty() ? "&7&o未命名" : "&f" + showName));
         infoDisplay.add("   ⓔ &3装配鞍: " + (saddle == 1 ? "&b是" : "&7否"));
 
         PetHandler.NBT_NODE_EQUIP.values().forEach(elm -> {

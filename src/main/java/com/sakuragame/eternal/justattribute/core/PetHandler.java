@@ -19,7 +19,7 @@ public class PetHandler {
     public final static String SADDLE_SLOT = "pet_saddle_slot";
     public final static String NBT_NODE_LEVEL = "pet.level";
     public final static String NBT_NODE_EXP = "pet.exp";
-    public final static String NBT_NODE_INTIMACY = "pet.intimacy";
+    public final static String NBT_NODE_NAME = "pet.name";
 
     public final static String NBT_NODE_SADDLE = "pet.saddle";
     public final static Map<String, Pair<String, String>> NBT_NODE_EQUIP = new LinkedHashMap<String, Pair<String, String>>() {{
