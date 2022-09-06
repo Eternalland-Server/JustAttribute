@@ -21,7 +21,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
-public class PetListener implements Listener {
+public class SlotListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSlotRequireEvent(CustomPacketEvent e) {

@@ -32,7 +32,7 @@ public class PetHandler {
     public final static String DISPLAY_NODE_INFO = "display.pet-info";
     public final static String DISPLAY_NODE_CAPACITY = "display.pet-capacity";
 
-    public final static int[] stage = {1, 8, 18, 31};
+    public final static int[] stage = {1, 8, 18, 30, 31};
 
     public static ItemStack setSaddle(Player player, ItemStack egg) {
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(egg);
@@ -60,4 +60,8 @@ public class PetHandler {
         Item equip = ZaphkielAPI.INSTANCE.getRegisteredItem().get(data.asString());
         return new Pair<>(itemStream.rebuildToItemStack(player), equip.buildItemStack(player));
     }
+
+//    public static ItemStack unlockCapacity(Player player, ItemStack egg, int level) {
+//
+//    }
 }

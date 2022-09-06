@@ -22,10 +22,10 @@ import org.bukkit.event.Listener;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AttributeListener implements Listener {
+public class EquipListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onBuild(ItemBuildEvent.Pre e) {
+    public void onEquipBuild(ItemBuildEvent.Pre e) {
         String display = e.getItemStream().getZaphkielItem().getDisplay();
         if (!display.equals("EQUIP_COMMON_DISPLAY")) return;
         if (e.getPlayer() == null) return;
@@ -40,7 +40,6 @@ public class AttributeListener implements Listener {
         if (autoEnhance == null) return;
 
         int level = autoEnhance.asInt();
-
         tag.removeDeep(EnhanceFactory.NBT_NODE_PRE_ENHANCE);
         tag.putDeep(EnhanceFactory.NBT_NODE_ENHANCE, level);
 
@@ -52,9 +51,9 @@ public class AttributeListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onDisplay(ItemReleaseEvent.Display e) {
+    public void onEquipRelease(ItemReleaseEvent.Display e) {
         String display = e.getItemStream().getZaphkielItem().getDisplay();
-        if (!display.endsWith("EQUIP_COMMON_DISPLAY")) return;
+        if (!display.equals("EQUIP_COMMON_DISPLAY")) return;
 
         Item item = e.getItemStream().getZaphkielItem();
         ItemTag tag = e.getItemStream().getZaphkielData();
@@ -86,13 +85,9 @@ public class AttributeListener implements Listener {
             ItemTagData potency = tag.getDeep(attr.getPotencyNode());
 
             if (ordinary != null) {
-                double v1 = item.getData().getDouble(attr.getOrdinaryNode(), -1);
+                double v1 = item.getData().getDouble(attr.getOrdinaryNode(), 0);
                 double v2 = ordinary.asDouble();
-                ordinaryDisplay.add(
-                        v1 == -1 ?
-                                attr.format(v2, attr.isOnlyPercent()) :
-                                attr.format(v1, v2 - v1)
-                );
+                ordinaryDisplay.add(attr.format(v1, v2 - v1));
             }
 
             if (potency != null && grade != null) {
@@ -113,4 +108,26 @@ public class AttributeListener implements Listener {
         e.addLore(Attribute.DISPLAY_NODE_POTENCY, potencyDisplay);
     }
 
+    @EventHandler
+    public void onPetEquipRelease(ItemReleaseEvent.Display e) {
+        String display = e.getItemStream().getZaphkielItem().getDisplay();
+        if (!display.equals("PET_EQUIP_COMMON_DISPLAY")) return;
+
+        Item item = e.getItemStream().getZaphkielItem();
+        ItemTag tag = e.getItemStream().getZaphkielData();
+
+        List<String> ordinaryDisplay = new LinkedList<>();
+
+        for (Attribute attr : Attribute.values()) {
+            ItemTagData ordinary = tag.getDeep(attr.getOrdinaryNode());
+            ItemTagData potency = tag.getDeep(attr.getPotencyNode());
+
+            if (ordinary != null) {
+                double v = ordinary.asDouble();
+                ordinaryDisplay.add(attr.format(v));
+            }
+        }
+
+        e.addLore(Attribute.DISPLAY_NODE_ORDINARY, ordinaryDisplay);
+    }
 }

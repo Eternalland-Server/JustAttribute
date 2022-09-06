@@ -7,10 +7,10 @@ public class BuildRegister extends ListenRegister {
 
     public BuildRegister() {
         super(JustAttribute.getInstance());
-        this.registerListener(new AttributeListener());
+        this.registerListener(new EquipListener());
         this.registerListener(new ExpireListener());
         this.registerListener(new PetListener());
         this.registerListener(new SkinListener());
-        this.registerListener(new ZaphkielListener());
+        this.registerListener(new CommonListener());
     }
 }

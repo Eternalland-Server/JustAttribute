@@ -5,7 +5,6 @@ import com.sakuragame.eternal.justattribute.core.soulbound.Action;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
 import com.sakuragame.eternal.justattribute.core.special.*;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
-import com.sakuragame.eternal.justattribute.util.Utils;
 import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
@@ -18,7 +17,7 @@ import org.bukkit.event.Listener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ZaphkielListener implements Listener {
+public class CommonListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onSoulBound(ItemBuildEvent.Pre e) {
