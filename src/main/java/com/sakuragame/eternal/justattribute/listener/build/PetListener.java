@@ -2,6 +2,7 @@ package com.sakuragame.eternal.justattribute.listener.build;
 
 import com.sakuragame.eternal.justattribute.core.PetHandler;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
+import com.sakuragame.eternal.justattribute.core.special.EquipQuality;
 import com.taylorswiftcn.justwei.util.MegumiUtil;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.Item;
@@ -32,8 +33,8 @@ public class PetListener implements Listener {
         int level = tag.getDeepOrElse(PetHandler.NBT_NODE_LEVEL, new ItemTagData(0)).asInt();
         String showName = tag.getDeepOrElse(PetHandler.NBT_NODE_NAME, new ItemTagData("")).asString();
         int saddle = tag.getDeepOrElse(PetHandler.NBT_NODE_SADDLE, new ItemTagData(0)).asInt();
-        infoDisplay.add("   ⓞ &3宠物等级: &f" + level + (level == PetHandler.MAX_LEVEL ? "&e(MAX)" : ""));
-        infoDisplay.add("   ⓥ &3宠物名称： &f" + (showName.isEmpty() ? "&7&o未命名" : "&f" + showName));
+        infoDisplay.add("   ⓞ &3等级: &f" + level + (level == PetHandler.MAX_LEVEL ? "&e(MAX)" : ""));
+        infoDisplay.add("   ⓥ &3名称： &f" + (showName.isEmpty() ? "&7&o未命名" : "&f" + showName));
         infoDisplay.add("   ⓔ &3装配鞍: " + (saddle == 1 ? "&b是" : "&7否"));
 
         PetHandler.NBT_NODE_EQUIP.values().forEach(elm -> {
@@ -54,6 +55,12 @@ public class PetListener implements Listener {
 
         List<String> capacityDisplay = new LinkedList<>();
         for (int i : PetHandler.stage) {
+            if (i == 31) {
+                EquipQuality quality = EquipQuality.getQuality(tag);
+                if (quality == null) continue;
+                if (quality.getId() < 5) continue;
+            }
+
             ItemTagData data = tag.getDeep(PetHandler.NBT_NODE_CAPACITY + "." + i);
             if (data == null) {
                 capacityDisplay.add("   ☎ " + (player != null ? "&8" + i + "级解锁" : "&7即将解锁"));

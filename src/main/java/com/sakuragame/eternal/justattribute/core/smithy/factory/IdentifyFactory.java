@@ -25,7 +25,6 @@ public class IdentifyFactory {
 
     public final static String EQUIP_SLOT = "identify_equip";
     public final static String PROP_SLOT = "identify_prop";
-    public final static String RESULT_SLOT = "identify_result";
 
     private static Group weaponGroup;
     private static Group equipGroup;

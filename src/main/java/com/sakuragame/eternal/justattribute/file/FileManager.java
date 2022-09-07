@@ -3,6 +3,7 @@ package com.sakuragame.eternal.justattribute.file;
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.mob.MobConfig;
 import com.sakuragame.eternal.justattribute.file.sub.ConfigFile;
+import com.sakuragame.eternal.justattribute.file.sub.PetFile;
 import com.taylorswiftcn.justwei.file.JustConfiguration;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.io.MythicConfig;
@@ -19,6 +20,7 @@ public class FileManager extends JustConfiguration {
 
     private final JustAttribute plugin;
     @Getter private YamlConfiguration config;
+    @Getter private YamlConfiguration pet;
 
     private final Map<String, MobConfig> mobConfig;
 
@@ -30,8 +32,10 @@ public class FileManager extends JustConfiguration {
 
     public void init() {
         config = initFile("config.yml");
+        pet = initFile("pet.yml");
 
         ConfigFile.init();
+        PetFile.init();
         initSmithy();
         loadMobConfig();
     }

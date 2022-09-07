@@ -7,7 +7,6 @@ import com.sakuragame.eternal.justattribute.file.FileManager;
 import com.sakuragame.eternal.justattribute.hook.AttributePlaceholder;
 import com.sakuragame.eternal.justattribute.listener.*;
 import com.sakuragame.eternal.justattribute.listener.hook.StorageListener;
-import com.sakuragame.eternal.justattribute.listener.pet.SlotListener;
 import com.sakuragame.eternal.justattribute.storage.StorageManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -52,7 +51,7 @@ public class JustAttribute extends JavaPlugin {
         new CombatRegister();
         new HookRegister();
         new SmithyRegister();
-        this.registerListener(new SlotListener());
+        new PetRegister();
 
         if (Bukkit.getPluginManager().getPlugin("PlayerSQL") != null) {
             PLAYER_SQL = true;
