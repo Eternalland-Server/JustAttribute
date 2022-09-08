@@ -35,14 +35,14 @@ public class IdentifyFactory {
         put("v2_identify_scroll", Arrays.asList(
                 new Pair<>(0, 0.5),
                 new Pair<>(1, 0.3),
-                new Pair<>(2, 0.15),
-                new Pair<>(3, 0.05)
+                new Pair<>(2, 0.16),
+                new Pair<>(3, 0.04)
         ));
         put("v3_identify_scroll", Arrays.asList(
-                new Pair<>(1, 0.5),
-                new Pair<>(2, 0.35),
-                new Pair<>(3, 0.12),
-                new Pair<>(4, 0.03)));
+                new Pair<>(1, 0.52),
+                new Pair<>(2, 0.36),
+                new Pair<>(3, 0.1),
+                new Pair<>(4, 0.02)));
     }};
 
     private static Map<Attribute, String> low;
