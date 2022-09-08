@@ -44,6 +44,12 @@ public class PetHandler {
         return itemStream.rebuildToItemStack(player);
     }
 
+    public static int isUseSaddle(ItemStack egg) {
+        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(egg);
+        ItemTag tag = itemStream.getZaphkielData();
+        return tag.getDeepOrElse(NBT_NODE_SADDLE, new ItemTagData(0)).asInt();
+    }
+
     public static ItemStack setEquip(Player player, String slot, ItemStack egg, ItemStack equip) {
         ItemStream equipStream = ZaphkielAPI.INSTANCE.read(equip);
         String id = equipStream.getZaphkielName();

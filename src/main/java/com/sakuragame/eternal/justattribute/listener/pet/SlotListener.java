@@ -82,8 +82,9 @@ public class SlotListener implements Listener {
         ItemStack egg = SlotAPI.getCacheSlotItem(player, PetHandler.EGG_SLOT);
         if (MegumiUtil.isEmpty(egg)) return;
 
-        if (ident.equals(PetHandler.SADDLE_SLOT)) {
+        if (ident.equals(PetHandler.SADDLE_SLOT) && PetHandler.isUseSaddle(egg) == 1) {
             MessageAPI.sendActionTip(player, "&c&l宠物鞍无法取下");
+            e.setCancelled(true);
             return;
         }
 
