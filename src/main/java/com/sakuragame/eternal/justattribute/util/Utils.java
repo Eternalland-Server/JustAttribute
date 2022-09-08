@@ -17,6 +17,7 @@ public class Utils {
 
     public final static DecimalFormat FORMAT_A = new DecimalFormat("0");
     public final static DecimalFormat FORMAT_B = new DecimalFormat("0.00");
+    public final static DecimalFormat FORMAT_C = new DecimalFormat("0.0");
     public final static Random RANDOM = new Random();
 
     public static int getRandomInt(int value) {
@@ -33,14 +34,9 @@ public class Utils {
         return RANDOM.nextInt(b - a) + a;
     }
 
-    public static String getZapID(ItemStack item) {
-        ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-        return itemStream.getZaphkielName();
-    }
-
     public static String format(double value, boolean isPercent) {
         value = isPercent ? value * 100 : value;
-        String s = FORMAT_A.format(value);
+        String s = FORMAT_C.format(value);
         return isPercent ? s + "%" : s;
     }
 

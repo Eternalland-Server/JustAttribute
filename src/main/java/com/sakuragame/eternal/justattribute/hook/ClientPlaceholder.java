@@ -50,11 +50,11 @@ public class ClientPlaceholder {
             placeholder.put(ident.getPlaceholder(), ident.formatting(value));
         }
 
-        placeholder.put(RESTORE_HP_PER_SEC, "+" + Utils.FORMAT_A.format(role.getAttributeValue(Attribute.Energy) / 100) + "HP/s");
-        placeholder.put(RESTORE_MP_PER_SEC, "+" + Utils.FORMAT_A.format(role.getAttributeValue(Attribute.Stamina) / 100) + "MP/s");
+        placeholder.put(RESTORE_HP_PER_SEC, "+" + Utils.FORMAT_C.format(role.getAttributeValue(Attribute.Energy) / 100) + "HP/s");
+        placeholder.put(RESTORE_MP_PER_SEC, "+" + Utils.FORMAT_C.format(role.getAttributeValue(Attribute.Stamina) / 100) + "MP/s");
 
-        placeholder.put(DAMAGE_VAMPIRE_PRE_ATTACK, "+" + Utils.FORMAT_A.format(role.getDamageVampire()));
-        placeholder.put(SKILL_VAMPIRE_PRE_ATTACK, "+" + Utils.FORMAT_A.format(role.getSkillVampire()));
+        placeholder.put(DAMAGE_VAMPIRE_PRE_ATTACK, "+" + Utils.FORMAT_C.format(role.getDamageVampire()));
+        placeholder.put(SKILL_VAMPIRE_PRE_ATTACK, "+" + Utils.FORMAT_C.format(role.getSkillVampire()));
 
         placeholder.put(REALM_DAMAGE_PROMOTE, "+" + Utils.FORMAT_B.format((Utils.getRealmDamagePromote(uuid) - 1) * 100) + "%");
         placeholder.put(REALM_DEFENCE_PROMOTE, "+" + Utils.FORMAT_B.format((Utils.getRealmDefencePromote(uuid) - 1) * 100) + "%");

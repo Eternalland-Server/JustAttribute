@@ -116,7 +116,7 @@ public enum Attribute {
 
     public String format(double value, boolean isPercent) {
         value = isPercent ? value * 100 : value;
-        String str = (value >= 0 ? "+" : "") + Utils.FORMAT_A.format(value);
+        String str = (value >= 0 ? "+" : "") + Utils.FORMAT_C.format(value);
         str = isPercent ? str + "%" : str;
 
         return ConfigFile.format.attribute

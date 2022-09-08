@@ -14,6 +14,7 @@ import ink.ptms.zaphkiel.api.event.ItemBuildEvent;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
+import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagList;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -68,31 +69,41 @@ public class EquipListener implements Listener {
             }
         }
 
-        List<String> ordinaryDisplay = new LinkedList<>();
-        List<String> potencyDisplay = new LinkedList<>();
-
-        ItemTagData gradeData = tag.getDeep(PotencyGrade.NBT_TAG);
-        PotencyGrade grade = gradeData == null ? null : PotencyGrade.match(gradeData.asInt());
-        if (grade != null) {
-            potencyDisplay.add(grade.formatting());
-            potencyDisplay.add("");
+        ItemTagData enhance = tag.getDeepOrElse(EnhanceFactory.NBT_NODE_ENHANCE, new ItemTagData(0));
+        if (enhance != null) {
+            e.addName(EnhanceFactory.DISPLAY_NODE_ENHANCE, "§6§l(+" + enhance.asInt() + ")");
         }
 
-        ItemTagData enhance = tag.getDeepOrElse(EnhanceFactory.NBT_NODE_ENHANCE, new ItemTagData(0));
-
+        List<String> ordinaryDisplay = new LinkedList<>();
         for (Attribute attr : Attribute.values()) {
             ItemTagData ordinary = tag.getDeep(attr.getOrdinaryNode());
-            ItemTagData potency = tag.getDeep(attr.getPotencyNode());
 
             if (ordinary != null) {
                 double v1 = item.getData().getDouble(attr.getOrdinaryNode(), 0);
                 double v2 = ordinary.asDouble();
                 ordinaryDisplay.add(attr.format(v1, v2 - v1));
             }
+        }
+        e.addLore(Attribute.DISPLAY_NODE_ORDINARY, ordinaryDisplay);
 
-            if (potency != null && grade != null) {
-                double v = potency.asDouble();
-                potencyDisplay.add(attr.format(v, true));
+        List<String> potencyDisplay = new LinkedList<>();
+        ItemTagData gradeData = tag.getDeep(PotencyGrade.NBT_TAG);
+        PotencyGrade grade = gradeData == null ? null : PotencyGrade.match(gradeData.asInt());
+        if (grade != null) {
+            potencyDisplay.add(grade.formatting());
+            potencyDisplay.add("");
+
+            ItemTagData potencyData = tag.getDeep(Attribute.NBT_NODE_POTENCY);
+            if (potencyData != null) {
+                ItemTagList potencyList = potencyData.asList();
+                potencyList.forEach(elm -> {
+                    String s = elm.asString();
+                    Attribute ident = Attribute.match(s.split("\\|", 2)[0]);
+                    if (ident != null) {
+                        double value = Double.parseDouble(s.split("\\|", 2)[1]);
+                        potencyDisplay.add(ident.format(value, true));
+                    }
+                });
             }
         }
 
@@ -100,11 +111,6 @@ public class EquipListener implements Listener {
             potencyDisplay.add(ConfigFile.potency_empty);
         }
 
-        if (enhance != null) {
-            e.addName(EnhanceFactory.DISPLAY_NODE_ENHANCE, "§6§l(+" + enhance.asInt() + ")");
-        }
-
-        e.addLore(Attribute.DISPLAY_NODE_ORDINARY, ordinaryDisplay);
         e.addLore(Attribute.DISPLAY_NODE_POTENCY, potencyDisplay);
     }
 

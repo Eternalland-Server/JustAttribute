@@ -2,10 +2,8 @@ package com.sakuragame.eternal.justattribute.core.smithy.factory;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
-import com.sakuragame.eternal.justattribute.core.smithy.data.Group;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
-import com.sakuragame.eternal.justattribute.util.Utils;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
@@ -28,13 +26,25 @@ public class IdentifyFactory {
     public final static String EQUIP_SLOT = "identify_equip";
     public final static String PROP_SLOT = "identify_prop";
 
-    private static Map<String, List<Integer>> scope = new HashMap<String, List<Integer>>() {{
-        put("v1_identify_scroll", Arrays.asList(0, 1, 2));
-        put("v2_identify_scroll", Arrays.asList(0, 1, 2, 3));
-        put("v3_identify_scroll", Arrays.asList(1, 2, 3, 4));
+    private final static Map<String, List<Pair<Integer, Double>>> scope = new HashMap<String, List<Pair<Integer, Double>>>() {{
+        put("v1_identify_scroll", Arrays.asList(
+                new Pair<>(0, 0.5),
+                new Pair<>(1, 0.35),
+                new Pair<>(2, 0.15)
+        ));
+        put("v2_identify_scroll", Arrays.asList(
+                new Pair<>(0, 0.5),
+                new Pair<>(1, 0.3),
+                new Pair<>(2, 0.15),
+                new Pair<>(3, 0.05)
+        ));
+        put("v3_identify_scroll", Arrays.asList(
+                new Pair<>(1, 0.5),
+                new Pair<>(2, 0.35),
+                new Pair<>(3, 0.12),
+                new Pair<>(4, 0.03)));
     }};
 
-    private static Map<Integer, Double> weight;
     private static Map<Attribute, String> low;
     private static Map<Attribute, String> middle;
     private static Map<Attribute, String> height;
@@ -82,6 +92,9 @@ public class IdentifyFactory {
         if (v2 != 0) {
             random(middle, v2).forEach(s -> potency.add(new ItemTagData(s)));
         }
+        if (v1 != 0) {
+            random(low, v1).forEach(s -> potency.add(new ItemTagData(s)));
+        }
         if (v0 != 0) {
             for (int i = 0; i < v0; i++) {
                 if (Math.random() > 0.5) {
@@ -93,6 +106,7 @@ public class IdentifyFactory {
             }
         }
 
+        tag.putDeep(PotencyGrade.NBT_TAG, grade.getId());
         tag.putDeep(Attribute.NBT_NODE_POTENCY, potency);
 
         return new Pair<>(grade, itemStream.rebuildToItemStack(player));
@@ -115,19 +129,18 @@ public class IdentifyFactory {
     }
 
     private static int getPotencyGrade(String scrollID) {
-        Map<Integer, Double> map = new HashMap<>();
-        scope.get(scrollID).forEach(k -> map.put(k, weight.get(k)));
+        List<Pair<Integer, Double>> weight = scope.get(scrollID);
 
         List<Double> place = new ArrayList<>();
         double total = 0d;
         double value = 0d;
 
-        for (double d : map.values()) {
-            total += d;
+        for (Pair<Integer, Double> pair : weight) {
+            total += pair.getValue();
         }
 
-        for (double d : map.values()) {
-            value += d;
+        for (Pair<Integer, Double> pair : weight) {
+            value += pair.getValue();
             place.add(value / total);
         }
 
@@ -135,46 +148,38 @@ public class IdentifyFactory {
         place.add(random);
         Collections.sort(place);
         int index = place.indexOf(random);
-        List<Integer> keys = new ArrayList<>(map.keySet());
 
-        return keys.get(index);
+        return weight.get(index).getKey();
     }
 
     private static void loadConfig() {
-        weight = new HashMap<>();
         low = new HashMap<>();
         middle = new HashMap<>();
         height = new HashMap<>();
 
         YamlConfiguration yaml = JustAttribute.getFileManager().getSmithyConfig("identify");
 
-        ConfigurationSection weightSection = yaml.getConfigurationSection("weight");
-        for (String key : weightSection.getKeys(false)) {
-            double v = weightSection.getDouble(key);
-            weight.put(Integer.parseInt(key), v);
-        }
-
         ConfigurationSection lowSection = yaml.getConfigurationSection("low");
         for (String key : lowSection.getKeys(false)) {
             Attribute ident = Attribute.match(key);
             if (ident == null) continue;
-            String s = weightSection.getString(key);
+            String s = lowSection.getString(key);
             low.put(ident, s);
         }
 
         ConfigurationSection middleSection = yaml.getConfigurationSection("middle");
-        for (String key : lowSection.getKeys(false)) {
+        for (String key : middleSection.getKeys(false)) {
             Attribute ident = Attribute.match(key);
             if (ident == null) continue;
-            String s = weightSection.getString(key);
+            String s = middleSection.getString(key);
             middle.put(ident, s);
         }
 
         ConfigurationSection heightSection = yaml.getConfigurationSection("height");
-        for (String key : lowSection.getKeys(false)) {
+        for (String key : heightSection.getKeys(false)) {
             Attribute ident = Attribute.match(key);
             if (ident == null) continue;
-            String s = weightSection.getString(key);
+            String s = heightSection.getString(key);
             height.put(ident, s);
         }
     }
