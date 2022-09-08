@@ -135,7 +135,9 @@ public class IdentifyListener implements Listener {
             return;
         }
 
-        Pair<PotencyGrade, ItemStack> result = IdentifyFactory.machining(player, equip.clone());
+        ItemStream propStream = ZaphkielAPI.INSTANCE.read(prop);
+
+        Pair<PotencyGrade, ItemStack> result = IdentifyFactory.machining(player, equip.clone(), propStream.getZaphkielName());
         PotencyGrade grade = result.getKey();
         ItemStack item = result.getValue();
 

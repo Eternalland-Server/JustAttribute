@@ -1,71 +1,43 @@
-weapon:
-  mini:
-    weight: 60
-    attribute:
-      damage: 2-4
-      critical_chance: 6-10
-      critical_damage: 5-8
-      defence_penetration: 4-6
-      vampire_damage: 3-5
-      vampire_versatile: 3-5
-      exp_addition: 10
-  pro:
-    weight: 30
-    attribute:
-      damage: 6-8
-      critical_chance: 12-16
-      critical_damage: 10-14
-      defence_penetration: 6-8
-      vampire_damage: 5-8
-      vampire_versatile: 5-8
-      exp_addition: 20
-  ultra:
-    weight: 10
-    attribute:
-      damage: 8-12
-      critical_chance: 18-25
-      critical_damage: 16-20
-      defence_penetration: 8-12
-      vampire_damage: 8-10
-      vampire_versatile: 8-10
-      exp_addition: 30
-equip:
-  mini:
-    weight: 60
-    attribute:
-      energy: 2
-      stamina: 2
-      wisdom: 2
-      technique: 2
-      defence: 3-5
-      damage_immune: 2
-      health: 4
-      mana: 4
-      restore_health: 5-10
-      restore_mana: 5-10
-  pro:
-    weight: 30
-    attribute:
-      energy: 4
-      stamina: 4
-      wisdom: 4
-      technique: 4
-      defence: 6-9
-      damage_immune: 4
-      health: 6
-      mana: 6
-      restore_health: 12-18
-      restore_mana: 12-18
-  ultra:
-    weight: 10
-    attribute:
-      energy: 6
-      stamina: 6
-      wisdom: 6
-      technique: 6
-      defence: 10-12
-      damage_immune: 6
-      health: 8
-      mana: 8
-      restore_health: 20-25
-      restore_mana: 20-25
+weight:
+  0: 0.4
+  1: 0.28
+  2: 0.18
+  3: 0.12
+  4: 0.02
+
+low:
+  energy: '0.04 0.06'
+  stamina: '0.04 0.06'
+  wisdom: '0.04 0.06'
+  technique: '0.04 0.06'
+  damage: '0.03 0.06'
+  defence: '0.03 0.06'
+  health: '0.05 0.08'
+  mana: '0.05 0.08'
+  restore_health: '0.05 0.1'
+  restore_mana: '0.05 0.1'
+  critical_chance: '0.04 0.8'
+  exp_addition: '0.1 0.15'
+middle:
+  damage: '0.06 0.1'
+  defence: '0.06 0.1'
+  health: '0.08 0.12'
+  mana: '0.08 0.12'
+  restore_health: '0.1 0.15'
+  restore_mana: '0.1 0.15'
+  exp_addition: '0.12 0.16'
+  vampire_damage: '0.1 0.14'
+  vampire_versatile: '0.1 0.14'
+  critical_chance: '0.08 0.12'
+  critical_damage: '0.12 0.2'
+height:
+  damage: '0.1 0.14'
+  defence: '0.1 0.14'
+  exp_addition: '0.2 0.3'
+  vampire_damage: '0.12 0.18'
+  vampire_versatile: '0.12 0.18'
+  defence_penetration: '0.08 0.12'
+  damage_immune: '0.04 0.8'
+  critical_chance: '0.12 0.16'
+  critical_damage: '0.16 0.25'
+  movement_speed: '0.06 0.1'

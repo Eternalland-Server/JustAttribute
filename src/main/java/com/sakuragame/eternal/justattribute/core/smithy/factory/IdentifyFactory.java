@@ -2,21 +2,23 @@ package com.sakuragame.eternal.justattribute.core.smithy.factory;
 
 import com.sakuragame.eternal.justattribute.JustAttribute;
 import com.sakuragame.eternal.justattribute.core.attribute.Attribute;
-import com.sakuragame.eternal.justattribute.core.smithy.data.Entry;
 import com.sakuragame.eternal.justattribute.core.smithy.data.Group;
-import com.sakuragame.eternal.justattribute.core.smithy.data.Level;
 import com.sakuragame.eternal.justattribute.core.special.EquipClassify;
 import com.sakuragame.eternal.justattribute.core.special.PotencyGrade;
 import com.sakuragame.eternal.justattribute.util.Utils;
 import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
+import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
+import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagList;
 import net.sakuragame.eternal.dragoncore.util.Pair;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 public class IdentifyFactory {
@@ -26,91 +28,149 @@ public class IdentifyFactory {
     public final static String EQUIP_SLOT = "identify_equip";
     public final static String PROP_SLOT = "identify_prop";
 
-    private static Group weaponGroup;
-    private static Group equipGroup;
+    private static Map<String, List<Integer>> scope = new HashMap<String, List<Integer>>() {{
+        put("v1_identify_scroll", Arrays.asList(0, 1, 2));
+        put("v2_identify_scroll", Arrays.asList(0, 1, 2, 3));
+        put("v3_identify_scroll", Arrays.asList(1, 2, 3, 4));
+    }};
+
+    private static Map<Integer, Double> weight;
+    private static Map<Attribute, String> low;
+    private static Map<Attribute, String> middle;
+    private static Map<Attribute, String> height;
+
+    private final static Random RANDOM = new Random();
 
     public static void init() {
         loadConfig();
     }
 
-    public static Pair<PotencyGrade, ItemStack> machining(Player player, ItemStack item) {
-        return machining(player, item, null);
-    }
-
-    public static Pair<PotencyGrade, ItemStack> machining(Player player, ItemStack item, PotencyGrade grade) {
-        item.setAmount(1);
-
+    public static Pair<PotencyGrade, ItemStack> machining(Player player, ItemStack item, String scrollID) {
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(item);
-        ItemTag itemTag = itemStream.getZaphkielData();
+        ItemTag tag = itemStream.getZaphkielData();
 
-        EquipClassify classify = EquipClassify.getClassify(itemTag);
+        EquipClassify classify = EquipClassify.getClassify(tag);
         if (classify == null) return new Pair<>(PotencyGrade.NONE, item);
 
-        Group group = getGroup(classify);
-        Pair<PotencyGrade, Map<Attribute, String>> result = group.getRandom(grade);
-        grade = result.getKey();
-        Map<Attribute, String> potency = result.getValue();
-
-        itemTag.putDeep(PotencyGrade.NBT_TAG, grade.getId());
-        itemTag.removeDeep(Attribute.NBT_NODE_POTENCY);
-        for (Attribute key : potency.keySet()) {
-            String s = potency.get(key);
-            double value = Utils.getRangeValue(s) / 100d;
-            itemTag.putDeep(key.getPotencyNode(), value);
+        PotencyGrade grade = PotencyGrade.match(getPotencyGrade(scrollID));
+        int v1 = 0;
+        int v2 = 0;
+        int v3 = 0;
+        switch (grade) {
+            case SSS:
+                v3 = 3;
+                break;
+            case SS:
+                v3 = 2;
+                break;
+            case S:
+                v3 = 1;
+                break;
+            case A:
+                v2 = 2;
+                break;
+            case B:
+                v1 = 2;
+                break;
         }
+        int v0 = 3 - v3 - v2 - v1;
+
+        ItemTagList potency = new ItemTagList();
+        if (v3 != 0) {
+            random(height, v3).forEach(s -> potency.add(new ItemTagData(s)));
+        }
+        if (v2 != 0) {
+            random(middle, v2).forEach(s -> potency.add(new ItemTagData(s)));
+        }
+        if (v0 != 0) {
+            for (int i = 0; i < v0; i++) {
+                if (Math.random() > 0.5) {
+                    potency.add(new ItemTagData(random(middle, 1).get(0)));
+                }
+                else {
+                    potency.add(new ItemTagData(random(low, 1).get(0)));
+                }
+            }
+        }
+
+        tag.putDeep(Attribute.NBT_NODE_POTENCY, potency);
 
         return new Pair<>(grade, itemStream.rebuildToItemStack(player));
     }
 
-    private static Group getGroup(EquipClassify classify) {
-        if (classify == EquipClassify.MainHand || classify == EquipClassify.OffHand) {
-            return weaponGroup;
+    private static List<String> random(Map<Attribute, String> map, int count) {
+        List<String> result = new ArrayList<>();
+
+        List<Attribute> keys = new ArrayList<>(map.keySet());
+        for (int i = 0; i < count; i++) {
+            Attribute ident = keys.get(RANDOM.nextInt(keys.size()));
+            String s = map.get(ident);
+            double min = Double.parseDouble(s.split(" ", 2)[0]);
+            double max = Double.parseDouble(s.split(" ", 2)[1]);
+            double value = new BigDecimal(min + (max - min) * Math.random()).setScale(3, RoundingMode.HALF_UP).doubleValue();
+            result.add(ident.getId() + "|" + value);
         }
 
-        return equipGroup;
+        return result;
+    }
+
+    private static int getPotencyGrade(String scrollID) {
+        Map<Integer, Double> map = new HashMap<>();
+        scope.get(scrollID).forEach(k -> map.put(k, weight.get(k)));
+
+        List<Double> place = new ArrayList<>();
+        double total = 0d;
+        double value = 0d;
+
+        for (double d : map.values()) {
+            total += d;
+        }
+
+        for (double d : map.values()) {
+            value += d;
+            place.add(value / total);
+        }
+
+        double random = Math.random();
+        place.add(random);
+        Collections.sort(place);
+        int index = place.indexOf(random);
+        List<Integer> keys = new ArrayList<>(map.keySet());
+
+        return keys.get(index);
     }
 
     private static void loadConfig() {
         YamlConfiguration yaml = JustAttribute.getFileManager().getSmithyConfig("identify");
 
-        ConfigurationSection weapon = yaml.getConfigurationSection("weapon");
-        ConfigurationSection equip = yaml.getConfigurationSection("equip");
-
-        weaponGroup = loadGroup(weapon);
-        equipGroup = loadGroup(equip);
-    }
-
-    private static Group loadGroup(ConfigurationSection section) {
-        if (section == null) return null;
-
-        Entry mini = loadScope(Level.MINI, section.getConfigurationSection("mini"));
-        Entry pro = loadScope(Level.PRO, section.getConfigurationSection("pro"));
-        Entry ultra = loadScope(Level.ULTRA, section.getConfigurationSection("ultra"));
-
-        return new Group(mini, pro, ultra);
-    }
-
-    private static Entry loadScope(Level level, ConfigurationSection section) {
-        double weight = section.getDouble("weight");
-        Map<Attribute, String> map = loadEntry(section.getConfigurationSection("attribute"));
-
-        return new Entry(level, weight, map);
-    }
-
-    private static Map<Attribute, String> loadEntry(ConfigurationSection section) {
-        Map<Attribute, String> map = new HashMap<>();
-        if (section == null) return map;
-
-        for (String key : section.getKeys(false)) {
-            Attribute attribute = Attribute.match(key);
-            if (attribute == null) {
-                JustAttribute.getInstance().getLogger().info("锻造配置中出现未知属性: " + key);
-                continue;
-            }
-            String range = section.getString(key);
-            map.put(attribute, range);
+        ConfigurationSection weightSection = yaml.getConfigurationSection("weight");
+        for (String key : weightSection.getKeys(false)) {
+            double v = weightSection.getDouble(key);
+            weight.put(Integer.parseInt(key), v);
         }
 
-        return map;
+        ConfigurationSection lowSection = yaml.getConfigurationSection("low");
+        for (String key : lowSection.getKeys(false)) {
+            Attribute ident = Attribute.match(key);
+            if (ident == null) continue;
+            String s = weightSection.getString(key);
+            low.put(ident, s);
+        }
+
+        ConfigurationSection middleSection = yaml.getConfigurationSection("middle");
+        for (String key : lowSection.getKeys(false)) {
+            Attribute ident = Attribute.match(key);
+            if (ident == null) continue;
+            String s = weightSection.getString(key);
+            middle.put(ident, s);
+        }
+
+        ConfigurationSection heightSection = yaml.getConfigurationSection("height");
+        for (String key : lowSection.getKeys(false)) {
+            Attribute ident = Attribute.match(key);
+            if (ident == null) continue;
+            String s = weightSection.getString(key);
+            height.put(ident, s);
+        }
     }
 }

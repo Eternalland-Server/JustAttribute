@@ -64,7 +64,7 @@ public enum PotencyGrade {
             }
         }
 
-        return null;
+        return NONE;
     }
 
     public static PotencyGrade getGrade(ItemStack item) {

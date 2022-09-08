@@ -9,6 +9,7 @@ import ink.ptms.zaphkiel.ZaphkielAPI;
 import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
+import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagList;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
@@ -56,12 +57,22 @@ public class AttributeSource implements Cloneable {
     }
 
     public AttributeSource addOrdinary(Attribute attribute, double value) {
-        ordinary.put(attribute, value);
+        this.ordinary.merge(attribute, value, Double::sum);
         return this;
     }
 
     public AttributeSource addPotency(Attribute attribute, double value) {
-        potency.put(attribute, value);
+        this.potency.merge(attribute, value, Double::sum);
+        return this;
+    }
+
+    public AttributeSource putOrdinary(Attribute attribute, double value) {
+        this.ordinary.put(attribute, value);
+        return this;
+    }
+
+    public AttributeSource putPotency(Attribute attribute, double value) {
+        this.potency.put(attribute, value);
         return this;
     }
 
@@ -85,7 +96,7 @@ public class AttributeSource implements Cloneable {
                 Attribute ident = Attribute.match(args[0]);
                 if (ident == null) continue;
                 double value = Double.parseDouble(args[1]);
-                potency.merge(ident, value, Double::sum);
+                this.potency.merge(ident, value, Double::sum);
             }
 
             PetHandler.NBT_NODE_EQUIP.values().forEach(key -> {
@@ -99,9 +110,19 @@ public class AttributeSource implements Cloneable {
         }
         else {
             for (Attribute attr : Attribute.values()) {
-                ordinary.merge(attr, tag.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble(), Double::sum);
-                potency.merge(attr, tag.getDeepOrElse(attr.getPotencyNode(), new ItemTagData(0)).asDouble(), Double::sum);
+                this.ordinary.merge(attr, tag.getDeepOrElse(attr.getOrdinaryNode(), new ItemTagData(0)).asDouble(), Double::sum);
             }
+
+            ItemTagData potencyData = tag.getDeep(Attribute.NBT_NODE_POTENCY);
+            if (potencyData == null) return;
+
+            ItemTagList potencyList = potencyData.asList();
+            potencyList.forEach(elm -> {
+                String s = elm.asString();
+                Attribute ident = Attribute.match(s.split("\\|", 2)[0]);
+                double value = Double.parseDouble(s.split("\\|", 2)[1]);
+                this.potency.merge(ident, value, Double::sum);
+            });
         }
     }
 
