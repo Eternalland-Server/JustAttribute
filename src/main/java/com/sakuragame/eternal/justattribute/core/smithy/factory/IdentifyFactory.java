@@ -141,6 +141,11 @@ public class IdentifyFactory {
     }
 
     private static void loadConfig() {
+        weight = new HashMap<>();
+        low = new HashMap<>();
+        middle = new HashMap<>();
+        height = new HashMap<>();
+
         YamlConfiguration yaml = JustAttribute.getFileManager().getSmithyConfig("identify");
 
         ConfigurationSection weightSection = yaml.getConfigurationSection("weight");
