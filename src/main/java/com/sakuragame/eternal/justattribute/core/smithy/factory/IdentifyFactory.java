@@ -39,9 +39,9 @@ public class IdentifyFactory {
                 new Pair<>(3, 0.04)
         ));
         put("v3_identify_scroll", Arrays.asList(
-                new Pair<>(1, 0.52),
-                new Pair<>(2, 0.36),
-                new Pair<>(3, 0.1),
+                new Pair<>(1, 0.5),
+                new Pair<>(2, 0.35),
+                new Pair<>(3, 0.13),
                 new Pair<>(4, 0.02)));
     }};
 
