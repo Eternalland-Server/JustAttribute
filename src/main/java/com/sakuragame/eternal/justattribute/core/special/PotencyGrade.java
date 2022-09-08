@@ -17,8 +17,8 @@ public enum PotencyGrade {
     B(0, "ㅑ", "B"),
     A(1, "ㅒ", "A"),
     S(2, "ㅓ", "S"),
-    SS(3, "ㅔ", "SS", new String[]{"⒝ §a恭喜§7", "<player>", "§a在鉴定 ", "<item>", "§a 时,鉴定出§6SS§a级潜能"}),
-    SSS(4, "ㅏ", "SSS",  new String[]{"⒠ §e恭喜§7", "<player>", "§e在鉴定 ", "<item>", "§e 时,鉴定出§cSSS§e级潜能"});
+    SS(3, "ㅔ", "SS", new String[]{"⒝ §a恭喜§7", "<player>", "§a在鉴定 &f", "<item>", "§a 时,鉴定出§6SS§a级潜能"}),
+    SSS(4, "ㅏ", "SSS",  new String[]{"⒠ §e恭喜§7", "<player>", "§e在鉴定 &f", "<item>", "§e 时,鉴定出§cSSS§e级潜能"});
 
     private final int id;
     private final String symbol;
