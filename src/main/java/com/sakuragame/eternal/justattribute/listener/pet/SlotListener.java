@@ -79,8 +79,15 @@ public class SlotListener implements Listener {
         Player player = e.getPlayer();
         String ident = e.getIdentifier();
 
+        if (!ConfigFile.slotSetting.containsKey(ident)) return;
+        int id = ConfigFile.slotSetting.get(ident);
+
         ItemStack egg = SlotAPI.getCacheSlotItem(player, PetHandler.EGG_SLOT);
-        if (MegumiUtil.isEmpty(egg)) return;
+        if (id > 21 && id < 26 && MegumiUtil.isEmpty(egg)) {
+            MessageAPI.sendActionTip(player, "&c&l还没有使用宠物");
+            e.setCancelled(true);
+            return;
+        }
 
         if (ident.equals(PetHandler.SADDLE_SLOT) && PetHandler.isUseSaddle(egg) == 1) {
             MessageAPI.sendActionTip(player, "&c&l宠物鞍无法取下");

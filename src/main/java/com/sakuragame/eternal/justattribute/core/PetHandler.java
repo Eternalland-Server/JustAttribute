@@ -9,6 +9,7 @@ import ink.ptms.zaphkiel.api.ItemStream;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
 import net.sakuragame.eternal.dragoncore.util.Pair;
+import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -56,7 +57,7 @@ public class PetHandler {
 
         ItemStream itemStream = ZaphkielAPI.INSTANCE.read(egg);
         ItemTag tag = itemStream.getZaphkielData();
-        tag.putDeep(NBT_NODE_EQUIP.get(slot).getValue(), id);
+        tag.putDeep(NBT_NODE_EQUIP.get(slot).getValue(), new StrBuilder(id).reverse().toString());
 
         return itemStream.rebuildToItemStack(player);
     }
@@ -66,7 +67,8 @@ public class PetHandler {
         ItemTag tag = itemStream.getZaphkielData();
         ItemTagData data = tag.removeDeep(NBT_NODE_EQUIP.get(slot).getValue());
         if (data == null) return null;
-        Item equip = ZaphkielAPI.INSTANCE.getRegisteredItem().get(data.asString());
+        String equipID = new StringBuilder(data.asString()).reverse().toString();
+        Item equip = ZaphkielAPI.INSTANCE.getRegisteredItem().get(equipID);
         return new Pair<>(itemStream.rebuildToItemStack(player), equip.buildItemStack(player));
     }
 
