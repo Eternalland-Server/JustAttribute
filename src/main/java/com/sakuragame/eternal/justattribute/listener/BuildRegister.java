@@ -12,5 +12,6 @@ public class BuildRegister extends ListenRegister {
         this.registerListener(new PetListener());
         this.registerListener(new SkinListener());
         this.registerListener(new CommonListener());
+        this.registerListener(new FishingListener());
     }
 }
