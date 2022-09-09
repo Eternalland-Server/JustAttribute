@@ -9,6 +9,7 @@ import ink.ptms.zaphkiel.api.Item;
 import ink.ptms.zaphkiel.api.event.ItemReleaseEvent;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTag;
 import ink.ptms.zaphkiel.taboolib.module.nms.ItemTagData;
+import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -45,7 +46,7 @@ public class PetListener implements Listener {
                 infoDisplay.add("   ⓛ &b" + name + ": &7<无>");
             }
             else {
-                String id = data.asString();
+                String id = new StrBuilder(data.asString()).reverse().toString();
                 Item item = ZaphkielAPI.INSTANCE.getRegisteredItem().get(id);
                 infoDisplay.add("   " + item.getName().get("ICON") + " &b" + name + ": &f" + ChatColor.stripColor(MegumiUtil.onReplace(item.getName().get("NAME"))));
             }

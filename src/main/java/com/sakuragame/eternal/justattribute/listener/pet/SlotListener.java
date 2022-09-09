@@ -15,6 +15,7 @@ import net.sakuragame.eternal.dragoncore.api.gui.event.CustomPacketEvent;
 import net.sakuragame.eternal.dragoncore.network.PacketSender;
 import net.sakuragame.eternal.dragoncore.util.Pair;
 import net.sakuragame.eternal.justmessage.api.MessageAPI;
+import org.apache.commons.lang.text.StrBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -110,7 +111,8 @@ public class SlotListener implements Listener {
         PetHandler.NBT_NODE_EQUIP.forEach((slot, v) -> {
             ItemTagData data = tag.getDeep(v.getValue());
             if (data != null) {
-                Item zapItem = ZaphkielAPI.INSTANCE.getRegisteredItem().get(data.asString());
+                String equipID = new StrBuilder(data.asString()).reverse().toString();
+                Item zapItem = ZaphkielAPI.INSTANCE.getRegisteredItem().get(equipID);
                 PacketSender.putClientSlotItem(player, slot, zapItem.buildItemStack(player));
             }
         });

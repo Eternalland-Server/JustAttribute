@@ -67,7 +67,7 @@ public class PetHandler {
         ItemTag tag = itemStream.getZaphkielData();
         ItemTagData data = tag.removeDeep(NBT_NODE_EQUIP.get(slot).getValue());
         if (data == null) return null;
-        String equipID = new StringBuilder(data.asString()).reverse().toString();
+        String equipID = new StrBuilder(data.asString()).reverse().toString();
         Item equip = ZaphkielAPI.INSTANCE.getRegisteredItem().get(equipID);
         return new Pair<>(itemStream.rebuildToItemStack(player), equip.buildItemStack(player));
     }
