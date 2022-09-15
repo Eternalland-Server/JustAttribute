@@ -11,6 +11,8 @@
 
 #### API
 ```yaml
+`JustAttributeAPI`
+
 # 获取玩家角色对象
 getRoleCharacter(Player player);
 getRoleCharacter(UUID uuid);
