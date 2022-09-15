@@ -2,20 +2,24 @@
 
 > 作者: justwei
 
-玩家属性插件
+![img](./.img/0.png)
+![img](./.img/1.png)
+![img](./.img/2.png)
+![img](./.img/3.png)
 
-## 指令
+
+## 命令
 ```text
-  /attribute - 查看全部
+  /attribute
 ```
 
 ## PAPI
 ```text
-%attribute_<属性ID>%
+%attribute_<identifier>%
 ```
 
 ## 装备品质
-> 节点: justattribute.quality
+> node: justattribute.quality
 
 | ID  | 显示名 |    描述     |
 |:----|:---:|:---------:|
@@ -30,7 +34,7 @@
 | 8   | SSS |   超凡入圣    |
 
 ## 装备类型
-> 节点: justattribute.classify
+> node: justattribute.classify
 
 | ID  |   显示名    |
 |:----|:--------:|
@@ -59,7 +63,7 @@
 | 107 |  时装(翅膀)  |
 
 ## 灵魂绑定
-> 节点: justattribute.soulbound.action
+> node: justattribute.soulbound.action
 
 | ID  |     描述      |
 |:----|:-----------:|
@@ -71,7 +75,7 @@
 | 12  |    道具绑定     |
 
 ## 潜能评级
-> 节点: justattribute.potency.grade
+> node: justattribute.potency.grade
 
 | ID  | 符号  |  名称  |
 |:----|:---:|:----:|
@@ -81,73 +85,3 @@
 | 2   |  ㅓ  |  S   |
 | 3   |  ㅔ  |  SS  |
 | 4   |  ㅏ  | SSS  |
-
-## Zaphkiel item example
-```yaml
-example_item:
-  display: example_display
-  icon: WOODEN_SWORD
-  name:
-    NAME: '&7测试武器'
-  lore:
-    DESC:
-      - '&f用来测试的武器.'
-  data:
-    justattribute:
-      quality: 5
-      soulbound:
-        action: 0
-      classify: 0
-      ordinary:
-        energy: 999
-        stamina: 999
-        wisdom: 999
-        technique: 999
-        damage: 999
-        defence: 999
-        health: 999
-        mana: 999
-        critical_chance: 0.2
-        critical_damage: 0.75
-      potency:
-        grade: 1
-        addition:
-          damage: 0.06
-          defence: 0.07
-          helath: 0.1
-          mana: 0.1
-          restore_health: 2
-          restore_mana: 2
-          vampire_damage: 0.2
-          vampire_versatile: 0.05
-          defence_penetration: 0.2
-          damage_immune: 0.1
-          exp_addition: 1
-```
-
-## Zaphkiel display example
-```yaml
-example_display:
-  name: '&7<NAME>'
-  lore:
-    - '<display.quality...>'
-    - '<display.soulbound...>'
-    - '<display.combat...>'
-    - '<display.classify...>'
-    - '<display.realm...>'
-    - ''
-    - '<display.ordinary...>'
-    - ''
-    - '<display.potency...>'
-    - ''
-    - '&f<DESC...>'
-```
-
-## MythicMobs DamageModifiers
-```yaml
-  DamageModifiers:
-    # 属性伤害
-    - ATTRIBUTE_ATTACK 0.5
-    # 技能伤害
-    - ABILITY_ATTACK 0.5
-```
