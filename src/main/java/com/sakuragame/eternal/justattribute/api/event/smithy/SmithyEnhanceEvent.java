@@ -6,14 +6,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 @Getter
-public class SmithyBoostEvent extends JustEvent {
+public class SmithyEnhanceEvent extends JustEvent {
 
     private final ItemStack equip;
-    private final int boost;
+    private final int level;
+    private final boolean success;
 
-    public SmithyBoostEvent(Player who, ItemStack equip, int boost) {
+    public SmithyEnhanceEvent(Player who, ItemStack equip, int level, boolean success) {
         super(who);
         this.equip = equip;
-        this.boost = boost;
+        this.level = level;
+        this.success = success;
     }
 }

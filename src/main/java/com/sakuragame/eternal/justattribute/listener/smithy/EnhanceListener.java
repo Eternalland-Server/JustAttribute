@@ -1,5 +1,6 @@
 package com.sakuragame.eternal.justattribute.listener.smithy;
 
+import com.sakuragame.eternal.justattribute.api.event.smithy.SmithyEnhanceEvent;
 import com.sakuragame.eternal.justattribute.core.smithy.SmithyManager;
 import com.sakuragame.eternal.justattribute.core.smithy.factory.EnhanceFactory;
 import com.sakuragame.eternal.justattribute.core.soulbound.SoulBound;
@@ -163,10 +164,11 @@ public class EnhanceListener implements Listener {
         ItemStream equipStream = ZaphkielAPI.INSTANCE.read(equip);
         ItemStream propStream = ZaphkielAPI.INSTANCE.read(prop);
 
-        int level = equipStream.getZaphkielData().getDeepOrElse(EnhanceFactory.NBT_NODE_ENHANCE, new ItemTagData(0)).asInt() + 1;
+        int level = equipStream.getZaphkielData().getDeepOrElse(EnhanceFactory.NBT_NODE_ENHANCE, new ItemTagData(0)).asInt();
+        int nextLevel = level + 1;
         int max = this.crystal.get(propStream.getZaphkielName());
 
-        if (max < level) {
+        if (max < nextLevel) {
             player.sendMessage(ConfigFile.prefix + "该强化水晶无法继续强化至更高级");
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
             return;
@@ -179,6 +181,9 @@ public class EnhanceListener implements Listener {
             SmithyManager.putSlot(player, EnhanceFactory.PROP_SLOT, prop, true);
             player.sendMessage(ConfigFile.prefix + "§c强化失败");
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.5f, 1f);
+
+            SmithyEnhanceEvent event = new SmithyEnhanceEvent(player, equip, level, false);
+            event.call();
             return;
         }
 
@@ -188,10 +193,13 @@ public class EnhanceListener implements Listener {
         SmithyManager.putSlot(player, EnhanceFactory.PROP_SLOT, prop, true);
 
         Map<String, String> placeholder = new HashMap<>();
-        placeholder.put("enhance_chance", level < EnhanceFactory.MAX ? (format.format(EnhanceFactory.chance.getOrDefault(level + 1, 0d) * 100) + "%") : "???");
+        placeholder.put("enhance_chance", nextLevel < EnhanceFactory.MAX ? (format.format(EnhanceFactory.chance.getOrDefault(nextLevel + 1, 0d) * 100) + "%") : "???");
         PacketSender.sendSyncPlaceholder(player, placeholder);
 
-        player.sendMessage(ConfigFile.prefix + "§a强化成功§6(+" + level + ")");
+        player.sendMessage(ConfigFile.prefix + "§a强化成功§6(+" + nextLevel + ")");
         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 1f);
+
+        SmithyEnhanceEvent event = new SmithyEnhanceEvent(player, equip, nextLevel, true);
+        event.call();
     }
 }

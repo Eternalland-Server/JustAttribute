@@ -1,6 +1,6 @@
 # JustAttribute
 
-> 作者: justwei
+> 角色属性系统
 
 ![img](./.img/0.png)
 ![img](./.img/4.png)
@@ -9,17 +9,60 @@
 ![img](./.img/3.png)
 
 
-## 命令
-```text
+#### API
+```yaml
+# 获取玩家角色对象
+getRoleCharacter(Player player);
+getRoleCharacter(UUID uuid);
+```
+
+#### Event
+```yaml
+# 角色账户加载完成事件
+RoleAccountLoadedEvent
+# 角色属性更新事件
+RoleAttributeUpdateEvent
+# 角色状态更新事件
+RoleStateUpdateEvent
+# 角色法力值消耗事件
+RoleConsumeManaEvent
+# 角色物理伤害事件
+RoleLaunchAttackEvent
+# 角色技能伤害事件
+RoleSkillAttackEvent
+# 角色吸血事件
+RoleVampireEvent
+# 角色遭受攻击事件
+RoleUnderAttackEvent
+# 角色濒死事件
+RoleNearDeathEvent
+
+# 装备强化事件
+SmithyEnhanceEvent
+# 装备鉴定事件
+SmithyIdentifyEvent
+# 装备封印事件
+SmithySealEvent
+# 装备属性继承事件
+SmithyTransferEvent
+
+# 装备绑定事件
+EquipBoundEvent
+# 物品过期事件
+ItemExpiredEvent
+```
+
+#### 命令
+```yaml
   /attribute
 ```
 
-## PAPI
-```text
+#### 占位符
+```yaml
 %attribute_<identifier>%
 ```
 
-## 装备品质
+#### 品质
 > node: justattribute.quality
 
 | ID  | 显示名 |    描述     |
@@ -34,7 +77,7 @@
 | 7   | SS  |   王者无敌    |
 | 8   | SSS |   超凡入圣    |
 
-## 装备类型
+#### 类型
 > node: justattribute.classify
 
 | ID  |   显示名    |
@@ -63,7 +106,7 @@
 | 106 |  时装(鞋子)  |
 | 107 |  时装(翅膀)  |
 
-## 灵魂绑定
+#### 绑定
 > node: justattribute.soulbound.action
 
 | ID  |     描述      |
@@ -75,7 +118,7 @@
 | 11  |    使用后绑定    |
 | 12  |    道具绑定     |
 
-## 潜能评级
+#### 潜能评级
 > node: justattribute.potency.grade
 
 | ID  | 符号  |  名称  |
